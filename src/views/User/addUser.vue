@@ -1,6 +1,7 @@
 <template>
     <div class="organizeManage">
        添加用户
+       <el-button type="primary" icon="el-icon-search">搜索</el-button>
     </div>
 </template>
 
