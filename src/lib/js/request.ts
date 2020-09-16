@@ -1,7 +1,7 @@
-import axios from "axios";
-import { UserModule } from "@/store/module/user";
-import { ConfigModule } from '@/store/module/config';
-import { Modal, Spin } from 'view-design'
+import axios from "axios"
+import { UserModule } from "@/store/module/user"
+import { ConfigModule } from "@/store/module/config"
+import { Modal } from "view-design"
 
 let needLoadingRequestCount = 0
 const startLoading = () => {
@@ -33,21 +33,20 @@ const instance = axios.create({
     headers: {
         "Content-Type": "application/json;charset=utf8"
     }
-});
+})
 
 instance.interceptors.request.use(
-    config => {
-        return new Promise(async resolve => {
-            let access_token: string | undefined = ""
-            if (config.url != 'uaa/oauth/token') access_token = await UserModule.token;
+    async config => {
+        let access_token: string | undefined = ""
+        if (config.url !== "uaa/oauth/token") access_token = await UserModule.token
+        return new Promise(resolve => {
             config.headers.Authorization = `Basic d2ViX2FwcDo=`
-
             if (config.method === "post") {
-                if (config.url != 'uaa/oauth/token') {
+                if (config.url !== "uaa/oauth/token") {
                     config.headers.Authorization = `Bearer ${access_token}`
                 }
             } else if (config.method === "get") {
-                if (config.url != 'uaa/oauth/token') {
+                if (config.url !== "uaa/oauth/token") {
                     config.headers.Authorization = `Bearer ${access_token}`
                 }
             }
@@ -57,52 +56,51 @@ instance.interceptors.request.use(
         })
     },
     error => {
-        Promise.reject(error);
+        Promise.reject(error)
     }
 )
 
 instance.interceptors.response.use(
     async response => {
         tryHideFullScreenLoading()
-
-        return response;
+        await UserModule.monitor()
+        return response
     },
     async error => {
-        // await UserModule.monitor();
-        if (error.response.status == 401) {
-            (Modal as any)["error"]({
-                title: '会话超时',
-                content: '请重新登录',
-                okText: '好的',
+        if (error.response.status === 401) {
+            (Modal as any).error({
+                title: "会话超时",
+                content: "请重新登录",
+                okText: "好的",
                 onOk: () => {
-                    window.location.href = 'http://4aportal.bmcc.com.cn/';
+                    window.location.href = "http://4aportal.bmcc.com.cn/"
                 }
-            });
+            })
         }
         tryHideFullScreenLoading()
-        return Promise.reject(error);
+        return Promise.reject(error)
     }
-);
+)
 
 export function formateURLOnlyGet(link: string, json: object) {
-    let url = link;
-    var data = Object.entries(json);
+    let url = link
+    const data = Object.entries(json)
 
     if (data.length) {
-        url += url.indexOf("?") == -1 ? "?" : "";
+        url += url.indexOf("?") === -1 ? "?" : ""
         url += Object.entries(data)
             .map(item => {
-                return item[1].join("=");
+                return item[1].join("=")
             })
-            .join("&");
+            .join("&")
     }
-    return url;
+    return url
 }
 
 const formData = {
-    transformRequest: [function (data: any) {
+    transformRequest: [(data: any) => {
         let ret = ""
-        for (let it in data) {
+        for (const it in data) {
             ret += encodeURIComponent(it) + "=" + encodeURIComponent(data[it]) + "&"
         }
         return ret
@@ -121,12 +119,12 @@ export function getData(url: string, json: object) {
     return instance
         .get(formateURLOnlyGet(url, json))
         .then(res => res.data)
-        .catch(error => error.response);
+        .catch(error => error.response)
 }
 
 export function postData(url: string, json?: any, isformData = true) {
     return instance
         .post(url, json, isformData ? formData : {})
         .then(res => res.data)
-        .catch(error => error.response);
+        .catch(error => error.response)
 }

@@ -1,9 +1,8 @@
-import { RouteConfig } from 'vue-router'
-import User from "./User/index"
-
+import { RouteConfig } from "vue-router"
+import IndexPage from "./IndexPage"
 
 export const appRouter: Array<RouteConfig> = [
-    ...User
+    ...IndexPage
 ]
 
 export const routes: Array<RouteConfig> = [
