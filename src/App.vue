@@ -1,13 +1,32 @@
 <template>
     <div id="app">
-        <router-view v-if="userCode" />
+        <el-container v-if="userCode" >
+            <el-header>
+                <Navbar />
+            </el-header>
+            <el-container>
+                <el-aside>Aside</el-aside>
+                <el-main>
+                    <router-view />
+                </el-main>
+            </el-container>
+            <el-footer>
+                <NavFooter />
+            </el-footer>
+        </el-container>
     </div>
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 // @ts-ignore
 import { UserModule } from "@/store/module/user"
-@Component
+// @ts-ignore
+import NavFooter from "@/views/layout/NavFooter"
+// @ts-ignore
+import Navbar from "@/views/layout/Navbar"
+@Component({
+    components: { NavFooter, Navbar }
+})
 export default class App extends Vue {
     get userCode() {
         // @ts-ignore

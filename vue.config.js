@@ -27,7 +27,7 @@ module.exports = {
                     "@": path.resolve(__dirname, "./src"),
                     "@c": path.resolve(__dirname, "./src/components"),
                     "@l": path.resolve(__dirname, "./src/lib"),
-                    "@a": path.resolve(__dirname, "./src/api"),
+                    "@api": path.resolve(__dirname, "./src/api"),
                     "@s": path.resolve(__dirname, "./src/style"),
                     "@m": path.resolve(__dirname, "./src/mixin"),
                     "@d": path.resolve(__dirname, "./src/data"),
