@@ -1,7 +1,7 @@
 <template>
     <div class="AppNav">
         <div class="navSize"></div>
-        <div v-for="item in userRouter" @click="navChange(item.name)" class="navItem" :class="[item.name === routerName ? 'selectNameItem' : 'noSelectNameItem']" v-text="item.meta.title"></div>
+        <div v-for="item in userRouter" :key="item" @click="navChange(item.name)" class="navItem" :class="[item.name === routerName ? 'selectNameItem' : 'noSelectNameItem']" v-text="item.meta.title"></div>
     </div>
 </template>
 

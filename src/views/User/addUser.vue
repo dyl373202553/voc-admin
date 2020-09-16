@@ -1,6 +1,6 @@
 <template>
     <div class="organizeManage">
-        添加用户
+       添加用户
     </div>
 </template>
 
@@ -13,6 +13,4 @@ export default class organizeManage extends Vue {
 }
 </script>
 <style lang="less" scoped>
-.organizeManage {
-}
 </style>

@@ -1,6 +1,6 @@
 <template>
     <div class="userManage">
-        用户管理
+    用户管理
     </div>
 </template>
 

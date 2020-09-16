@@ -6,16 +6,16 @@
 
             <div>
                 <AutoComplete :transfer="true" @on-search="handleSearch" v-model="searchValue" icon="ios-search" placeholder="请输入">
-                    <Option v-for="item in searchData" :value="item">{{ item.orgName }}</Option>
+                    <Option v-for="item in searchData" :value="item" :key="item">{{ item.orgName }}</Option>
                 </AutoComplete>
-                <div v-for="item in childOrgList">
+                <div v-for="item in childOrgList" :key="item">
                     <div class="oneItemBox" :class="{'selectOrg':selectOrgCode == item.orgCode}" @click="getSubordinate(item)">
                         <div v-if="'200000000' != item.orgCode" class="iconfont iconicon_xiaojiantou_shouqi" :class="{'selected':item.isShow}"></div>
                         <div v-text="item.orgName" class="orgName"></div>
                     </div>
                     <!-- 二级 -->
                     <div v-show="item.isShow" class="twoItemBox">
-                        <div class="oneItemBox" :class="{'selectOrg':selectOrgCode == ite.orgCode}" v-for="ite in item.childOrgList" @click="selectOrg(ite)">
+                        <div class="oneItemBox" :class="{'selectOrg':selectOrgCode == ite.orgCode}" v-for="ite in item.childOrgList" :key="ite" @click="selectOrg(ite)">
                             <div v-text="ite.orgName" class="orgName"></div>
                         </div>
                     </div>
