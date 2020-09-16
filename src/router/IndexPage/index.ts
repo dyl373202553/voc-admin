@@ -1,7 +1,15 @@
 export default [
     {
         path: "/",
-        name: "index",
-        component: () => import("@/views/IndexPage/Index.vue")
+        name: "home",
+        component: () => import("@/views/IndexPage/Home.vue")
+    },
+    {
+        path: "/OverseeList",
+        name: "OverseeList",
+        component: () => import("@/views/oversee/OverseeList.vue"),
+        meta: {
+            title: "OverseeList"
+        }
     }
 ]

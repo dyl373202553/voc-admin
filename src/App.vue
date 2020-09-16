@@ -5,7 +5,9 @@
                 <Navbar />
             </el-header>
             <el-container>
-                <el-aside>Aside</el-aside>
+                <el-aside>
+                    <AppNav />
+                </el-aside>
                 <el-main>
                     <router-view />
                 </el-main>
@@ -24,8 +26,10 @@ import { UserModule } from "@/store/module/user"
 import NavFooter from "@/views/layout/NavFooter"
 // @ts-ignore
 import Navbar from "@/views/layout/Navbar"
+// @ts-ignore
+import AppNav from "@/views/layout/AppNav"
 @Component({
-    components: { NavFooter, Navbar }
+    components: { NavFooter, Navbar, AppNav }
 })
 export default class App extends Vue {
     get userCode() {
