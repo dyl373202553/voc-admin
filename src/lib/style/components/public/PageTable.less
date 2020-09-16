@@ -1,0 +1,34 @@
+.pagetable {
+    .tableContent {
+
+        @{deep} .ivu-table-header th {
+            background-color: #7ba7ec;
+            color: #fff;
+            .fz(12px);
+        }
+
+        @{deep} .ivu-table .tableRow td {
+            background-color: #f5f9ff;
+            color: #000000;
+            .fz(12px);
+        }
+
+        @{deep} th,
+        @{deep} td {
+            text-align: center;
+            .fz(12px);
+            .color(#333);
+        }
+
+        @{deep} .ivu-table .ivu-table-header .ivu-table-cell .ivu-table-sort i {
+            .color(#8fbbff);
+        }
+        @{deep} .ivu-table .ivu-table-header .ivu-table-cell .ivu-table-sort i.on {
+            .color(#fff);
+        }
+    }
+
+    .page{
+        .mt(20px);
+    }
+}

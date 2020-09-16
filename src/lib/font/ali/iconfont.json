@@ -1,0 +1,30 @@
+{
+  "id": "2069927",
+  "name": "统一用户",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon",
+  "description": "统一用户图标",
+  "glyphs": [
+    {
+      "icon_id": "16284411",
+      "name": "icon_小箭头_收起",
+      "font_class": "icon_xiaojiantou_shouqi",
+      "unicode": "e65b",
+      "unicode_decimal": 58971
+    },
+    {
+      "icon_id": "17191817",
+      "name": "icon_ 添加领导",
+      "font_class": "icon_tianjialingdao",
+      "unicode": "e668",
+      "unicode_decimal": 58984
+    },
+    {
+      "icon_id": "17191820",
+      "name": "icon_编辑部门信息",
+      "font_class": "icon_bianjibumenxinxi",
+      "unicode": "e669",
+      "unicode_decimal": 58985
+    }
+  ]
+}

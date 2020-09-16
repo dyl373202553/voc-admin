@@ -1,0 +1,111 @@
+/*html5*/
+article,
+aside,
+dialog,
+footer,
+header,
+section,
+footer,
+nav,
+figure,
+menu {
+    display: block
+}
+
+* {
+    /* user-select: none; */
+}
+
+html,
+body {
+    font-family: "Microsoft YaHei";
+    color: #666666;
+    background-color: #F9FAFC;
+    font-size: 14px;
+    height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: normal;
+}
+
+ul,
+ol {
+    list-style: none;
+    margin-bottom: 0 !important;
+}
+
+img {
+    border: none;
+    vertical-align: middle;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+table {
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+input{
+    -webkit-appearance: none;
+}
+
+input,
+textarea {
+    outline: none;
+    border: none;
+    box-shadow:none; /*去除阴影*/
+    outline: none;/*聚焦input的蓝色边框*/
+    resize: none; /*textarea 禁止拖拽*/
+    border: none; /*去除边框*/
+    -webkit-appearance: none;/*常用于IOS下移除原生样式*/
+    -webkit-tap-highlight-color: rgba(0,0,0,0); /*点击高亮的颜色*/
+}
+
+textarea {
+    resize: none;
+    overflow: auto;
+}
+
+.demo-spin-icon-load {
+    animation: ani-demo-spin 2s linear infinite;
+}
+
+/*tableData  组件覆盖*/
+.tableData{
+    width: 100% !important;
+}
+.tableData .ivu-table-header th{
+    background-color: #7BA7EC;
+    color:#FFF;
+    text-align: left;
+    border-right: 1px solid #7BA7EC;
+}
+
+.tableData .ivu-table .tableRow td{
+    background-color: #F5F9FF;
+    color: #000000;
+}
+
+.tableData .ivu-table-body .linebai{
+    background: #FFF!important;
+}
+
+.tableData .ivu-table-body .table_title{
+    background: #F5F9FF!important;
+}
+
+.ivu-spin-fix{
+    background-color: rgba(0,0,0,.8);
+    z-index: 9999999999;
+}
+

@@ -1,0 +1,214 @@
+.HostPeople {
+    .pdAll(15px 25px);
+}
+
+.Contacts {
+    //
+    .flex;
+}
+
+.ContactsLeft{
+    .pdAll(15px 25px);
+    .w_n(452px);
+    border-right: 1px solid #ECEFF5;
+}
+
+.ContactsRight{
+    .flex_1;
+    .pdAll(15px 25px);
+}
+// 联系人
+.InvitedTitle{
+    .flex;
+    .acenter;
+    .between;
+
+    .InvitedTitleDel{
+        .flex;
+        .acenter;
+        & i {
+            .mr(6px);
+            .color(#D1D6DD);
+        }
+        & span{
+            .fz(12px);
+            .color(#333);
+        }
+
+        &:hover{
+            .hover_hand;
+        }
+    }
+}
+
+// 主持人
+@{deep} .ivu-auto-complete .ivu-icon-ios-search {
+    .color(#4484f6);
+    .bold;
+}
+
+.titleBox {
+    .h_n(44px);
+    .lHeight(44px);
+    .flex;
+    border-bottom: 1px dotted #e0e0e0;
+
+    .titleItem {
+        .flex_1;
+        .text-center;
+        &:hover {
+            .hover_hand;
+        }
+    }
+
+    .selectItemTitle {
+        .color(#4484f6);
+        .po_re;
+        &:after {
+            .po_ab;
+            bottom: -1px;
+            content: "";
+            .w_n(72px);
+            left: 50%;
+            .ml(-36px);
+            .bg(#4484f6);
+            .h_n(2px);
+        }
+    }
+}
+
+.deptBox {
+    .h_n(400px);
+    overflow: auto;
+
+    .deptItem {
+        .flex;
+        .acenter;
+        .mt(15px);
+
+        .iconicon_xiaojiantou_shouqi {
+            .color(#d1d1d1);
+            .fz(12px);
+        }
+        &:hover {
+            .hover_hand;
+        }
+
+        .selected {
+            .color(#4484f6);
+            transform: rotate(90deg);
+            transition: 0.5s;
+        }
+
+        .orgName {
+            .ml(5px);
+            .fz(14px);
+            .color(#333);
+        }
+    }
+
+    .deptItemTwo {
+        .deptItem;
+        .ml(15px);
+    }
+
+    .peopleBox {
+        .flex;
+        .acenter;
+        .between;
+        .ml(15px);
+        .mt(15px);
+        .mr(15px);
+        &:hover {
+            .hover_hand;
+        }
+        .left {
+            .flex;
+            .acenter;
+            .portrait {
+                .w_n(20px);
+                .h_n(20px);
+                .radius(50%);
+            }
+            .nickName {
+                .fz(14px);
+                .color(#333);
+                .ml(10px);
+            }
+        }
+    }
+
+    .peopleBoxTwo {
+        .peopleBox;
+        .ml(40px);
+    }
+}
+
+.deptTwoBox{
+    .ml(20px);
+    .deptItem {
+        .flex;
+        .acenter;
+        .mt(15px);
+
+        .iconicon_xiaojiantou_shouqi {
+            .color(#d1d1d1);
+            .fz(12px);
+        }
+        &:hover {
+            .hover_hand;
+        }
+
+        .selected {
+            .color(#4484f6);
+            transform: rotate(90deg);
+            transition: 0.5s;
+        }
+
+        .orgName {
+            .ml(5px);
+            .fz(14px);
+            .color(#333);
+        }
+    }
+
+    .deptItemTwo {
+        .deptItem;
+        .ml(15px);
+    }
+
+    .peopleBox {
+        .flex;
+        .acenter;
+        .between;
+        .ml(15px);
+        .mt(15px);
+        .mr(15px);
+        &:hover {
+            .hover_hand;
+        }
+        .left {
+            .flex;
+            .acenter;
+            .portrait {
+                .w_n(20px);
+                .h_n(20px);
+                .radius(50%);
+            }
+            .nickName {
+                .fz(14px);
+                .color(#333);
+                .ml(10px);
+            }
+        }
+    }
+
+    .peopleBoxTwo {
+        .peopleBox;
+        .ml(40px);
+    }
+}
+
+.ml0{
+    .ml(0)!important;
+}
