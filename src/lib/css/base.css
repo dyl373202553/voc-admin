@@ -160,7 +160,6 @@ textarea {
   position: relative;
   padding-top: 90px;
   padding-bottom: 50px;
-  background-color: gold;
 }
 body > .el-container {
   margin-bottom: 40px;
@@ -177,3 +176,4 @@ body > .el-container {
 .el-dropdown-menu {
   top: 68px !important;
 }
+

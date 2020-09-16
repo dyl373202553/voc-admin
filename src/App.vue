@@ -23,11 +23,11 @@ import { Component, Vue } from "vue-property-decorator"
 // @ts-ignore
 import { UserModule } from "@/store/module/user"
 // @ts-ignore
-import NavFooter from "@/views/layout/NavFooter"
+import NavFooter from "@/components/layout/NavFooter"
 // @ts-ignore
-import Navbar from "@/views/layout/Navbar"
+import Navbar from "@/components/layout/Navbar"
 // @ts-ignore
-import AppNav from "@/views/layout/AppNav"
+import AppNav from "@/components/layout/AppNav"
 @Component({
     components: { NavFooter, Navbar, AppNav }
 })
@@ -43,4 +43,7 @@ export default class App extends Vue {
 }
 </script>
 <style lang="less" scoped>
+    .app-container {
+        margin-top: 15px;
+    }
 </style>

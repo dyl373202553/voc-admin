@@ -8,6 +8,7 @@ import "element-ui/lib/theme-chalk/index.css"
 
 import "@/lib/js/leakRepair"
 import "@/lib/css/base.css"
+import "@/lib/css/index.scss"
 import { deepCopy, getSlotData, getImg, day, getFileIcon } from "@/lib/js/unitls"
 
 Vue.config.productionTip = false
