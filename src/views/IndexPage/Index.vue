@@ -1,7 +1,16 @@
 
 <template>
     <div class="Index">
-        <el-tag>标签一</el-tag>
+        <el-container>
+            <el-header>Header</el-header>
+            <el-container>
+                <el-aside>Aside</el-aside>
+                <el-main>Main</el-main>
+            </el-container>
+            <el-footer>
+                footer
+            </el-footer>
+        </el-container>
     </div>
 </template>
 
@@ -12,6 +21,5 @@ export default class Index extends Vue {
 }
 </script>
 <style lang="less" scoped>
-.Index {
-}
+
 </style>
