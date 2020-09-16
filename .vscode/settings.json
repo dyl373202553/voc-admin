@@ -1,4 +1,5 @@
 {
   "editor.tabSize": 2,
-  "svn.ignoreMissingSvnWarning": true
+  "svn.ignoreMissingSvnWarning": true,
+  "editor.detectIndentation": false
 }

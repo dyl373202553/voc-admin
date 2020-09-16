@@ -1,7 +1,7 @@
 import axios from "axios"
 import { UserModule } from "@/store/module/user"
 import { ConfigModule } from "@/store/module/config"
-import { Modal } from "view-design"
+import { MessageBox } from "element-ui"
 
 let needLoadingRequestCount = 0
 const startLoading = () => {
@@ -68,11 +68,9 @@ instance.interceptors.response.use(
     },
     async error => {
         if (error.response.status === 401) {
-            (Modal as any).error({
-                title: "会话超时",
-                content: "请重新登录",
-                okText: "好的",
-                onOk: () => {
+            MessageBox.alert("请重新登录", "会话超时", {
+                confirmButtonText: "好的",
+                callback: () => {
                     window.location.href = "http://4aportal.bmcc.com.cn/"
                 }
             })

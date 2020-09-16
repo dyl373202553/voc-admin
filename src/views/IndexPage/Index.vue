@@ -1,6 +1,7 @@
+
 <template>
     <div class="Index">
-        首页
+        <el-tag>标签一</el-tag>
     </div>
 </template>
 
@@ -8,7 +9,6 @@
 import { Component, Vue } from "vue-property-decorator"
 @Component
 export default class Index extends Vue {
-
 }
 </script>
 <style lang="less" scoped>
