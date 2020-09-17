@@ -7,7 +7,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getHomeProgramList } from "@/api/IndexPage/home"
+import { getHomeProgramList, getDict } from "@/api/IndexPage/home"
 @Component
 export default class Index extends Vue {
     protected mounted() {
@@ -16,6 +16,14 @@ export default class Index extends Vue {
             pageSize: "3"
         }
         getHomeProgramList(params).then((res) => {
+            console.log(res)
+        })
+        const params2 = {
+            pageNum: "1",
+            pageSize: "10",
+            description: "1"
+        }
+        getDict(params2).then((res) => {
             console.log(res)
         })
     }

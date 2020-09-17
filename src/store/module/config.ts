@@ -21,8 +21,9 @@ class Config extends VuexModule implements ConfigState {
     public user = `uaa/api/getUserInfo`
     public baseUrl = `/vue-potal`
     public api = `/information-unifyuser/api`
-    public dict = `/configure-system/api/dict/sysDictValue/getDictValueList`
-    public voc = `portal-gateway/moa-customervoice/api/modules` // 客户之声
+    // public dict = `/configure-system/api/dict/sysDictValue/getDictValueList`
+    public voc = `moa-customervoice/api/modules` // 客户之声
+    public dict = `configure-system/api/dict/sysDictType/data`
 }
 
 export const ConfigModule = getModule(Config)
