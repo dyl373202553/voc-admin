@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const path = require("path")
 module.exports = {
     publicPath: "./",
@@ -7,9 +8,9 @@ module.exports = {
     transpileDependencies: [],
     productionSourceMap: false,
 
-    chainWebpack: config => {
-        // config.resolve.symlinks(true);
-    },
+    // chainWebpack: config => {
+    //     // config.resolve.symlinks(true);
+    // },
     configureWebpack: config => {
         if (process.env.NODE_ENV === "production") {
             // 为生产环境修改配置...
@@ -74,7 +75,7 @@ module.exports = {
                 }
             }
         },
-        before: app => { },
+        // before: app => { },
         overlay: {
             warnings: true,
             errors: true

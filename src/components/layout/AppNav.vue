@@ -3,8 +3,8 @@
         <div class="navSize"></div>
         <div v-for="item in indexPage" :key="item"
         @click="navChange(item.name)" class="navItem"
-        :class="[item.name === routerName ? 'selectNameItem' : 'noSelectNameItem']" v-text="item.name"></div>
-        <el-scrollbar wrap-class="scrollbar-wrapper">
+        :class="[item.name === routerName ? 'selectNameItem' : 'noSelectNameItem']" v-text="item.meta.title"></div>
+        <!-- <el-scrollbar wrap-class="scrollbar-wrapper">
             <el-menu
                 default-active="2"
                 class="el-menu-vertical-demo"
@@ -28,7 +28,7 @@
                     <span slot="title">导航四</span>
                 </el-menu-item>
             </el-menu>
-        </el-scrollbar>
+        </el-scrollbar> -->
     </div>
 </template>
 
