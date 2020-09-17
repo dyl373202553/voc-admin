@@ -1,7 +1,7 @@
 <template>
     <div class="AppNav">
         <div class="navSize"></div>
-        <div v-for="item in indexPage" :key="item"
+        <div v-for="item in indexPage" :key="item.path"
         @click="navChange(item.name)" class="navItem"
         :class="[item.name === routerName ? 'selectNameItem' : 'noSelectNameItem']" v-text="item.meta.title"></div>
         <!-- <el-scrollbar wrap-class="scrollbar-wrapper">

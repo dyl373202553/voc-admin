@@ -12,6 +12,7 @@ export interface ConfigState {
     user: any;
     api: string;
     dict: string;
+    voc: string;
 }
 
 @Module({ dynamic: true, store, name: "config" })
@@ -21,6 +22,7 @@ class Config extends VuexModule implements ConfigState {
     public baseUrl = `/vue-potal`
     public api = `/information-unifyuser/api`
     public dict = `/configure-system/api/dict/sysDictValue/getDictValueList`
+    public voc = `portal-gateway/moa-customervoice/api/modules` // 客户之声
 }
 
 export const ConfigModule = getModule(Config)
