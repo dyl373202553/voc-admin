@@ -70,6 +70,22 @@ export default [
         meta: {
             title: "ProgramList"
         }
+    },
+    {
+        path: "/ProgramDetail",
+        name: "ProgramDetail",
+        component: () => import("@/views/programList/ProgramDetail.vue"),
+        meta: {
+            title: "ProgramDetail"
+        }
+    },
+    {
+        path: "/CreateStudio",
+        name: "CreateStudio",
+        component: () => import("@/views/programList/CreateStudio.vue"),
+        meta: {
+            title: "CreateStudio"
+        }
     }
 
 ]
