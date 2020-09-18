@@ -54,6 +54,22 @@ export default [
         meta: {
             title: "ContentManagement"
         }
+    },
+    {
+        path: "/ProgramSummary",
+        name: "ProgramSummary",
+        component: () => import("@/views/programList/ProgramSummary.vue"),
+        meta: {
+            title: "ProgramSummary"
+        }
+    },
+    {
+        path: "/ProgramList",
+        name: "ProgramList",
+        component: () => import("@/views/programList/ProgramList.vue"),
+        meta: {
+            title: "ProgramList"
+        }
     }
 
 ]

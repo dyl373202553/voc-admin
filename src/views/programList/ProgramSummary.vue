@@ -48,7 +48,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 @Component
-export default class OverseeCheck extends Vue {
+export default class ProgramSummary extends Vue {
     private textarea = "";
     private input= "";
 }
