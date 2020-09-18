@@ -86,6 +86,21 @@ export default [
         meta: {
             title: "CreateStudio"
         }
+    },
+    {
+        path: "/ProgramManage",
+        name: "ProgramManage",
+        component: () => import("@/views/programList/programManage/ProgramManage.vue"),
+        meta: {
+            title: "ProgramManage"
+        }
+    },
+    {
+        path: "/ProgramRelease",
+        name: "ProgramRelease",
+        component: () => import("@/views/programList/ProgramRelease.vue"),
+        meta: {
+            title: "ProgramRelease"
+        }
     }
-
 ]
