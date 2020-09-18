@@ -38,5 +38,22 @@ export default [
         meta: {
             title: "ToDoList"
         }
+    },
+    {
+        path: "/SpecialFocus",
+        name: "SpecialFocus",
+        component: () => import("@/views/specialFocus/SpecialFocus.vue"),
+        meta: {
+            title: "SpecialFocus"
+        }
+    },
+    {
+        path: "/ContentManagement",
+        name: "ContentManagement",
+        component: () => import("@/views/specialFocus/contentManagement/ContentManagement.vue"),
+        meta: {
+            title: "ContentManagement"
+        }
     }
+
 ]
