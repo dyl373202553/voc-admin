@@ -152,7 +152,6 @@ textarea {
   overflow: hidden;
   border: 1px solid #ECEFF5;
   padding-top: 27px;
-  background: rosybrown;
 }
 .el-main {
   padding-top: 90px;
@@ -177,3 +176,6 @@ body > .el-container {
   top: 68px !important;
 }
 
+.el-menu {
+  border: none;
+}

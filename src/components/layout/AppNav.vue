@@ -1,34 +1,60 @@
 <template>
     <div class="AppNav">
-        <div class="navSize"></div>
-        <div v-for="item in indexPage" :key="item.path"
-        @click="navChange(item.name)" class="navItem"
-        :class="[item.name === routerName ? 'selectNameItem' : 'noSelectNameItem']" v-text="item.meta.title"></div>
-        <!-- <el-scrollbar wrap-class="scrollbar-wrapper">
+        <el-scrollbar wrap-class="scrollbar-wrapper">
             <el-menu
-                default-active="2"
+                :default-active="this.activedMenu()"
                 class="el-menu-vertical-demo"
                 >
+                <template v-for="item in indexPage">
+                    <el-menu-item
+                        v-if="!item.children || item.children.length==0"
+                        :key="item.path"
+                        :index="item.path"
+                        @click="toPage(item.path)"
+                        class="my-menu-item">
+                        <i style="padding-right: 20px;" :class="[item.icon]"></i>
+                        <span slot="title">&nbsp;&nbsp;&nbsp;&nbsp;{{item.meta.title}}</span>
+                    </el-menu-item>
+                    <el-submenu
+                        v-if="item.children && item.children.length>0"
+                        :key="item.path"
+                        :index="item.children[0].path">
+                        <template slot="title">
+                            <template @click="toPage(item.children[0].path,$event)">
+                            <i style="padding-right: 20px;" :class="[item.icon]"></i>
+                            <span slot="title">&nbsp;&nbsp;&nbsp;&nbsp;{{item.meta.title}}</span>
+                            </template>
+                        </template>
+                        <el-menu-item-group v-for="(child,childindex) in item.children" :key="childindex">
+                            <el-menu-item :index="child.path" @click="toPage(child.path)">
+                            {{child.meta.title}}
+                            </el-menu-item>
+                        </el-menu-item-group>
+                    </el-submenu>
+                </template>
+
                 <el-submenu index="1">
                     <template slot="title">
                         <i class="el-icon-location"></i>
                         <span>导航一</span>
                     </template>
                     <el-menu-item-group>
-                        <el-menu-item index="1-1">选项1</el-menu-item>
+                        <el-menu-item index="1">选项1</el-menu-item>
                         <el-menu-item index="1-2">选项2</el-menu-item>
                     </el-menu-item-group>
                 </el-submenu>
-                <el-menu-item index="2">
-                    <i class="el-icon-menu"></i>
-                    <span slot="title">导航二</span>
-                </el-menu-item>
-                <el-menu-item index="4">
+                <!-- <el-menu-item index="4">
                     <i class="el-icon-setting"></i>
                     <span slot="title">导航四</span>
-                </el-menu-item>
+                </el-menu-item> -->
             </el-menu>
-        </el-scrollbar> -->
+        </el-scrollbar>
+
+        <!-- <div class="navSize"></div>
+        <div v-for="item in indexPage" :key="item.path"
+        @click="navChange(item.name)" class="navItem"
+        :class="[item.name === routerName ? 'selectNameItem' : 'noSelectNameItem']" v-text="item.meta.title"></div> -->
+
     </div>
 </template>
 
@@ -54,6 +80,18 @@ export default class AppNav extends Vue {
     private navChange(name: string) {
         this.$router.push({ name })
     }
+
+    private activedMenu() {
+        const index = this.$route.path
+        return index
+    }
+
+    private toPage(path: string) {
+        if (this.$route.path === path) return
+        setTimeout(() => {
+            this.$router.push(path)
+        })
+    }
 }
 </script>
 <style lang="less" scoped>
@@ -61,8 +99,6 @@ export default class AppNav extends Vue {
     .navSize {
         .h_n(30px);
     }
-    .w_n(160px);
-    border-right: 1px solid #eceff5;
     .bg(#FFF);
     .h_n(auto);
 
