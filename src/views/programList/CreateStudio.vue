@@ -61,6 +61,7 @@
 import { Component, Vue } from "vue-property-decorator"
 import { postCreateStudio } from "@/api/programList/createStudio"
 // import { day } from "@/lib/js/unitls"
+import { MessageBox } from "element-ui"
 
 @Component
 export default class CreateStudio extends Vue {
@@ -79,18 +80,11 @@ export default class CreateStudio extends Vue {
         summaryFlag: "0" // 是否发布节目小结
     }
 
-    protected mounted() {
-        postCreateStudio(this.studioForm)
-    }
-
     private onSubmit() {
-        this.$message("submit!")
-    }
-
-    private onCancel() {
-        this.$message({
-            message: "cancel!",
-            type: "warning"
+        postCreateStudio(this.studioForm).then((res) => {
+            if (res) {
+                MessageBox.alert(`操作成功`, "成功", { type: "success" })
+            }
         })
     }
 
