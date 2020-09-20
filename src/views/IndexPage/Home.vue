@@ -161,6 +161,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
+import { getRecentProgram } from "@/api/IndexPage/home"
 @Component
 export default class Home extends Vue {
     // 督办状态overseeState：1.督办未发布 2.本期无督办 3.督办未回复 4.督办未确认 5.督办已完成
@@ -230,6 +231,19 @@ export default class Home extends Vue {
         department: "全业务交付运营中心",
         likenum: "11345"
     }]
+
+    private dataPage = {
+        pageNum: "1",
+        pageSize: "10"
+    }
+
+    private load() {
+        getRecentProgram(this.dataPage).then((res) => {
+            if (res) {
+                console.log(res.data)
+            }
+        })
+    }
 
     private handleClick(tab: any, event: any) {
         console.log(tab, event)
