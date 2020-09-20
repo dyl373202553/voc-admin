@@ -4,14 +4,14 @@
       <div slot="header" class="clearfix">
         <span class="header-title">创建直播间</span>
       </div>
-      <el-form ref="form" :model="form" label-width="150px">
+      <el-form ref="studioForm" :model="studioForm" label-width="150px">
         <el-form-item label="节目时间">
           <el-col :span="11">
-            <el-date-picker v-model="form.date1" type="datetime" placeholder="请选择开始时间" style="width: 100%;" />
+            <el-date-picker v-model="studioForm.date1" type="datetime" placeholder="请选择开始时间" style="width: 100%;" />
           </el-col>
           <el-col :span="2" class="line">至</el-col>
           <el-col :span="11">
-            <el-date-picker v-model="form.date2" type="datetime" placeholder="请选择结束时间" style="width: 100%;" />
+            <el-date-picker v-model="studioForm.date2" type="datetime" placeholder="请选择结束时间" style="width: 100%;" />
           </el-col>
         </el-form-item>
         <el-form-item label="节目封面">
@@ -32,19 +32,19 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="节目主讲人">
-          <el-input v-model="form.name" />
+          <el-input v-model="studioForm.name" />
         </el-form-item>
         <el-form-item label="本期嘉宾">
-          <el-input v-model="form.name" />
+          <el-input v-model="studioForm.name" />
         </el-form-item>
         <el-form-item label="是否发布督办举措">
-          <el-radio-group v-model="form.resource">
+          <el-radio-group v-model="studioForm.resource">
             <el-radio label="是" />
             <el-radio label="否" />
           </el-radio-group>
         </el-form-item>
         <el-form-item label="是否发布节目小结">
-          <el-radio-group v-model="form.resource">
+          <el-radio-group v-model="studioForm.resource">
             <el-radio label="是" />
             <el-radio label="否" />
           </el-radio-group>
@@ -59,6 +59,9 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
+import { postCreateStudio } from "@/api/programList/createStudio"
+// import { day } from "@/lib/js/unitls"
+
 @Component
 export default class CreateStudio extends Vue {
     private fileList = [{
@@ -66,15 +69,18 @@ export default class CreateStudio extends Vue {
         url: "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
     }]
 
-    private form = {
-        name: "",
-        region: "",
-        date1: "",
-        date2: "",
-        delivery: false,
-        type: [],
-        resource: "",
-        desc: ""
+    private studioForm = {
+        startTime: "2020/7/24 11:10:00",
+        endTime: "2020/7/24 12:10:00",
+        logoUrl: "",
+        speakersData: "ddd", // 节目主讲人
+        guests: "yyy", // 本期嘉宾
+        superviseFlag: "0", // 是否发布督办举措
+        summaryFlag: "0" // 是否发布节目小结
+    }
+
+    protected mounted() {
+        postCreateStudio(this.studioForm)
     }
 
     private onSubmit() {
