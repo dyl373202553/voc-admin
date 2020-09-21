@@ -36,83 +36,82 @@ export default [
                 name: "OverseeCheck",
                 component: () => import("@/views/oversee/OverseeCheck.vue"),
                 meta: {
-                    title: "OverseeCheck"
+                    title: "督办查看"
                 }
             }
         ]
+    },
+    {
+        path: "/OverseeAnswer",
+        name: "OverseeAnswer",
+        component: () => import("@/views/toDoList/OverseeAnswer.vue"),
+        meta: {
+            title: "督办回答"
+        }
+    },
+
+    {
+        path: "/SpecialFocus",
+        name: "SpecialFocus",
+        component: () => import("@/views/specialFocus/SpecialFocus.vue"),
+        meta: {
+            title: "发布特别关注"
+        }
+    },
+    {
+        path: "/ContentManagement",
+        name: "ContentManagement",
+        component: () => import("@/views/specialFocus/ContentManagement.vue"),
+        meta: {
+            title: "内容管理"
+        }
+    },
+    {
+        path: "/ProgramSummary",
+        name: "ProgramSummary",
+        component: () => import("@/views/programList/ProgramSummary.vue"),
+        meta: {
+            title: "小结"
+        }
+    },
+    {
+        path: "/ProgramList",
+        name: "ProgramList",
+        component: () => import("@/views/programList/ProgramList.vue"),
+        meta: {
+            title: "节目列表"
+        }
+    },
+    {
+        path: "/ProgramDetail",
+        name: "ProgramDetail",
+        component: () => import("@/views/programList/ProgramDetail.vue"),
+        meta: {
+            title: "节目详情"
+        }
+    },
+    {
+        path: "/CreateStudio",
+        name: "CreateStudio",
+        component: () => import("@/views/programList/CreateStudio.vue"),
+        meta: {
+            title: "创建直播间"
+        }
+    },
+    {
+        path: "/ProgramManage",
+        name: "ProgramManage",
+        component: () => import("@/views/programList/programManage/ProgramManage.vue"),
+        meta: {
+            title: "节目管理"
+        }
+    },
+    {
+        path: "/ProgramRelease",
+        name: "ProgramRelease",
+        component: () => import("@/views/programList/ProgramRelease.vue"),
+        meta: {
+            title: "发布节目"
+        }
     }
-
-    // {
-    //     path: "/OverseeAnswer",
-    //     name: "OverseeAnswer",
-    //     component: () => import("@/views/toDoList/OverseeAnswer.vue"),
-    //     meta: {
-    //         title: "OverseeAnswer"
-    //     }
-    // },
-
-    // {
-    //     path: "/SpecialFocus",
-    //     name: "SpecialFocus",
-    //     component: () => import("@/views/specialFocus/SpecialFocus.vue"),
-    //     meta: {
-    //         title: "SpecialFocus"
-    //     }
-    // },
-    // {
-    //     path: "/ContentManagement",
-    //     name: "ContentManagement",
-    //     component: () => import("@/views/specialFocus/contentManagement/ContentManagement.vue"),
-    //     meta: {
-    //         title: "ContentManagement"
-    //     }
-    // },
-    // {
-    //     path: "/ProgramSummary",
-    //     name: "ProgramSummary",
-    //     component: () => import("@/views/programList/ProgramSummary.vue"),
-    //     meta: {
-    //         title: "ProgramSummary"
-    //     }
-    // },
-    // {
-    //     path: "/ProgramList",
-    //     name: "ProgramList",
-    //     component: () => import("@/views/programList/ProgramList.vue"),
-    //     meta: {
-    //         title: "ProgramList"
-    //     }
-    // },
-    // {
-    //     path: "/ProgramDetail",
-    //     name: "ProgramDetail",
-    //     component: () => import("@/views/programList/ProgramDetail.vue"),
-    //     meta: {
-    //         title: "ProgramDetail"
-    //     }
-    // },
-    // {
-    //     path: "/CreateStudio",
-    //     name: "CreateStudio",
-    //     component: () => import("@/views/programList/CreateStudio.vue"),
-    //     meta: {
-    //         title: "CreateStudio"
-    //     }
-    // },
-    // {
-    //     path: "/ProgramManage",
-    //     name: "ProgramManage",
-    //     component: () => import("@/views/programList/programManage/ProgramManage.vue"),
-    //     meta: {
-    //         title: "ProgramManage"
-    //     }
-    // },
-    // {
-    //     path: "/ProgramRelease",
-    //     name: "ProgramRelease",
-    //     component: () => import("@/views/programList/ProgramRelease.vue"),
-    //     meta: {
-    //         title: "ProgramRelease"
-    //     }
-    // }
 ]
