@@ -58,7 +58,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { postProgramRelease } from "@/api/programList/programRelease"
+import { postProgramRelease } from "@/api/programList/programList"
 import { MessageBox } from "element-ui"
 @Component
 export default class ProgramRelease extends Vue {
