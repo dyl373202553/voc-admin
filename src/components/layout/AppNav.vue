@@ -25,13 +25,22 @@
                             <span slot="title">&nbsp;&nbsp;&nbsp;&nbsp;{{item.meta.title}}</span>
                             </template>
                         </template>
-                        <el-menu-item-group v-for="(child,childindex) in item.children"  :key="childindex">
+                        <div v-for="(child,childindex) in item.children"  :key="childindex">
                             <el-menu-item v-if="!child.hidden" :index="child.path" @click="toPage(child.path)">
                             {{child.meta.title}}
                             </el-menu-item>
-                        </el-menu-item-group>
+                        </div>
                     </el-submenu>
                 </template>
+
+                <el-submenu index="1">
+                    <template slot="title">
+                        <i class="el-icon-location"></i>
+                        <span>导航一</span>
+                    </template>
+                    <el-menu-item index="1-1">选项1</el-menu-item>
+                    <el-menu-item index="1-2">选项2</el-menu-item>
+                </el-submenu>
             </el-menu>
         </el-scrollbar>
 
