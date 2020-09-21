@@ -9,7 +9,7 @@
                     <AppNav />
                 </el-aside>
                 <el-main>
-                    <router-view />
+                    <AppMain />
                 </el-main>
             </el-container>
             <el-footer>
@@ -28,8 +28,10 @@ import NavFooter from "@/components/layout/NavFooter"
 import Navbar from "@/components/layout/Navbar"
 // @ts-ignore
 import AppNav from "@/components/layout/AppNav"
+// @ts-ignore
+import AppMain from "@/components/layout/AppMain"
 @Component({
-    components: { NavFooter, Navbar, AppNav }
+    components: { NavFooter, Navbar, AppNav, AppMain }
 })
 export default class App extends Vue {
     get userCode() {

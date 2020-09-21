@@ -22,7 +22,7 @@ export default [
     {
         path: "/programList",
         meta: { title: "节目列表" },
-        component: () => import("@/App.vue"),
+        component: () => import("@/components/layout/AppMain.vue"),
         children: [
             {
                 path: "/ProgramSummary",
@@ -77,7 +77,7 @@ export default [
     {
         path: "/SpecialFocus",
         meta: { title: "特别关注" },
-        component: () => import("@/App.vue"),
+        component: () => import("@/components/layout/AppMain.vue"),
         children: [
             {
                 path: "/SpecialFocus",
@@ -100,7 +100,7 @@ export default [
     {
         path: "/Oversee",
         meta: { title: "督办管理" },
-        component: () => import("@/App.vue"),
+        component: () => import("@/components/layout/AppMain.vue"),
         children: [
             {
                 path: "/OverseeList",

@@ -117,5 +117,6 @@ import { Component, Vue } from "vue-property-decorator"
 export default class OverseeAnswer extends Vue {
     private centerDialogVisible =false
     private name =""
+    private form ={}
 }
 </script>
