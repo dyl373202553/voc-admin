@@ -8,7 +8,7 @@
             <el-table :data="tableData" element-loading-text="Loading" stripe >
             <el-table-column prop="createTime" label="发布时间" align="center" width="200" />
             <el-table-column prop="pushUserInfo" label="发布人" align="center" />
-            <el-table-column prop="status" label="内容状态" align="center">
+            <el-table-column prop="viewStatus" label="内容状态" align="center">
                 <div slot-scope="scope">
                     <!-- 1:未开始， 2：进行中， 3：已下线 -->
                 <span v-show="scope.row.viewStatus === '1'" class="dred">{{ scope.row.viewStatus }} 未开始</span>
@@ -26,7 +26,13 @@
             </el-table-column>
             </el-table>
             <div class="dpagination">
-                <el-pagination background layout="prev, pager, next, jumper" :total="30" />
+                <el-pagination
+                background
+                @current-change="handleCurrentChange"
+                :current-page="dataPage.pageNum"
+                :total="dataTotal"
+                layout="prev, pager, next, jumper">
+                </el-pagination>
             </div>
         </div>
         </el-card>
@@ -35,15 +41,16 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getSpecialFocusList, postOffLine } from "@/api/specialFocus/SpecialFocus"
+import { getSpecialFocusList, postOffLine, getViewStatus } from "@/api/specialFocus/SpecialFocus"
 import { MessageBox } from "element-ui"
 @Component
 export default class ContentManagement extends Vue {
     private centerDialogVisible = false
     private tableData = []
+    private dataTotal = 0
     private dataPage = {
-        pageNum: "1",
-        pageSize: "10"
+        pageNum: 1,
+        pageSize: 10
     }
 
     protected mounted() {
@@ -54,6 +61,7 @@ export default class ContentManagement extends Vue {
         getSpecialFocusList(this.dataPage).then((res) => {
             if (res) {
                 this.tableData = res.data
+                this.dataTotal = res.total
             }
         })
     }
@@ -65,6 +73,21 @@ export default class ContentManagement extends Vue {
                 // this.load()
             }
         })
+    }
+
+    private userViewStatus(status: string) {
+        const params = {
+            value: status,
+            type: "khzs_special_attention_status"
+        }
+        getViewStatus(params).then((res) => {
+            return res.data
+        })
+    }
+
+    private handleCurrentChange(val: number) {
+        this.dataPage.pageNum = val
+        this.load()
     }
 
     // private checkDetail(id: string) {

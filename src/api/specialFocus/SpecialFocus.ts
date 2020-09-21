@@ -1,6 +1,6 @@
 import { postData, getData } from "@/lib/js/request"
 import { ConfigModule } from "@/store/module/config"
-const { voc } = ConfigModule
+const { voc, dictValue } = ConfigModule
 
 // 发布特别关注
 export const postSpecialFocus = (
@@ -15,8 +15,8 @@ export const postSpecialFocus = (
 // 特别关注--内容管理
 export const getSpecialFocusList = (
     { pageNum, pageSize }: {
-        pageNum: string;
-        pageSize: string;
+        pageNum: number;
+        pageSize: number;
     }
 ) => { return getData(`${voc}/khzsSpecialAttention/data`, { pageNum, pageSize }) }
 
@@ -28,3 +28,7 @@ export const getSpecialFocusDetail = (
 
 // 特别关注-下线
 export const postOffLine = (ids: string) => { return postData(`${voc}/khzsSpecialAttention/offline`, ids) }
+
+// 字典-获取内容状态中文码
+export const getViewStatus = (
+    { type, value }: { type: string; value: string }) => { return getData(`${dictValue}`, { type, value }) }
