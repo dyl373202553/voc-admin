@@ -14,6 +14,7 @@ export default [
     {
         path: "/OverseeAnswer",
         name: "OverseeAnswer",
+        hidden: true,
         component: () => import("@/views/toDoList/OverseeAnswer.vue"),
         meta: {
             title: "督办回答"
@@ -27,6 +28,7 @@ export default [
             {
                 path: "/ProgramSummary",
                 name: "ProgramSummary",
+                hidden: true,
                 component: () => import("@/views/programList/ProgramSummary.vue"),
                 meta: {
                     title: "小结"
@@ -43,6 +45,7 @@ export default [
             {
                 path: "/ProgramDetail",
                 name: "ProgramDetail",
+                hidden: true,
                 component: () => import("@/views/programList/ProgramDetail.vue"),
                 meta: {
                     title: "节目详情"
@@ -98,27 +101,20 @@ export default [
         ]
     },
     {
-        path: "/Oversee",
-        meta: { title: "督办管理" },
-        component: () => import("@/components/layout/AppMain.vue"),
-        children: [
-            {
-                path: "/OverseeList",
-                name: "OverseeList",
-                component: () => import("@/views/oversee/OverseeList.vue"),
-                meta: {
-                    title: "督办管理"
-                }
-            },
-            {
-                path: "/OverseeCheck",
-                name: "OverseeCheck",
-                component: () => import("@/views/oversee/OverseeCheck.vue"),
-                meta: {
-                    title: "督办查看"
-                }
-            }
-        ]
+        path: "/OverseeList",
+        name: "OverseeList",
+        component: () => import("@/views/oversee/OverseeList.vue"),
+        meta: {
+            title: "督办管理"
+        }
+    },
+    {
+        path: "/OverseeCheck",
+        name: "OverseeCheck",
+        hidden: true,
+        component: () => import("@/views/oversee/OverseeCheck.vue"),
+        meta: {
+            title: "督办查看"
+        }
     }
-
 ]

@@ -7,7 +7,7 @@
                 >
                 <template v-for="item in indexPage">
                     <el-menu-item
-                        v-if="!item.children || item.children.length==0"
+                        v-if="(!item.children || item.children.length==0) && !item.hidden"
                         :key="item.path"
                         :index="item.path"
                         @click="toPage(item.path)"
@@ -25,8 +25,8 @@
                             <span slot="title">&nbsp;&nbsp;&nbsp;&nbsp;{{item.meta.title}}</span>
                             </template>
                         </template>
-                        <el-menu-item-group v-for="(child,childindex) in item.children" :key="childindex">
-                            <el-menu-item :index="child.path" @click="toPage(child.path)">
+                        <el-menu-item-group v-for="(child,childindex) in item.children"  :key="childindex">
+                            <el-menu-item v-if="!child.hidden" :index="child.path" @click="toPage(child.path)">
                             {{child.meta.title}}
                             </el-menu-item>
                         </el-menu-item-group>
