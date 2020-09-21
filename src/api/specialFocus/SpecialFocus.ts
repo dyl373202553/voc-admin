@@ -20,5 +20,11 @@ export const getSpecialFocusList = (
     }
 ) => { return getData(`${voc}/khzsSpecialAttention/data`, { pageNum, pageSize }) }
 
+// 特别关注--内容管理-查看详情
+export const getSpecialFocusDetail = (
+    { id }: {
+    id: string;
+}) => { return getData(`${voc}/khzsSpecialAttention/get`, { id }) }
+
 // 特别关注-下线
 export const postOffLine = (ids: string) => { return postData(`${voc}/khzsSpecialAttention/offline`, ids) }
