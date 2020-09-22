@@ -113,6 +113,13 @@ const formData = {
  * @param {String} url 请求地址
  * @param {json} json 请求参数
  */
+export function getDataUrl(url: string) {
+    return instance
+        .get(url)
+        .then(res => res.data)
+        .catch(error => error.response)
+}
+
 export function getData(url: string, json: object) {
     return instance
         .get(formateURLOnlyGet(url, json))

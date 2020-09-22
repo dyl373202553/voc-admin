@@ -1,4 +1,4 @@
-import { postData, getData } from "@/lib/js/request"
+import { postData, getData, getDataUrl } from "@/lib/js/request"
 import { ConfigModule } from "@/store/module/config"
 const { voc } = ConfigModule
 
@@ -15,11 +15,14 @@ export const postCreateStudio = (
     }
 ) => { return postData(`${voc}/khzsLive/save`, { startTime, endTime, logoUrl, speakersData, guests, superviseFlag, summaryFlag }) }
 
+// 获取所属直播间数据
+export const getStudioList = () => { return getDataUrl(`${voc}/khzsProgram/getOwnerLiveList`) }
+
 // 发布节目
 export const postProgramRelease = (
     { liveId, type, title, summary, content, fileIds }: {
         liveId: string; // 直播间ID
-        type: string; // 1？固定的？
+        type: number;
         title: string; // 节目名称
         summary: string; // 节目简介
         content: string; // 节目内容

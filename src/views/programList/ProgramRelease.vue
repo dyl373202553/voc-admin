@@ -6,27 +6,26 @@
         <span v-show="$route.params.summaryName" class="header-title">编辑节目</span>
       </div>
       <el-form ref="dataForm" :model="dataForm" label-width="150px">
-
-        <el-form-item label="节目时间">
-          <el-select v-model="value" placeholder="请选择节目时间" style="width: 65%;">
+         <el-form-item label="节目时间">
+          <el-select v-model="timeValue" placeholder="请选择节目时间" style="width: 65%;" @change="selectChange">
             <el-option
-              v-for="item in options"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"
+              v-for="item in dataOptions"
+              :key="item.id"
+              :label="item.startTime + '--' + item.endTime"
+              :value="item.id"
             />
           </el-select>
           <span class="dgrey" style="margin-left:20px;">注：默认展示时间与发布直播最近时间，如有多个可进行选择</span>
         </el-form-item>
         <el-form-item label="节目类型">
-          <el-radio-group v-model="dataForm.type">
-            <el-radio label="常规类" />
-            <el-radio label="回顾类" />
-            <el-radio label="其他" />
-          </el-radio-group>
+          <el-radio-group v-model="dataForm.type" @change="typeChange">
+            <el-radio :label="1">常规类</el-radio>
+            <el-radio :label="2">回顾类</el-radio>
+            <el-radio :label="3">其他</el-radio>
+        </el-radio-group>
         </el-form-item>
         <el-form-item label="节目名称">
-          <el-input v-model="dataForm.title" />
+          <el-input v-model="dataForm.title" :disabled="programType!==3" />
         </el-form-item>
         <el-form-item label="节目简介">
           <el-input
@@ -58,10 +57,12 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { postProgramRelease } from "@/api/programList/programList"
+import { postProgramRelease, getStudioList } from "@/api/programList/programList"
 import { MessageBox } from "element-ui"
 @Component
 export default class ProgramRelease extends Vue {
+    /* 测试 */
+    private value = "1"
     private options = [{
         value: "1",
         label: "2020年08月15日 17:00--17:30"
@@ -73,16 +74,47 @@ export default class ProgramRelease extends Vue {
         label: "2020年10月15日 17:00--17:30"
     }]
 
-    private value = "1"
+    /* 测试 */
+
+    private dataOptions = []
+    private timeValue = ""
     private dataForm = {
         liveId: "f6eda5dc51744c028b96b55e5d0e500c", // 直播间ID
-        type: "1", // 1？固定的？
+        type: 1,
         title: "客户之声第203期", // 节目名称
         summary: "节目简介12", // 节目简介
         content: "节目简介12", // 节目内容
         fileIds: "附件id12" // 附件id
     }
 
+    protected mounted() {
+        this.load()
+    }
+
+    private load() {
+        getStudioList().then((res) => {
+            if (res) {
+                this.dataOptions = res.data
+                this.timeValue = res.data[0].startTime + "--" + res.data[0].endTime
+            }
+        })
+    }
+
+    // 切换节目时间
+    private selectChange() {
+        alert(this.timeValue)
+    }
+
+    // 切换节目类型
+    private typeChange() {
+        if (this.dataForm.type === 3) {
+            this.dataForm.title = ""
+        } else {
+            alert(this.dataForm.type)
+        }
+    }
+
+    // 提交
     private onSubmit() {
         postProgramRelease(this.dataForm).then((res) => {
             if (res) {

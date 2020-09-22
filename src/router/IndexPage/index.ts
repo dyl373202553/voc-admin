@@ -22,7 +22,7 @@ export default [
     },
     {
         path: "/programList",
-        meta: { title: "节目列表" },
+        meta: { title: "我的节目" },
         component: () => import("@/components/layout/AppMain.vue"),
         children: [
             {
