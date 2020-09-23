@@ -12,7 +12,7 @@
           <div class="top-info">
             <span>2019年12月24日</span>
             <span>信息系统部-张三</span>
-            <span>10000</span>
+            <span><i class="el-icon-view"/>10000</span>
             <span><i class="el-icon-thumb" />447</span>
           </div>
         </div>

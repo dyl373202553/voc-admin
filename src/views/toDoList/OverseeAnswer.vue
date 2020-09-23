@@ -21,11 +21,12 @@
             </div>
           </div>
           <div v-show="$route.params.statusName === '督办回答'" class="dsummary-mian">
-            <div class="dsummary-title">督办举措</div>
+            <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>督办举措</div>
             <el-input
-              type="textarea"
-              :rows="3"
-              placeholder="请输入督办措施"
+                v-model="dsummaryContent"
+                type="textarea"
+                :rows="3"
+                placeholder="请输入举措内容"
             />
           </div>
           <div v-show="$route.params.statusName === '举措确认'" class="dsummary-mian">
@@ -73,12 +74,24 @@
           <div v-show="$route.params.statusName === '督办回答'" class="dsummary-mian">
             <div class="dsummary-title">上传附件</div>
             <div>
-              <p>上传附件</p>
+                <el-upload
+                    class="upload-demo"
+                    action="https://jsonplaceholder.typicode.com/posts/"
+                    :on-preview="handlePreview"
+                    :on-remove="handleRemove"
+                    :before-remove="beforeRemove"
+                    multiple
+                    :limit="3"
+                    :on-exceed="handleExceed"
+                    :file-list="fileList">
+                    <el-button size="small" type="primary" plain>附件上传</el-button>
+                    <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
+                </el-upload>
             </div>
           </div>
           <div v-show="$route.params.statusName === '督办回答'" class="bottom dbtn">
             <el-button round>取消</el-button>
-            <el-button type="primary" round>提交</el-button>
+            <el-button type="primary" round :disabled="!dsummaryContent">提交</el-button>
           </div>
           <div v-show="$route.params.statusName === '举措确认'" class="bottom dbtn">
             <el-button type="danger" round plain @click="centerDialogVisible = true">一键退回</el-button>
@@ -118,5 +131,6 @@ export default class OverseeAnswer extends Vue {
     private centerDialogVisible =false
     private name =""
     private form ={}
+    private dsummaryContent = ""
 }
 </script>

@@ -8,10 +8,10 @@
             <el-form label-position="left" label-width="30px">
             <el-row>
                 <el-col :span="24">
-                <div class="dinput-search">输入查询</div>
+                    <div class="dinput-search">输入查询</div>
                 </el-col>
                 <el-col :span="20">
-                <el-input />
+                    <el-input v-model="searchData" />
                 </el-col>
                 <el-col :span="4">
                 <el-form-item class="dbtn">
@@ -76,6 +76,7 @@ import { getProgramList } from "@/api/programList/programList"
 @Component
 export default class ProgramList extends Vue {
     private centerDialogVisible=false
+    private searchData = ""
     private tabledData= [{
         title: "客户之声第100期",
         time: "2019年2月4日 14:12",

@@ -17,10 +17,10 @@
           </div>
         </div>
         <div v-show="$route.params.statusName === '督办未发布'" class="dsummary-mian">
-          <div class="dsummary-title">督办事项</div>
+          <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>督办事项</div>
           <div>
             <el-input
-              v-model="this.textarea"
+              v-model="textarea"
               type="textarea"
               :rows="3"
               placeholder="请填写督办事项"
@@ -28,9 +28,9 @@
           </div>
         </div>
         <div v-show="$route.params.statusName === '督办未发布'" class="dsummary-mian">
-          <div class="dsummary-title">责任部门</div>
+          <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>责任部门</div>
           <div>
-            <el-input v-model="this.input" placeholder="请选择参与部门" suffix-icon="el-icon-s-home" />
+            <el-input v-model="input" placeholder="请选择参与部门" suffix-icon="el-icon-s-home" />
           </div>
         </div>
 
@@ -66,7 +66,8 @@
 
         <div class="bottom dbtn">
           <el-button v-show="$route.params.statusName !== '督办未确认'" round>返回</el-button>
-          <el-button v-show="$route.params.statusName === '督办未发布' || $route.params.statusName === '督办未回复'" type="primary" round>提交</el-button>
+          <el-button v-show="$route.params.statusName === '督办未发布' || $route.params.statusName === '督办未回复'" type="primary" round
+          :disabled="!(this.textarea && this.input)">提交</el-button>
           <el-button v-show="$route.params.statusName === '督办未确认'" type="danger" round>退回</el-button>
           <el-button v-show="$route.params.statusName === '督办未确认'" type="primary" round>确认</el-button>
           <el-button v-show="$route.params.statusName === '督办未确认' || $route.params.statusName === '督办未回复'" type="danger" plain round>撤销督办</el-button>
