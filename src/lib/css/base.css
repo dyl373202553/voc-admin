@@ -11,11 +11,11 @@ figure,
 menu {
     display: block
 }
-
+/*
 * {
-    /* user-select: none; */
+     user-select: none; 
 }
-
+*/
 html,
 body {
     font-family: PingFang SC, Helvetica Neue, Helvetica, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
