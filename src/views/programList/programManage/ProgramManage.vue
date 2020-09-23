@@ -5,7 +5,7 @@
         <span class="header-title">节目管理</span>
       </div>
       <div class="dtable">
-        <el-table v-loading="listLoading" :data="tableData" element-loading-text="Loading" stripe height="600">
+        <el-table v-loading="listLoading" :data="tableData" element-loading-text="Loading" stripe height="580">
           <el-table-column prop="title" label="节目名称" align="center" width="200" />
           <el-table-column prop="time" label="节目时间" align="center" />
           <el-table-column prop="name" label="主讲人" align="center" />
@@ -29,6 +29,7 @@
         </div>
       </div>
     </el-card>
+
   </div>
 </template>
 
