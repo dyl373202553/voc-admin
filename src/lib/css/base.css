@@ -179,3 +179,24 @@ body > .el-container {
 .el-menu {
   border: none;
 }
+.el-submenu {
+  border-bottom: 1px solid #ECEFF5;
+}
+.my-menu-item {
+  border-bottom: 1px solid #ECEFF5;
+}
+.el-submenu.is-active .el-submenu__title {
+  font-size: 14px;
+  color: #4484F6;
+}
+.el-menu-item.is-active {
+  background: #F1F6FF;
+}
+.el-submenu .el-menu-item {
+  padding-left: 54px !important;
+}
+
+.AppNav .el-icon-arrow-down:before {
+  content: "\e790" !important;
+  font-size: 14px;
+}

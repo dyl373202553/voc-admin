@@ -12,7 +12,6 @@
                         :index="item.path"
                         @click="toPage(item.path)"
                         class="my-menu-item">
-                        <i style="padding-right: 20px;" :class="[item.icon]"></i>
                         <span slot="title">&nbsp;&nbsp;&nbsp;&nbsp;{{item.meta.title}}</span>
                     </el-menu-item>
                     <el-submenu
@@ -21,12 +20,11 @@
                         :index="item.children[0].path">
                         <template slot="title">
                             <template @click="toPage(item.children[0].path,$event)">
-                            <i style="padding-right: 20px;" :class="[item.icon]"></i>
                             <span slot="title">&nbsp;&nbsp;&nbsp;&nbsp;{{item.meta.title}}</span>
                             </template>
                         </template>
                         <div v-for="(child,childindex) in item.children"  :key="childindex">
-                            <el-menu-item v-if="!child.hidden" :index="child.path" @click="toPage(child.path)">
+                            <el-menu-item class="two-menu" v-if="!child.hidden" :index="child.path" @click="toPage(child.path)">
                             {{child.meta.title}}
                             </el-menu-item>
                         </div>
