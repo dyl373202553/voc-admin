@@ -59,7 +59,19 @@
             <EditorBar v-model="dataForm.content" :is-clear="isClear" @change="change" />
         </el-form-item>
         <el-form-item label="上传附件">
-          上传附件
+            <el-upload
+                class="upload-demo"
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :on-preview="handlePreview"
+                :on-remove="handleRemove"
+                :before-remove="beforeRemove"
+                multiple
+                :limit="3"
+                :on-exceed="handleExceed"
+                :file-list="fileList">
+                <el-button size="small" type="primary" plain>附件上传</el-button>
+                <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
+          </el-upload>
         </el-form-item>
         <el-form-item class="text-center dbtn">
           <el-button v-show="$route.params.summaryName" plain round>返回</el-button>
