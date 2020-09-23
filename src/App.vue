@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <el-container v-if="userCode" >
+        <el-container >
             <el-header>
                 <Navbar />
             </el-header>
@@ -20,16 +20,11 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-// @ts-ignore
 import { UserModule } from "@/store/module/user"
-// @ts-ignore
-import NavFooter from "@/components/layout/NavFooter"
-// @ts-ignore
-import Navbar from "@/components/layout/Navbar"
-// @ts-ignore
-import AppNav from "@/components/layout/AppNav"
-// @ts-ignore
-import AppMain from "@/components/layout/AppMain"
+import NavFooter from "@/components/layout/NavFooter.vue"
+import Navbar from "@/components/layout/Navbar.vue"
+import AppNav from "@/components/layout/AppNav.vue"
+import AppMain from "@/components/layout/AppMain.vue"
 @Component({
     components: { NavFooter, Navbar, AppNav, AppMain }
 })

@@ -36,12 +36,7 @@
           />
         </el-form-item>
         <el-form-item label="节目内容">
-           <el-input
-            v-model="dataForm.content"
-            type="textarea"
-            :rows="3"
-            placeholder="请输入节目简介"
-          />
+            <EditorBar v-model="dataForm.content" :is-clear="isClear" @change="change" />
         </el-form-item>
         <el-form-item label="上传附件">
           上传附件
@@ -59,7 +54,10 @@
 import { Component, Vue } from "vue-property-decorator"
 import { postProgramRelease, getStudioList } from "@/api/programList/programList"
 import { MessageBox } from "element-ui"
-@Component
+import EditorBar from "@/components/wangEnditor/Editoritem.vue"
+@Component({
+    components: { EditorBar }
+})
 export default class ProgramRelease extends Vue {
     /* 测试 */
     private value = "1"
@@ -74,6 +72,11 @@ export default class ProgramRelease extends Vue {
         label: "2020年10月15日 17:00--17:30"
     }]
 
+    private isClear = false
+    private detail = ""
+    private change(val: any) {
+        console.log(val)
+    }
     /* 测试 */
 
     private dataOptions = []

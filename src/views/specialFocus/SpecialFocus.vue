@@ -28,7 +28,16 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item label="内容上传">
-                内容上传
+                    <el-upload
+                        class="upload-image"
+                        action="https://jsonplaceholder.typicode.com/posts/"
+                        :on-preview="handlePreview"
+                        :on-remove="handleRemove"
+                        :file-list="fileList"
+                        list-type="picture">
+                        <el-button size="small" type="primary" plain>点击上传</el-button>
+                        <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于150M的文件，支持格式png/jpg/mp4/wma</span>
+                    </el-upload>
                     <el-col :span="24" v-show="$route.params.id">
                         <img :src="dataForm.content"/>
                     </el-col>
@@ -58,6 +67,9 @@ export default class SpecialFocus extends Vue {
         status: "0", // 上线状态（0：上线，1：下线）
         id: ""
     }
+    // 上传图片
+
+    private fileList = [{ name: "food2.jpeg", url: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600835517648&di=66a169c2743457deb998e954546616a0&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Fback_pic%2F05%2F49%2F55%2F635acaccbda9696.jpg" }]
 
     protected mounted() {
         if (this.$route.params.id) {
@@ -98,6 +110,14 @@ export default class SpecialFocus extends Vue {
                 // this.load()
             }
         })
+    }
+
+    private handlePreview(file: any) {
+        console.log(file)
+    }
+
+    private handleRemove(file: any, fileList: any) {
+        console.log(file, fileList)
     }
 }
 </script>

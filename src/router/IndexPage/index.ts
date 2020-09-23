@@ -21,14 +21,6 @@ export default [
         }
     },
     {
-        path: "/Fuwenben",
-        name: "Fuwenben",
-        component: () => import("@/views/oversee/Fuwenben.vue"),
-        meta: {
-            title: "Fuwenben"
-        }
-    },
-    {
         path: "/programList",
         meta: { title: "我的节目" },
         component: () => import("@/components/layout/AppMain.vue"),

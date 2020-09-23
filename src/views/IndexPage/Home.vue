@@ -194,11 +194,11 @@ export default class Home extends Vue {
     ]
 
     private slideshowList = [ // 轮播图
-        { img: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1599578367938&di=759e987896e8fa8d9eddce3239b39a91&imgtype=0&src=http%3A%2F%2Fattach.bbs.miui.com%2Fforum%2F201712%2F17%2F164500sm8dddu1wn1dg3ru.jpg" },
-        { img: "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=148390101,1193239458&fm=26&gp=0.jpg" },
-        { img: "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=288121398,2226868261&fm=26&gp=0.jpg" },
-        { img: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1599390485371&di=5090d253298fadf563714b2e33d40884&imgtype=0&src=http%3A%2F%2Fpic1.win4000.com%2Fwallpaper%2F6%2F59a8b96120100.jpg" },
-        { img: "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1943936513,3845891088&fm=26&gp=0.jpg" }
+        { img: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600835517648&di=66a169c2743457deb998e954546616a0&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Fback_pic%2F05%2F49%2F55%2F635acaccbda9696.jpg" },
+        { img: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600835550277&di=6ef90ad62c179b7b147d80bd96c80067&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Fback_pic%2F05%2F14%2F41%2F9359a6663593d10.jpg" },
+        { img: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600835565085&di=025c9d603ada9f8326735c37418bccbd&imgtype=0&src=http%3A%2F%2Fku.90sjimg.com%2Fback_pic%2F05%2F24%2F14%2F1159f04dfb36f0a.jpg" },
+        { img: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600835578753&di=c6374cd3314e12b884534d0b43aa4ed2&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Fback_pic%2F05%2F82%2F99%2F355c4aaa264ccc7.jpg" },
+        { img: "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3572048401,1441053076&fm=26&gp=0.jpg" }
     ]
 
     private rankList = "first"

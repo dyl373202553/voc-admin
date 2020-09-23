@@ -73,31 +73,32 @@
     }
   }
 
-  // 自定义css
-  .dred {
-    color:#db3636 !important;
-  }
-  .dgreen {
-    color:#5BD0C2 !important;
-  }
-  .dblue {
-    color:#4dbaf7 !important;
-  }
-  .dgrey {
-    color:#AFAFAF !important;
-  }
-  .bgrey {
-    background-image: linear-gradient(96deg, #D8D9DA 11%, #AEB7BE 100%) !important;
-  }
-  .bred {
-    background-image: linear-gradient(169deg, #FF8B8B 8%, #F37575 100%) !important;
-  }
-  .bgreen {
-    background-image: linear-gradient(-54deg, #4ECBBC 1%, #7FE3D7 99%) !important;
-  }
-  .border-none {
-    border: none !important;
-  }
+}
+
+// 自定义css
+.dred {
+  color:#db3636 !important;
+}
+.dgreen {
+  color:#5BD0C2 !important;
+}
+.dblue {
+  color:#4dbaf7 !important;
+}
+.dgrey {
+  color:#AFAFAF !important;
+}
+.bgrey {
+  background-image: linear-gradient(96deg, #D8D9DA 11%, #AEB7BE 100%) !important;
+}
+.bred {
+  background-image: linear-gradient(169deg, #FF8B8B 8%, #F37575 100%) !important;
+}
+.bgreen {
+  background-image: linear-gradient(-54deg, #4ECBBC 1%, #7FE3D7 99%) !important;
+}
+.border-none {
+  border: none !important;
 }
 
 // 节目内容
@@ -499,6 +500,18 @@
     color: #333333;
     margin-right: 30px;
     margin-top: 10px;
+  }
+}
+
+/* 文件图片上传 */
+.upload-image {
+  .el-upload-list--picture .el-upload-list__item {
+    height: 300px;
+    border: none;
+  }
+  .el-upload-list--picture .el-upload-list__item-thumbnail {
+    width: 95%;
+    height: 100%;
   }
 }
 
