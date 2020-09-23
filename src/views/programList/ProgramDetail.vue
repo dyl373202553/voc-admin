@@ -125,7 +125,6 @@
           <el-tab-pane label="全部留言(126)" name="fourth">全部留言</el-tab-pane>
         </el-tabs>
       </div>
-      <el-backtop :bottom="100"></el-backtop>
     </el-card>
   </div>
 </template>

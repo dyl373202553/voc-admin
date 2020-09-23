@@ -5,7 +5,11 @@
         <span class="header-title">创建直播间</span>
       </div>
       <el-form ref="dataForm" :model="dataForm" label-width="150px">
-        <el-form-item label="节目时间">
+        <el-form-item label="节目时间"
+            prop="startTime"
+            :rules="[
+            { required: true, message: '节目时间不能为空'}
+            ]">
           <el-col :span="11">
             <el-date-picker v-model="dataForm.startTime" type="datetime" placeholder="请选择开始时间" style="width: 100%;" />
           </el-col>
@@ -14,7 +18,11 @@
             <el-date-picker v-model="dataForm.endTime" type="datetime" placeholder="请选择结束时间" style="width: 100%;" />
           </el-col>
         </el-form-item>
-        <el-form-item label="节目封面">
+        <el-form-item label="节目封面"
+            prop="logoUrl"
+            :rules="[
+            { required: true, message: '节目封面不能为空'}
+            ]">
           <el-upload
             class="upload-image"
             action="https://jsonplaceholder.typicode.com/posts/"
@@ -26,29 +34,47 @@
             accept=".png, .jpg, .jpeg"
           >
             <el-button size="small" type="primary" plain>上传封面</el-button>
-            <span slot="tip" class="el-upload__tip">请上传小于2M的文件，支持格式jpg/png/jpeg;</span>
+            <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于2M的文件，支持格式jpg/png/jpeg;</span>
           </el-upload>
         </el-form-item>
-        <el-form-item label="节目主讲人">
+        <el-form-item label="节目主讲人"
+            prop="speakersData"
+            :rules="[
+            { required: true, message: '节目主讲人不能为空'}
+            ]">
           <el-input v-model="dataForm.speakersData" />
         </el-form-item>
-        <el-form-item label="本期嘉宾">
+        <el-form-item label="本期嘉宾"
+            prop="guests"
+            :rules="[
+            { required: true, message: '本期嘉宾不能为空'}
+            ]">
           <el-input v-model="dataForm.guests" />
         </el-form-item>
-        <el-form-item label="是否发布督办举措">
+        <el-form-item label="是否发布督办举措"
+            prop="superviseFlag"
+            :rules="[
+            { required: true, message: '请选择是否发布督办举措', trigger: 'change' }
+            ]">
           <el-radio-group v-model="dataForm.superviseFlag">
-            <el-radio label="是" />
-            <el-radio label="否" />
+            <el-radio v-model="dataForm.superviseFlag" label="0">是</el-radio>
+            <el-radio v-model="dataForm.superviseFlag" label="1">否</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="是否发布节目小结">
+        <el-form-item label="是否发布节目小结"
+             prop="summaryFlag"
+            :rules="[
+            { required: true, message: '请选择是否发布节目小结', trigger: 'change' }
+            ]">
           <el-radio-group v-model="dataForm.summaryFlag">
-            <el-radio label="是" />
-            <el-radio label="否" />
+            <el-radio v-model="dataForm.summaryFlag" label="0">是</el-radio>
+            <el-radio v-model="dataForm.summaryFlag" label="1">否</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item class="text-center dbtn">
-          <el-button type="primary" round @click="onSubmit">提交</el-button>
+          <el-button type="primary" round @click="onSubmit"
+            :disabled="!(dataForm.speakersData && dataForm.guests && dataForm.startTime && dataForm.endTime)"
+          >提交</el-button>
         </el-form-item>
       </el-form>
     </el-card>

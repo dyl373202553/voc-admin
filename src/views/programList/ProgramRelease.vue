@@ -6,7 +6,11 @@
         <span v-show="$route.params.summaryName" class="header-title">编辑节目</span>
       </div>
       <el-form ref="dataForm" :model="dataForm" label-width="150px">
-         <el-form-item label="节目时间">
+          <el-form-item label="节目时间"
+            prop="timeValue"
+            :rules="[
+            { required: true, message: '节目时间不能为空'}
+            ]">
           <el-select v-model="timeValue" placeholder="请选择节目时间" style="width: 65%;" @change="selectChange">
             <el-option
               v-for="item in dataOptions"
@@ -17,17 +21,29 @@
           </el-select>
           <span class="dgrey" style="margin-left:20px;">注：默认展示时间与发布直播最近时间，如有多个可进行选择</span>
         </el-form-item>
-        <el-form-item label="节目类型">
+         <el-form-item label="节目类型"
+            prop="type"
+            :rules="[
+            { required: true, message: '请选择是否发布督办举措', trigger: 'change' }
+            ]">
           <el-radio-group v-model="dataForm.type" @change="typeChange">
             <el-radio :label="1">常规类</el-radio>
             <el-radio :label="2">回顾类</el-radio>
             <el-radio :label="3">其他</el-radio>
         </el-radio-group>
         </el-form-item>
-        <el-form-item label="节目名称">
+        <el-form-item label="节目名称"
+            prop="title"
+            :rules="[
+            { required: true, message: '节目名称不能为空'}
+            ]">
           <el-input v-model="dataForm.title" :disabled="programType!==3" />
         </el-form-item>
-        <el-form-item label="节目简介">
+        <el-form-item label="节目简介"
+            prop="summary"
+            :rules="[
+            { required: true, message: '节目简介不能为空'}
+            ]">
           <el-input
             v-model="dataForm.summary"
             type="textarea"
@@ -35,7 +51,11 @@
             placeholder="请输入节目简介"
           />
         </el-form-item>
-        <el-form-item label="节目内容">
+        <el-form-item label="节目内容"
+            prop="content"
+            :rules="[
+            { required: true, message: '节目内容不能为空'}
+        ]">
             <EditorBar v-model="dataForm.content" :is-clear="isClear" @change="change" />
         </el-form-item>
         <el-form-item label="上传附件">
@@ -43,7 +63,9 @@
         </el-form-item>
         <el-form-item class="text-center dbtn">
           <el-button v-show="$route.params.summaryName" plain round>返回</el-button>
-          <el-button type="primary" round @click="onSubmit">提交</el-button>
+          <el-button type="primary" round @click="onSubmit"
+          :disabled="!(dataForm.liveId && dataForm.title && dataForm.summary && dataForm.content)"
+          >提交</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -82,11 +104,11 @@ export default class ProgramRelease extends Vue {
     private dataOptions = []
     private timeValue = ""
     private dataForm = {
-        liveId: "f6eda5dc51744c028b96b55e5d0e500c", // 直播间ID
+        liveId: "", // 直播间ID
         type: 1,
-        title: "客户之声第203期", // 节目名称
-        summary: "节目简介12", // 节目简介
-        content: "节目简介12", // 节目内容
+        title: "", // 节目名称
+        summary: "", // 节目简介
+        content: "", // 节目内容
         fileIds: "附件id12" // 附件id
     }
 
