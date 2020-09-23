@@ -116,5 +116,13 @@ export default [
         meta: {
             title: "督办查看"
         }
+    },
+    {
+        path: "/dataExport",
+        name: "DataExport",
+        component: () => import("@/views/dataExport/DataExport.vue"),
+        meta: {
+            title: "数据导出"
+        }
     }
 ]
