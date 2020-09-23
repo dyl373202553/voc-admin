@@ -34,7 +34,9 @@
                         :on-preview="handlePreview"
                         :on-remove="handleRemove"
                         :file-list="fileList"
-                        list-type="picture">
+                        list-type="picture"
+                        :limit="1"
+                        accept=".png, .jpg, .jpeg, .mp4, .wma">
                         <el-button size="small" type="primary" plain>点击上传</el-button>
                         <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于150M的文件，支持格式png/jpg/mp4/wma</span>
                     </el-upload>

@@ -16,13 +16,11 @@
         </el-form-item>
         <el-form-item label="节目封面">
           <el-upload
-            class="dupload"
+            class="upload-image"
             action="https://jsonplaceholder.typicode.com/posts/"
             :on-preview="handlePreview"
             :on-remove="handleRemove"
-            :on-exceed="handleExceed"
             :file-list="fileList"
-            :before-upload="handleOut"
             list-type="picture"
             :limit="1"
             accept=".png, .jpg, .jpeg"
@@ -66,10 +64,7 @@ import { day } from "@/lib/js/unitls"
 
 @Component
 export default class CreateStudio extends Vue {
-    private fileList = [{
-        name: "food2.jpeg",
-        url: "https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100"
-    }]
+    private fileList = [{ name: "food2.jpeg", url: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600835517648&di=66a169c2743457deb998e954546616a0&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Fback_pic%2F05%2F49%2F55%2F635acaccbda9696.jpg" }]
 
     private dataForm = {
         startTime: "",
