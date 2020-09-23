@@ -18,7 +18,7 @@
           <div class="right-menu">
             <el-dropdown class="avatar-container" trigger="click">
               <div class="avatar-wrapper">
-                <i class="el-icon-caret-bottom" />
+                <i class="el-icon-switch-button dlogOut" />
               </div>
               <el-dropdown-menu slot="dropdown" class="user-dropdown">
                 <el-dropdown-item divided>

@@ -200,3 +200,13 @@ body > .el-container {
   content: "\e790" !important;
   font-size: 14px;
 }
+
+.dlogOut{
+  cursor: pointer;
+  position: absolute;
+  right: -2px;
+  top: 13px;
+  font-size: 20px;
+  color: #C0C0C0;
+  font-weight: bold;
+}
