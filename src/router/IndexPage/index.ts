@@ -60,19 +60,19 @@ export default [
                 }
             },
             {
-                path: "/ProgramManage",
-                name: "ProgramManage",
-                component: () => import("@/views/programList/programManage/ProgramManage.vue"),
-                meta: {
-                    title: "节目管理"
-                }
-            },
-            {
                 path: "/ProgramRelease",
                 name: "ProgramRelease",
                 component: () => import("@/views/programList/ProgramRelease.vue"),
                 meta: {
                     title: "发布节目"
+                }
+            },
+            {
+                path: "/ProgramManage",
+                name: "ProgramManage",
+                component: () => import("@/views/programList/programManage/ProgramManage.vue"),
+                meta: {
+                    title: "节目管理"
                 }
             }
         ]
