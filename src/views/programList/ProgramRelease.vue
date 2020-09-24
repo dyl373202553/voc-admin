@@ -121,7 +121,8 @@ export default class ProgramRelease extends Vue {
         title: "", // 节目名称
         summary: "", // 节目简介
         content: "", // 节目内容
-        fileIds: "附件id12" // 附件id
+        fileIds: "附件id12", // 附件id
+        id: ""
     }
 
     protected mounted() {

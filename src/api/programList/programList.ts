@@ -77,7 +77,7 @@ export const getProgramDetail = (
 export const postProgramSummary = (
     { programId, content, deptnames, fileIds, id }: {
         programId: string; // 节目ID
-        content: number; // 小结内容
+        content: string; // 小结内容
         deptnames: string; // 参与部门，多个以‘;’想个，只做显示
         fileIds: string; // 附件id
         id: string; // 修改时传递ID，新增不传
