@@ -24,7 +24,7 @@ class Config extends VuexModule implements ConfigState {
     // public dict = `/configure-system/api/dict/sysDictValue/getDictValueList`
     public voc = `moa-customervoice/api/modules` // 客户之声
     public dict = `configure-system/api/dict/sysDictType/data`
-    public dictValue = `configure-system/api/dict/sysDictValue/getDictLabel`
+    public dictValue = `configure-system/api/server/dict/getDictValueList`
 }
 
 export const ConfigModule = getModule(Config)

@@ -1,6 +1,6 @@
 import { postData } from "@/lib/js/request"
 import { ConfigModule } from "@/store/module/config"
-const { uaa, user } = ConfigModule
+const { uaa, user, voc } = ConfigModule
 
 export const login = ({ userName, passWord }: { userName: string; passWord: string }) => {
     return postData(`${uaa}`, {
@@ -21,4 +21,9 @@ export const refresh: any = async (refresh_token: string): Promise<void> => {
         refresh_token: refresh_token,
         grant_type: "refresh_token"
     })
+}
+
+// 角色管理
+export const getRoleInfo: any = async () => {
+    return postData(`${voc}/khzsRoleConf/getRoleInfo`)
 }
