@@ -1,4 +1,4 @@
-import { getData } from "@/lib/js/request"
+import { getData, getDataUrl } from "@/lib/js/request"
 import { ConfigModule } from "@/store/module/config"
 const { voc } = ConfigModule
 
@@ -10,6 +10,7 @@ const { voc } = ConfigModule
 //     return getData(`${dict}`, { pageNum, pageSize, description })
 // }
 
+// 首页
 // 近期节目数据获取
 export const getRecentProgram = (
     { pageNum, pageSize }: {
@@ -18,6 +19,8 @@ export const getRecentProgram = (
     }
 ) => { return getData(`${voc}/khzsProgram/validData`, { pageNum, pageSize }) }
 
-// 排行榜数据获取
-// export const getRankList = () => { return getData(`${voc}/khzsRankingList/all`) }
 // 特别关注数据获取
+export const getFocusList = () => { return getDataUrl(`${voc}/khzsSpecialAttention/validData`) }
+
+// 排行榜数据获取
+export const getRankList = () => { return getDataUrl(`${voc}/khzsRankingList/all`) }
