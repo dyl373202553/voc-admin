@@ -231,3 +231,6 @@ body > .el-container {
   color: #FFA73E;
   padding: 2px 20px;
 }
+table {
+  width: 100% !important
+}
