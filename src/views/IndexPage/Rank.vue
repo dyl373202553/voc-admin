@@ -107,6 +107,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
+import { getRankList } from "@/api/IndexPage/home"
 @Component
 export default class Home extends Vue {
     private rankList = "first"
@@ -143,6 +144,22 @@ export default class Home extends Vue {
     private dataPage = {
         pageNum: "1",
         pageSize: "10"
+    }
+
+    protected mounted() {
+        this.load()
+    }
+
+    private handleClick(tab: any, event: any) {
+        console.log(tab, event)
+    }
+
+    private load() {
+        getRankList().then((res) => {
+            if (res) {
+                console.log(res)
+            }
+        })
     }
 }
 </script>

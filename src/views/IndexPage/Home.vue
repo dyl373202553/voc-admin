@@ -18,7 +18,9 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span class="header-title">近期节目</span>
-        <el-button class="box-card-dbtn" type="text">更多节目内容 <i class="el-icon-arrow-right" /></el-button>
+         <router-link :to="{name:'ProgramList'}">
+            <el-button class="box-card-dbtn" type="text">更多节目内容 <i class="el-icon-arrow-right" /></el-button>
+        </router-link>
       </div>
       <el-row>
         <el-col v-for="(value, key) in recentList" :key="key" :span="8">
@@ -58,7 +60,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getRecentProgram } from "@/api/IndexPage/home"
+import { getFocusList, getRecentProgram } from "@/api/IndexPage/home"
 import Rank from "./Rank.vue"
 @Component({
     components: { Rank }
@@ -101,52 +103,28 @@ export default class Home extends Vue {
         { img: "https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3572048401,1441053076&fm=26&gp=0.jpg" }
     ]
 
-    private rankList = "first"
-    private likenum = "first"
-    private activeName = "first"
-    private activeNametabs = "first"
-    private tableData = [{ // 点赞榜
-        rank: "1",
-        name: "王小虎",
-        department: "信息系统部",
-        likenum: "113345"
-    }, {
-        rank: "2",
-        name: "张三",
-        department: "技术规划部",
-        likenum: "113345"
-    }, {
-        rank: "3",
-        name: "李四",
-        department: "党委办公室(党群工作部、职能管理部党委)",
-        likenum: "113345"
-    }, {
-        rank: "4",
-        name: "天天",
-        department: "法律事务部",
-        likenum: "11345"
-    }, {
-        rank: "5",
-        name: "小敏",
-        department: "全业务交付运营中心",
-        likenum: "11345"
-    }]
-
     private dataPage = {
         pageNum: "1",
         pageSize: "10"
     }
 
-    private load() {
-        getRecentProgram(this.dataPage).then((res) => {
-            if (res) {
-                console.log(res.data)
-            }
-        })
+    protected mounted() {
+        this.load()
     }
 
-    private handleClick(tab: any, event: any) {
-        console.log(tab, event)
+    private load() {
+        // 特别关注数据获取
+        getFocusList().then((res) => {
+            if (res) {
+                console.log(res)
+            }
+        })
+        // 近期节目数据获取
+        getRecentProgram(this.dataPage).then((res) => {
+            if (res) {
+                console.log(res)
+            }
+        })
     }
 }
 </script>
