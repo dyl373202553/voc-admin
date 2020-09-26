@@ -7,7 +7,6 @@
       </div>
       <el-form ref="dataForm" :model="dataForm" label-width="150px">
           <el-form-item label="节目时间"
-            prop="timeValue"
             :rules="[
             { required: true, message: '节目时间不能为空'}
             ]">
@@ -37,7 +36,7 @@
             :rules="[
             { required: true, message: '节目名称不能为空'}
             ]">
-          <el-input v-model="dataForm.title" :disabled="programType!==3" />
+          <el-input v-model="dataForm.title" :disabled="dataForm.type!==3" />
         </el-form-item>
         <el-form-item label="节目简介"
             prop="summary"
@@ -62,13 +61,8 @@
             <el-upload
                 class="upload-demo"
                 action="https://jsonplaceholder.typicode.com/posts/"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
-                :before-remove="beforeRemove"
-                multiple
-                :limit="3"
-                :on-exceed="handleExceed"
-                :file-list="fileList">
+                :limit="1"
+                >
                 <el-button size="small" type="primary" plain>附件上传</el-button>
                 <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
           </el-upload>
@@ -87,6 +81,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { postProgramRelease, getStudioList } from "@/api/programList/programList"
+import { getProgramName } from "@/api/dict"
 import { MessageBox } from "element-ui"
 import EditorBar from "@/components/wangEnditor/Editoritem.vue"
 @Component({
@@ -136,6 +131,19 @@ export default class ProgramRelease extends Vue {
                 this.timeValue = res.data[0].startTime + "--" + res.data[0].endTime
             }
         })
+        this.getName()
+    }
+
+    private getName() {
+        getProgramName({ type: this.dataForm.type }).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    this.dataForm.title = res.data
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
     }
 
     // 切换节目时间
@@ -148,7 +156,7 @@ export default class ProgramRelease extends Vue {
         if (this.dataForm.type === 3) {
             this.dataForm.title = ""
         } else {
-            alert(this.dataForm.type)
+            this.getName()
         }
     }
 
