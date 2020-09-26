@@ -21,7 +21,7 @@
                 <router-link :to="{name:'SpecialFocus', params: {viewStatus:scope.row.viewStatus, id:scope.row.id} }">
                     <el-button type="text" size="small">查看</el-button>
                 </router-link>
-                <el-button v-show="scope.row.statusName !== '已下线'" type="text" size="small"  @click="onOffLine(scope.row.id)">结束</el-button>
+                <el-button v-show="scope.row.viewStatus !== '3'" type="text" size="small"  @click="onOffLine(scope.row.id)">结束</el-button>
                 </div>
             </el-table-column>
             </el-table>
@@ -60,17 +60,25 @@ export default class ContentManagement extends Vue {
     private load() {
         getSpecialFocusList(this.dataPage).then((res) => {
             if (res) {
-                this.tableData = res.data
-                this.dataTotal = res.total
+                if (res.code === 0) {
+                    this.tableData = res.data
+                    this.dataTotal = res.total
+                } else {
+                    MessageBox.alert(`数据数据失败，请联系管理员`, "失败", { type: "error" })
+                }
             }
         })
     }
 
     private onOffLine(id: string) {
-        postOffLine(id).then((res) => {
+        postOffLine({ ids: id }).then((res) => {
             if (res) {
-                MessageBox.alert(`操作成功`, "成功", { type: "success" })
-                // this.load()
+                if (res.code === 0) {
+                    this.load()
+                    MessageBox.alert(res.message, "成功", { type: "success" })
+                } else {
+                    MessageBox.alert(`操作失败`, "失败", { type: "error" })
+                }
             }
         })
     }

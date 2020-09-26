@@ -27,7 +27,12 @@ export const getSpecialFocusDetail = (
 }) => { return getData(`${voc}/khzsSpecialAttention/get`, { id }) }
 
 // 特别关注-下线
-export const postOffLine = (ids: string) => { return postData(`${voc}/khzsSpecialAttention/offline`, ids) }
+export const postOffLine = (
+    { ids}: {
+        ids: string;
+    }
+) => { return postData(`${voc}/khzsSpecialAttention/offline`, { ids }) }
+
 
 // 字典-获取内容状态中文码--需要修改
 export const getViewStatus = (
