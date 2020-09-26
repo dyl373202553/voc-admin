@@ -6,8 +6,8 @@ const { voc } = ConfigModule
 // 节目列表 - 近期节目数据获取（同首页）
 export const getRecentProgram = (
     { pageNum, pageSize }: {
-        pageNum: string;
-        pageSize: string;
+        pageNum: number;
+        pageSize: number;
     }
 ) => { return getData(`${voc}/khzsProgram/validData`, { pageNum, pageSize }) }
 

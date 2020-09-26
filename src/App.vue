@@ -1,5 +1,5 @@
 <template>
-    <div id="app">
+    <div id="app" v-if="userCode">
         <el-container >
             <el-header>
                 <Navbar />

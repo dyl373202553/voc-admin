@@ -72,7 +72,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getProgramList } from "@/api/programList/programList"
+import { getRecentProgram } from "@/api/programList/programList"
 @Component
 export default class ProgramList extends Vue {
     private centerDialogVisible=false
@@ -152,7 +152,7 @@ export default class ProgramList extends Vue {
     }
 
     private load() {
-        getProgramList(this.dataPage).then((res) => {
+        getRecentProgram(this.dataPage).then((res) => {
             if (res) {
                 this.tableData = res.data
                 this.dataTotal = res.total
