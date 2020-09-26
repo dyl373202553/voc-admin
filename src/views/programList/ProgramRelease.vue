@@ -10,7 +10,7 @@
             :rules="[
             { required: true, message: '节目时间不能为空'}
             ]">
-          <el-select v-model="timeValue" placeholder="请选择节目时间" style="width: 65%;" @change="selectChange">
+          <el-select v-model="dataForm.liveId" placeholder="请选择节目时间" style="width: 65%;" @change="selectChange">
             <el-option
               v-for="item in dataOptions"
               :key="item.id"
@@ -25,18 +25,22 @@
             :rules="[
             { required: true, message: '请选择是否发布督办举措', trigger: 'change' }
             ]">
-          <el-radio-group v-model="dataForm.type" @change="typeChange">
-            <el-radio :label="1">常规类</el-radio>
-            <el-radio :label="2">回顾类</el-radio>
-            <el-radio :label="3">其他</el-radio>
+            <!-- <el-radio-group v-model="dataForm.type" @change="typeChange">
+                <el-radio :label="1">常规类</el-radio>
+                <el-radio :label="2">回顾类</el-radio>
+                <el-radio :label="3">其他</el-radio>
+            </el-radio-group> -->
+        <el-radio-group v-model="dataForm.type" @change="typeChange">
+            <el-radio v-for="item in this.kindList" :key="item.orderId" :label="item.value">{{item.label}}</el-radio>
         </el-radio-group>
+
         </el-form-item>
         <el-form-item label="节目名称"
             prop="title"
             :rules="[
             { required: true, message: '节目名称不能为空'}
             ]">
-          <el-input v-model="dataForm.title" :disabled="dataForm.type!==3" />
+          <el-input v-model="dataForm.title" :disabled="dataForm.type!=='3'" />
         </el-form-item>
         <el-form-item label="节目简介"
             prop="summary"
@@ -81,7 +85,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { postProgramRelease, getStudioList } from "@/api/programList/programList"
-import { getProgramName } from "@/api/dict"
+import { getProgramName, getProgramKind } from "@/api/dict"
 import { MessageBox } from "element-ui"
 import EditorBar from "@/components/wangEnditor/Editoritem.vue"
 @Component({
@@ -109,10 +113,10 @@ export default class ProgramRelease extends Vue {
     /* 测试 */
 
     private dataOptions = []
-    private timeValue = ""
+    private kindList = []
     private dataForm = {
         liveId: "", // 直播间ID
-        type: 1,
+        type: "1",
         title: "", // 节目名称
         summary: "", // 节目简介
         content: "", // 节目内容
@@ -128,10 +132,16 @@ export default class ProgramRelease extends Vue {
         getStudioList().then((res) => {
             if (res) {
                 this.dataOptions = res.data
-                this.timeValue = res.data[0].startTime + "--" + res.data[0].endTime
+                this.dataForm.liveId = res.data[0].startTime + "--" + res.data[0].endTime
             }
         })
         this.getName()
+        getProgramKind({ type: "khzs_program_type" }).then((res) => {
+            if (res) {
+                this.kindList = res
+                this.dataForm.type = "1"
+            }
+        })
     }
 
     private getName() {
@@ -148,12 +158,12 @@ export default class ProgramRelease extends Vue {
 
     // 切换节目时间
     private selectChange() {
-        alert(this.timeValue)
+        alert(this.dataForm.liveId)
     }
 
     // 切换节目类型
     private typeChange() {
-        if (this.dataForm.type === 3) {
+        if (this.dataForm.type === "3") {
             this.dataForm.title = ""
         } else {
             this.getName()

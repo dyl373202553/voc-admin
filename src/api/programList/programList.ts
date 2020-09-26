@@ -37,18 +37,11 @@ export const postCreateStudio = (
 export const getStudioList = () => { return getDataUrl(`${voc}/khzsProgram/getOwnerLiveList`) }
 // 节目类型
 
-// 节目类型->节目名称
-export const getProgramName = (
-    { type }: {
-        type: number; // 常规类:1、回顾类:2
-    }
-) => { return getData(`${voc}/khzsProgram/getProgramNameByType`, { type }) }
-
 // 发布节目--编辑之后(提交)
 export const postProgramRelease = (
     { liveId, type, title, summary, content, fileIds }: {
         liveId: string; // 直播间ID
-        type: number;
+        type: string;
         title: string; // 节目名称
         summary: string; // 节目简介
         content: string; // 节目内容

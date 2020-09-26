@@ -35,6 +35,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
+import { getProgramList } from "@/api/programList/programList"
+import { MessageBox } from "element-ui"
 @Component
 export default class ProgramManage extends Vue {
     private tableData = [{
@@ -100,5 +102,25 @@ export default class ProgramManage extends Vue {
     }]
 
     private listLoading = false
+
+    private dataPage = {
+        pageNum: 1,
+        pageSize: 10
+    }
+
+    protected mounted() {
+        this.load()
+    }
+
+    private load() {
+        getProgramList(this.dataPage).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
 }
 </script>

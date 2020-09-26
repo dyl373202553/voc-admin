@@ -11,9 +11,16 @@ export const getDictValue = (type: string) => {
     return getData(`${dictValue}`, { type })
 }
 
+// 发布节目-获取类型
+export const getProgramKind = (
+    { type }: {
+        type: string; // 常规类:1、回顾类:2
+    }
+) => { return getData(`${dictValue}`, { type }) }
+
 // 发布节目-类型-获取节目名称
 export const getProgramName = (
     { type }: {
-        type: number; // 常规类:1、回顾类:2
+        type: string; // 常规类:1、回顾类:2
     }
 ) => { return getData(`${voc}/khzsProgram/getProgramNameByType`, { type }) }
