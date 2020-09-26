@@ -7,9 +7,9 @@ const { dictValue, voc } = ConfigModule
 // }
 
 // 字典类型
-export const getDictValue = (type: string) => {
-    return getData(`${dictValue}`, { type })
-}
+// export const getDictValue = (type: string) => {
+//     return getData(`${dictValue}`, { type })
+// }
 
 // 发布节目-获取类型
 export const getProgramKind = (
@@ -24,3 +24,7 @@ export const getProgramName = (
         type: string; // 常规类:1、回顾类:2
     }
 ) => { return getData(`${voc}/khzsProgram/getProgramNameByType`, { type }) }
+
+// 字典-获取内容状态中文码--需要修改
+export const getViewStatus = (
+    { type }: { type: string }) => { return getData(`${dictValue}`, { type }) }

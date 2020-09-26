@@ -11,9 +11,10 @@
             <el-table-column prop="viewStatus" label="内容状态" align="center">
                 <div slot-scope="scope">
                     <!-- 1:未开始， 2：进行中， 3：已下线 -->
-                <span v-show="scope.row.viewStatus === '1'" class="dred">{{ scope.row.viewStatus }} 未开始</span>
-                <span v-show="scope.row.viewStatus === '3'" class="dblue">{{ scope.row.viewStatus }} 已下线</span>
-                <span v-show="scope.row.viewStatus === '2'" class="dgreen">{{ scope.row.viewStatus }} 进行中</span>
+                    <!-- <span v-show="scope.row.viewStatus === '1'" class="dred">{{ scope.row.viewStatus }} 未开始</span>
+                    <span v-show="scope.row.viewStatus === '3'" class="dblue">{{ scope.row.viewStatus }} 已下线</span>
+                    <span v-show="scope.row.viewStatus === '2'" class="dgreen">{{ scope.row.viewStatus }} 进行中</span> -->
+                    <span class="dgreen">{{ ddd(scope.row.viewStatus) }}</span>
                 </div>
             </el-table-column>
             <el-table-column label="操作" width="150px">
@@ -41,7 +42,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getSpecialFocusList, postOffLine, getViewStatus } from "@/api/specialFocus/SpecialFocus"
+import { getSpecialFocusList, postOffLine } from "@/api/specialFocus/SpecialFocus"
+import { getViewStatus } from "@/api/dict"
 import { MessageBox } from "element-ui"
 @Component
 export default class ContentManagement extends Vue {
@@ -52,6 +54,27 @@ export default class ContentManagement extends Vue {
         pageNum: 1,
         pageSize: 10
     }
+
+    private dlist = [
+        {
+            dictTypeId: "2d3008353d7c496a9b5197385f683a81",
+            label: "未开始",
+            value: "1",
+            orderId: 10
+        },
+        {
+            dictTypeId: "2d3008353d7c496a9b5197385f683a81",
+            label: "进行中",
+            value: "2",
+            orderId: 20
+        },
+        {
+            dictTypeId: "2d3008353d7c496a9b5197385f683a81",
+            label: "已下线",
+            value: "3",
+            orderId: 30
+        }
+    ]
 
     protected mounted() {
         this.load()
@@ -83,9 +106,8 @@ export default class ContentManagement extends Vue {
         })
     }
 
-    private userViewStatus(status: string) {
+    private userViewStatus() {
         const params = {
-            value: status,
             type: "khzs_special_attention_status"
         }
         getViewStatus(params).then((res) => {
@@ -98,6 +120,13 @@ export default class ContentManagement extends Vue {
         this.load()
     }
 
+    private ddd(a: any) {
+        for (let i = 0; i < this.dlist.length; i++) {
+            if (this.dlist[i].value === a) {
+                return this.dlist[i].label
+            }
+        }
+    }
     // private checkDetail(id: string) {
     //     alert(id)
     //     postSpecialFocusDetail(id).then((res) => {
