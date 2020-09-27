@@ -66,6 +66,13 @@ export const getProgramDetail = (
     }
 ) => { return getData(`${voc}/khzsProgram/get`, { id }) }
 
+// 节目管理-删除
+export const getProgramDelete = (
+    { ids }: {
+        ids: string;
+    }
+) => { return postData(`${voc}/khzsProgram/delete`, { ids }) }
+
 // 节目管理-发布小结+管理小结
 export const postProgramSummary = (
     { programId, content, deptnames, fileIds, id }: {
