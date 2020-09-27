@@ -11,12 +11,12 @@
           <el-table-column prop="liveEntity.speakers" label="主讲人" align="center" />
           <el-table-column label="操作" align="center">
              <div slot-scope="scope">
-              <router-link v-show="scope.row.liveEntity.summaryFlag === '0'"
-                :to="{name:'ProgramSummary', params: { summaryName:'发布小结'} }">
+              <router-link v-if="scope.row.liveEntity.summaryFlag === '0' && !scope.row.summaryEntity"
+                :to="{name:'ProgramSummary', params: { summaryName:'发布小结', id:scope.row.id } }">
                 <el-button type="text" size="small">发布小结</el-button>
               </router-link>
-              <router-link v-show="scope.row.liveEntity.summaryFlag === '0'"
-                :to="{name:'ProgramSummary', params: { summaryName:'管理小结'} }">
+              <router-link v-if="scope.row.liveEntity.summaryFlag === '0' && scope.row.summaryEntity"
+                :to="{name:'ProgramSummary', params: { summaryName:'管理小结', id:scope.row.id } }">
                 <el-button type="text" size="small">管理小结</el-button>
               </router-link>
               <router-link :to="{name:'ProgramRelease', params: { summaryName:'detail', id:scope.row.id} }">
