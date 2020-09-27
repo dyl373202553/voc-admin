@@ -35,7 +35,7 @@ export default class App extends Vue {
     }
 
     private created() {
-        UserModule.initialize({ userName: "0804553E53D2E5BA", passWord: "B6D99AD4A856637B7F14042708632B26" })
+        UserModule.initialize({ userName: "0804553E53D2E5BA", passWord: "D928596B9DB10AA6EBF55A9F5B339667" })
     }
 }
 </script>
