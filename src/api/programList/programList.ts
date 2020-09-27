@@ -39,7 +39,7 @@ export const getStudioList = () => { return getDataUrl(`${voc}/khzsProgram/getOw
 
 // 发布节目--编辑之后(提交)
 export const postProgramRelease = (
-    { liveId, type, title, summary, content, fileIds }: {
+    { liveId, type, title, summary, content, fileIds, id }: {
         liveId: string; // 直播间ID
         type: string;
         title: string; // 节目名称
@@ -48,7 +48,7 @@ export const postProgramRelease = (
         fileIds: string; // 附件id
         id: string; // 修改时传递ID，新增不传
     }
-) => { return postData(`${voc}/khzsProgram/save`, { liveId, type, title, summary, content, fileIds }) }
+) => { return postData(`${voc}/khzsProgram/save`, { liveId, type, title, summary, content, fileIds, id }) }
 
 /* 节目管理 */
 // 节目管理

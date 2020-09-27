@@ -30,7 +30,7 @@
                 <el-radio :label="2">回顾类</el-radio>
                 <el-radio :label="3">其他</el-radio>
             </el-radio-group> -->
-        <el-radio-group v-model="dataForm.type" @change="typeChange">
+        <el-radio-group v-model="programType" @change="typeChange">
             <el-radio v-for="item in this.kindList" :key="item.orderId" :label="item.value" :disabled="selectBoolean">{{item.label}}</el-radio>
         </el-radio-group>
 
@@ -40,7 +40,7 @@
             :rules="[
             { required: true, message: '节目名称不能为空'}
             ]">
-          <el-input v-model="dataForm.title" :disabled="dataForm.type!=='3'" />
+          <el-input v-model="dataForm.title" :disabled="programType!=='3'" />
         </el-form-item>
         <el-form-item label="节目简介"
             prop="summary"
@@ -114,6 +114,7 @@ export default class ProgramRelease extends Vue {
 
     private dataOptions = []
     private kindList = []
+    private programType = "1"
     private dataForm = {
         liveId: "", // 直播间ID
         type: "1",
@@ -145,13 +146,13 @@ export default class ProgramRelease extends Vue {
         getProgramKind({ type: "khzs_program_type" }).then((res) => {
             if (res) {
                 this.kindList = res
-                this.dataForm.type = "1"
+                this.programType = "1"
             }
         })
     }
 
     private getName() {
-        getProgramName({ type: this.dataForm.type }).then((res) => {
+        getProgramName({ type: this.programType }).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.dataForm.title = res.data
@@ -164,7 +165,7 @@ export default class ProgramRelease extends Vue {
 
     // 切换节目类型
     private typeChange() {
-        if (this.dataForm.type === "3") {
+        if (this.programType === "3") {
             this.dataForm.title = ""
         } else {
             this.getName()
@@ -178,8 +179,10 @@ export default class ProgramRelease extends Vue {
                     this.dataForm.liveId = res.data.liveId
                     this.dataForm.title = res.data.title
                     this.dataForm.type = res.data.type
+                    this.programType = res.data.type
                     this.dataForm.summary = res.data.summary
                     this.dataForm.content = res.data.content
+                    this.dataForm.id = this.$route.params.id
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
@@ -189,12 +192,14 @@ export default class ProgramRelease extends Vue {
 
     // 提交
     private onSubmit() {
+        this.dataForm.type = this.programType
         postProgramRelease(this.dataForm).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     MessageBox.alert(res.message, "成功", { type: "success" })
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
-                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
             }
         })
     }
