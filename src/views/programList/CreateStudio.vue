@@ -96,7 +96,7 @@ export default class CreateStudio extends Vue {
         startTime: "",
         endTime: "",
         logoUrl: "http://www.managershare.com/uploads/2015/01/14210532585795.jpg",
-        speakersData: "%5b%7b%22userCode%22%3a%22fuhao%22%2c%22userName%22%3a%22%e5%82%85%e6%b5%a9%22%2c%22deptName%22%3a%22%e4%bf%a1%e6%81%af%e7%b3%bb%e7%bb%9f%e9%83%a8%22%7d%5d", // 节目主讲人
+        speakersData: "[{'userCode':'fuhao','userName':'傅浩','deptName':'信息系统部'}]", // 节目主讲人
         guests: "", // 本期嘉宾
         superviseFlag: "1", // 是否发布督办举措 0:是 1：否
         summaryFlag: "1" // 是否发布节目小结 0:是 1：否
