@@ -132,7 +132,7 @@ export default class ProgramRelease extends Vue {
         getStudioList().then((res) => {
             if (res) {
                 this.dataOptions = res.data
-                this.dataForm.liveId = res.data[0].startTime + "--" + res.data[0].endTime
+                this.dataForm.liveId = res.data[0].id
             }
         })
         this.getName()
@@ -174,7 +174,10 @@ export default class ProgramRelease extends Vue {
     private onSubmit() {
         postProgramRelease(this.dataForm).then((res) => {
             if (res) {
-                MessageBox.alert(`操作成功`, "成功", { type: "success" })
+                if (res.code < 200) {
+                    MessageBox.alert(res.message, "成功", { type: "success" })
+                }
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
             }
         })
     }
