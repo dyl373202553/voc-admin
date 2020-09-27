@@ -136,7 +136,7 @@ export default class ProgramManage extends Vue {
     }
 
     private programDelete(id: string) {
-        getProgramDelete({ ids: id }).then((res) => {
+        getProgramDelete({ id: id }).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     MessageBox.alert(res.message, "成功", { type: "success" })
