@@ -10,7 +10,7 @@
             :rules="[
             { required: true, message: '节目时间不能为空'}
             ]">
-          <el-select v-model="dataForm.liveId" placeholder="请选择节目时间" style="width: 65%;" @change="selectChange">
+          <el-select v-model="dataForm.liveId" placeholder="请选择节目时间" style="width: 65%;" :disabled="selectBoolean">
             <el-option
               v-for="item in dataOptions"
               :key="item.id"
@@ -31,7 +31,7 @@
                 <el-radio :label="3">其他</el-radio>
             </el-radio-group> -->
         <el-radio-group v-model="dataForm.type" @change="typeChange">
-            <el-radio v-for="item in this.kindList" :key="item.orderId" :label="item.value">{{item.label}}</el-radio>
+            <el-radio v-for="item in this.kindList" :key="item.orderId" :label="item.value" :disabled="selectBoolean">{{item.label}}</el-radio>
         </el-radio-group>
 
         </el-form-item>
@@ -84,7 +84,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { postProgramRelease, getStudioList } from "@/api/programList/programList"
+import { postProgramRelease, getStudioList, getProgramDetail } from "@/api/programList/programList"
 import { getProgramName, getProgramKind } from "@/api/dict"
 import { MessageBox } from "element-ui"
 import EditorBar from "@/components/wangEnditor/Editoritem.vue"
@@ -124,8 +124,14 @@ export default class ProgramRelease extends Vue {
         id: ""
     }
 
+    private selectBoolean = false
+
     protected mounted() {
         this.load()
+        if (this.$route.params.id) {
+            this.selectBoolean = true
+            this.getDetail()
+        }
     }
 
     private load() {
@@ -156,11 +162,6 @@ export default class ProgramRelease extends Vue {
         })
     }
 
-    // 切换节目时间
-    private selectChange() {
-        alert(this.dataForm.liveId)
-    }
-
     // 切换节目类型
     private typeChange() {
         if (this.dataForm.type === "3") {
@@ -168,6 +169,22 @@ export default class ProgramRelease extends Vue {
         } else {
             this.getName()
         }
+    }
+
+    private getDetail() {
+        getProgramDetail({ id: this.$route.params.id }).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    this.dataForm.liveId = res.data.liveId
+                    this.dataForm.title = res.data.title
+                    this.dataForm.type = res.data.type
+                    this.dataForm.summary = res.data.summary
+                    this.dataForm.content = res.data.content
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
     }
 
     // 提交

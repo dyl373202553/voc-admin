@@ -5,19 +5,21 @@
         <span class="header-title">节目管理</span>
       </div>
       <div class="dtable">
-        <el-table v-loading="listLoading" :data="tableData" element-loading-text="Loading" stripe height="580">
+        <el-table v-loading="listLoading" :data="tableData" element-loading-text="Loading" stripe>
           <el-table-column prop="title" label="节目名称" align="center" width="200" />
-          <el-table-column prop="time" label="节目时间" align="center" />
-          <el-table-column prop="name" label="主讲人" align="center" />
+          <el-table-column prop="liveEntity.startTime" label="节目时间" align="center" />
+          <el-table-column prop="liveEntity.speakers" label="主讲人" align="center" />
           <el-table-column label="操作" align="center">
-            <div>
-              <router-link :to="{name:'ProgramSummary', params: { summaryName:'发布小结'} }">
+             <div slot-scope="scope">
+              <router-link v-show="scope.row.liveEntity.summaryFlag === '0'"
+                :to="{name:'ProgramSummary', params: { summaryName:'发布小结'} }">
                 <el-button type="text" size="small">发布小结</el-button>
               </router-link>
-              <router-link :to="{name:'ProgramSummary', params: { summaryName:'管理小结'} }">
+              <router-link v-show="scope.row.liveEntity.summaryFlag === '0'"
+                :to="{name:'ProgramSummary', params: { summaryName:'管理小结'} }">
                 <el-button type="text" size="small">管理小结</el-button>
               </router-link>
-              <router-link :to="{name:'ProgramRelease', params: { summaryName:'编辑'} }">
+              <router-link :to="{name:'ProgramRelease', params: { summaryName:'detail', id:scope.row.id} }">
                 <el-button type="text" size="small">编辑</el-button>
               </router-link>
               <el-button icon="el-icon-delete" class="dbtn-del" />
@@ -39,7 +41,7 @@ import { getProgramList } from "@/api/programList/programList"
 import { MessageBox } from "element-ui"
 @Component
 export default class ProgramManage extends Vue {
-    private tableData = [{
+    private tabledData = [{
         title: "客户之声第100期",
         time: "2019年2月4日 14:12",
         name: "党委办公室（党群工作部、职能管理部党委）-张三",
@@ -103,6 +105,7 @@ export default class ProgramManage extends Vue {
 
     private listLoading = false
 
+    private tableData = []
     private dataPage = {
         pageNum: 1,
         pageSize: 10
@@ -116,6 +119,7 @@ export default class ProgramManage extends Vue {
         getProgramList(this.dataPage).then((res) => {
             if (res) {
                 if (res.code < 200) {
+                    this.tableData = res.data
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
