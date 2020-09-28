@@ -182,7 +182,6 @@ export default class ToDoList extends Vue {
     private load() {
         getToDoList(this.dataPage).then((res) => {
             if (res) {
-                console.log(res)
                 this.programToDo = res.data
                 this.dataTotal = res.total
             }

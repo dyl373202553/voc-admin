@@ -1,6 +1,6 @@
 import { postData, getData } from "@/lib/js/request"
 import { ConfigModule } from "@/store/module/config"
-const { voc, dictValue } = ConfigModule
+const { voc } = ConfigModule
 
 // 发布特别关注
 export const postSpecialFocus = (
@@ -28,7 +28,7 @@ export const getSpecialFocusDetail = (
 
 // 特别关注-下线
 export const postOffLine = (
-    { ids}: {
+    { ids }: {
         ids: string;
     }
 ) => { return postData(`${voc}/khzsSpecialAttention/offline`, { ids }) }

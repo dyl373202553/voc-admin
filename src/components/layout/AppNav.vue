@@ -55,9 +55,8 @@ export default class AppNav extends Vue {
         return this.$route.name
     }
 
-    protected mounted() {
-        console.log(this.indexPage)
-    }
+    // protected mounted() {
+    // }
 
     private navChange(name: string) {
         this.$router.push({ name })

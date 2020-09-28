@@ -58,20 +58,14 @@ module.exports = {
         https: false,
         hotOnly: false,
         proxy: {
+            // http://172.30.200.237/
+            // http://211.136.25.148:6080/
             "/vue-potal": {
                 target: "http://211.136.25.148:6080/",
                 ws: true,
                 changeOrigin: true,
                 pathRewrite: {
                     "^/vue-potal": "/vue-potal"
-                }
-            },
-            "/headPortrait/": {
-                target: "http://211.136.25.148:6080/",
-                ws: true,
-                changeOrigin: true,
-                pathRewrite: {
-                    "^/headPortrait/": ""
                 }
             }
         },

@@ -60,7 +60,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getFocusList, getRecentProgram } from "@/api/IndexPage/home"
+// import { getFocusList, getRecentProgram } from "@/api/IndexPage/home"
 import Rank from "./Rank.vue"
 @Component({
     components: { Rank }
@@ -108,24 +108,24 @@ export default class Home extends Vue {
         pageSize: "10"
     }
 
-    protected mounted() {
-        this.load()
-    }
+    // protected mounted() {
+    //     this.load()
+    // }
 
-    private load() {
-        // 特别关注数据获取
-        getFocusList().then((res) => {
-            if (res) {
-                console.log(res)
-            }
-        })
-        // 近期节目数据获取
-        getRecentProgram(this.dataPage).then((res) => {
-            if (res) {
-                console.log(res)
-            }
-        })
-    }
+    // private load() {
+    //     // 特别关注数据获取
+    //     getFocusList().then((res) => {
+    //         if (res) {
+    //             console.log(res)
+    //         }
+    //     })
+    //     // 近期节目数据获取
+    //     getRecentProgram(this.dataPage).then((res) => {
+    //         if (res) {
+    //             console.log(res)
+    //         }
+    //     })
+    // }
 }
 </script>
 

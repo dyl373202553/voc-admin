@@ -6,7 +6,7 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
     mode: "history",
-    base: process.env.NODE_ENV === "development" ? process.env.BASE_URL : process.env.BASE_URL + "/unifyuser/",
+    base: process.env.NODE_ENV === "development" ? process.env.BASE_URL : process.env.BASE_URL + "/pc_customervoice/", // 手机端：moa_customervoice pc端：pc_customervoice
     routes
 })
 const originalPush = VueRouter.prototype.push
