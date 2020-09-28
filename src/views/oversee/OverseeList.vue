@@ -10,15 +10,17 @@
           <el-table-column prop="deptnames" label="协办部门" align="center" />
           <el-table-column prop="status" label="督办状态" align="center">
             <div slot-scope="scope">
-              <span v-show="scope.row.status!=='4' && scope.row.status!=='other'" class="dred"> {{ scope.row.status }} </span>
-              <span v-show="scope.row.status==='4'" class="dblue"> {{ scope.row.status }} </span>
-              <span v-show="scope.row.status==='other'"> {{ scope.row.status }} </span>
+                <span v-show="scope.row.status==='0'"> {{ scope.row.status }}已完成 </span>
+                <span v-show="scope.row.status==='1'"> {{ scope.row.status }}督办未发布 </span>
+                <span v-show="scope.row.status==='2'"> {{ scope.row.status }}督办未回复 </span>
+                <span v-show="scope.row.status==='3'"> {{ scope.row.status }}督办未确认 </span>
+                <span v-show="scope.row.status==='4'"> {{ scope.row.status }}本期无督办 </span>
             </div>
           </el-table-column>
 
           <el-table-column label="操作" align="center">
             <div slot-scope="scope">
-              <router-link :to="{name:'OverseeCheck', params: {status:scope.row.status, status:scope.row.status} }">
+              <router-link v-if=" scope.row.status!=='4'" :to="{name:'OverseeCheck', params: {status:scope.row.status, programId:scope.row.programId, id:scope.row.id} }">
                 <el-button type="text" size="small">查看</el-button>
               </router-link>
             </div>
@@ -48,8 +50,8 @@ export default class OverseeList extends Vue {
     private tabledData = [{ // 点赞榜
         programTitle: "客户之声第100期",
         deptnames: "综合部 信息系统部",
-        status: "other",
-        statusName: "--"
+        status: "4",
+        statusName: "本期无督办"
     }, {
         programTitle: "客户之声第100期",
         deptnames: "综合部 信息系统部",
@@ -78,12 +80,12 @@ export default class OverseeList extends Vue {
     }, {
         programTitle: "客户之声第100期",
         deptnames: "综合部 信息系统部",
-        status: "4",
+        status: "0",
         statusName: "督办已完成"
     }, {
         programTitle: "客户之声第100期",
         deptnames: "综合部 信息系统部",
-        status: "4",
+        status: "0",
         statusName: "督办已完成"
     }, {
         programTitle: "客户之声第100期",
@@ -93,7 +95,7 @@ export default class OverseeList extends Vue {
     }, {
         programTitle: "客户之声第100期",
         deptnames: "综合部 信息系统部",
-        status: "4",
+        status: "0",
         statusName: "督办已完成"
     }]
 

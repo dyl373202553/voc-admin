@@ -11,7 +11,7 @@ export const getRecentProgram = (
     }
 ) => { return getData(`${voc}/khzsProgram/validData`, { pageNum, pageSize }) }
 
-// 节目列表 - 详情前(验证节目有效性)
+// 节目列表 - 详情前(验证节目有效性) 1：未开始，2：进行中，3：已结束
 export const getEffectiveness = (
     { id }: {
         id: string;

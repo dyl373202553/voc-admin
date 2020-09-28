@@ -25,6 +25,6 @@ export const getProgramName = (
     }
 ) => { return getData(`${voc}/khzsProgram/getProgramNameByType`, { type }) }
 
-// 字典-获取内容状态中文码--需要修改
+// 字典-获取内容状态中文码
 export const getViewStatus = (
     { type }: { type: string }) => { return getData(`${dictValue}`, { type }) }
