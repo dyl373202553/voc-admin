@@ -16,7 +16,7 @@
             </p>
           </div>
         </div>
-        <div v-show="$route.params.status === '1'" class="dsummary-mian">
+        <div class="dsummary-mian">
           <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>督办事项</div>
           <div>
             <el-input
@@ -33,13 +33,8 @@
             <el-input v-model="deptnamesData" placeholder="请选择参与部门" suffix-icon="el-icon-s-home" />
           </div>
         </div>
-
         <div v-show="$route.params.status !== '1'" class="dsummary-mian">
-          <div class="dsummary-title">督办问题</div>
-          <div>
-            <p>有大家做出奉献，我们自己才能保得平安。做好自我防护，祝大家好好学习，天天向上。有大家做出奉献，我们自己有大家做出奉献，我们自己有大家做出奉献，我们自己有大家做出奉献，我们自己有大家做出奉献，我们自己.</p>
-            <p><span>责任部门：</span><span>@信息系统部 @技术规划部</span></p>
-          </div>
+            <p><span>责任部门：</span><span>{{this.person}}</span></p>
         </div>
         <div v-show="$route.params.status !== '1'" class="dsummary-mian">
           <div class="dsummary-title">督办举措</div>
@@ -70,7 +65,7 @@
           :disabled="!(this.deptnamesData && this.programOversee)" @click="submit">提交</el-button>
           <el-button v-show="$route.params.status === '3'" type="danger" round>退回</el-button>
           <el-button v-show="$route.params.status === '3'" type="primary" round>确认</el-button>
-          <el-button v-show="$route.params.status === '3' || $route.params.status === '2'" type="danger" plain round>撤销督办</el-button>
+          <el-button v-show="$route.params.status === '3' || $route.params.status === '2'" type="danger" plain round @click="overseeCancel">撤销督办</el-button>
         </div>
       </div>
     </el-card>
@@ -80,12 +75,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { getProgramDetail } from "@/api/programList/programList"
-import { postOverseeAdd } from "@/api/oversee/oversee"
+import { postOverseeAdd, getOverseeDetail, postOverseeCancel } from "@/api/oversee/oversee"
 import { MessageBox } from "element-ui"
 @Component
 export default class OverseeCheck extends Vue {
     private programOversee = "";
     private deptnamesData = "[{'deptCode':'201000000','deptName':'信息系统部'},{'deptCode':'202000000','deptName':'网络部'}]";
+    private person = ""
     private programList= {
         title: "",
         time: ""
@@ -96,6 +92,7 @@ export default class OverseeCheck extends Vue {
     }
 
     private load() {
+        // 获取节目列表--主要是为了拿取节目时间
         getProgramDetail({ id: this.$route.params.programId }).then((res) => {
             if (res) {
                 if (res.code < 200) {
@@ -106,8 +103,21 @@ export default class OverseeCheck extends Vue {
                 }
             }
         })
+
+        // 督办详情
+        getOverseeDetail({ id: this.$route.params.id }).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    this.programOversee = res.data.content
+                    this.person = res.data.deptnames
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
     }
 
+    // 提交
     private submit() {
         const params = {
             id: this.$route.params.id, // ID
@@ -115,6 +125,19 @@ export default class OverseeCheck extends Vue {
             deptnamesData: this.deptnamesData // String-督办部门 格式：[{"deptCode":"201000000","deptName":"信息系统部"},{"deptCode":"202000000","deptName":"网络部"}]
         }
         postOverseeAdd(params).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    MessageBox.alert(res.message, "成功", { type: "success" })
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
+
+    // 撤销
+    private overseeCancel() {
+        postOverseeCancel({ id: this.$route.params.id }).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     MessageBox.alert(res.message, "成功", { type: "success" })
