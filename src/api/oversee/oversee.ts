@@ -6,8 +6,8 @@ const { voc } = ConfigModule
 // 督办管理列表
 export const getOverseeList = (
     { pageNum, pageSize }: {
-        pageNum: string;
-        pageSize: string;
+        pageNum: number;
+        pageSize: number;
     }
 ) => { return getData(`${voc}/khzsSuperviseItem/data`, { pageNum, pageSize }) }
 
@@ -17,7 +17,6 @@ export const getOverseeDetail = (
         id: string;
     }
 ) => { return getData(`${voc}/khzsSuperviseItem/get`, { id }) }
-
 
 // 督办管理-督办事项-新增
 export const postOverseeAdd = (
@@ -35,18 +34,16 @@ export const postOverseeCancel = (
     }
 ) => { return postData(`${voc}/khzsSuperviseItem/revokeSuperviseItem`, { id }) }
 
-
 // 督办管理-督办举措
 // 督办管理-督办举措-新增（非管理员-督办处理）
 export const postOverseeMeasure = (
     { todoId, content, fileIds, id }: {
         todoId: string; // 待办ID
-        content: string; //督办举措内容
-        fileIds: string; //附件
+        content: string; // 督办举措内容
+        fileIds: string; // 附件
         id: string; // ID
     }
 ) => { return postData(`${voc}/khzsSuperviseMeasures/save`, { todoId, content, fileIds, id }) }
-
 
 // 督办管理-督办举措-确认（批量）
 export const postOverseeMakesure = (
@@ -55,7 +52,6 @@ export const postOverseeMakesure = (
     }
 ) => { return postData(`${voc}/khzsSuperviseMeasures/confirmMeasures`, { ids }) }
 
-
 // 督办管理-督办举措-退回（批量）
 export const postOverseeBack = (
     { ids, content }: {
@@ -63,4 +59,3 @@ export const postOverseeBack = (
         content: string;
     }
 ) => { return postData(`${voc}/khzsSuperviseMeasures/returnMeasures`, { ids, content }) }
-
