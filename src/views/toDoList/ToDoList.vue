@@ -34,11 +34,11 @@
             </div>
           </el-tab-pane>
           <el-tab-pane label="督办待办" name="fourth">
-            <span slot="label">督办待办<el-badge value="12" /></span>
+            <span slot="label">督办待办<el-badge :value="dataOverseeTotal" /></span>
             <div class="dtodo-dtable">
-              <el-table v-loading="listLoading" :data="tableData2" element-loading-text="Loading" height="580">
+              <el-table v-loading="listLoading" :data="overseeToDo" element-loading-text="Loading">
                 <el-table-column prop="title" label="待办名称" align="center" width="200" />
-                <el-table-column prop="time" label="时间" align="center" />
+                <el-table-column prop="updateTime" label="时间" align="center" />
                 <el-table-column prop="content" label="内容" align="center" />
                 <el-table-column label="操作" align="center">
                   <div>
@@ -53,17 +53,17 @@
               </el-table>
               <div class="dpagination">
                 <el-pagination
-                  class="fl"
-                  background
-                  layout="prev, pager, next, jumper"
-                  :page-size="10"
-                  :total="30"
-                  :pager-count="7"
-                />
+                    class="fl"
+                    background
+                    @current-change="handleCurrentChange"
+                    :current-page="dataOverseePage.pageNum"
+                    :total="dataOverseeTotal"
+                    layout="prev, pager, next, jumper">
+                </el-pagination>
                 <div class="dpagination-right fr">
-                  当前显示 1 - 15 条记录，共 178 条记录
+                当前显示 {{this.dataOverseePageStart}} - {{this.dataOverseePageEnd}} 条记录，共 {{this.dataOverseeTotal}} 条记录
                 </div>
-              </div>
+                </div>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -169,14 +169,26 @@ export default class ToDoList extends Vue {
     private dataPageStart = 1
     private dataPageEnd = 10
 
+    private overseeToDo = []
+    private dataOverseeTotal = 0
+    private dataOverseePageStart = 1
+    private dataOverseePageEnd = 10
+
     private dataPage ={
         type: "1", // 1：节目待办，2：督办待办
         pageNum: 1,
         pageSize: 10
     }
 
+    private dataOverseePage ={
+        type: "2", // 1：节目待办，2：督办待办
+        pageNum: 1,
+        pageSize: 10
+    }
+
     protected mounted() {
         this.load()
+        this.load2()
     }
 
     private load() {
@@ -184,6 +196,15 @@ export default class ToDoList extends Vue {
             if (res) {
                 this.programToDo = res.data
                 this.dataTotal = res.total
+            }
+        })
+    }
+
+    private load2() {
+        getToDoList(this.dataOverseePage).then((res) => {
+            if (res) {
+                this.overseeToDo = res.data
+                this.dataOverseeTotal = res.total
             }
         })
     }
