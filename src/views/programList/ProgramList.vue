@@ -23,6 +23,39 @@
             </el-form>
         </div>
         <div class="dtable">
+            <el-table v-loading="listLoading" :data="tableData" element-loading-text="Loading" stripe>
+            <el-table-column prop="title" label="节目名称" align="center" width="200" />
+            <el-table-column prop="liveEntity.startTime" label="节目时间" align="center" />
+            <el-table-column prop="liveEntity.speakers" label="主讲人" align="center" />
+            <el-table-column prop="superviseItemEntity.status" label="督办状态" align="center">
+                <div slot-scope="scope">
+                    <!-- 督办状态： 0:督办已完成， 1：督办未发布，2：督办未回复，3：督办未确认，4：本期无督办 -->
+                <!-- <span v-show="scope.row.statusName!=='督办已完成' && scope.row.statusName!=='本期无督办'" class="dred"> {{ scope.row.statusName }} </span>
+                <span v-show="scope.row.statusName==='督办已完成'" class="dblue"> {{ scope.row.statusName }} </span>
+                <span v-show="scope.row.statusName==='本期无督办'"> {{ scope.row.statusName }} </span> -->
+                {{ scope.row.superviseItemEntity.status }}
+                </div>
+            </el-table-column>
+            <el-table-column label="操作" align="center">
+                <div slot-scope="scope">
+                <router-link :to="{name:'ProgramDetail', params: {statusName:scope.row.statusName} }">
+                    <el-button type="text" size="small">进入</el-button>
+                </router-link>
+                <el-button type="text" size="small" @click="centerDialogVisible = true">进入-弹框</el-button>
+                </div>
+            </el-table-column>
+            </el-table>
+            <div class="dpagination">
+                <el-pagination
+                background
+                @current-change="handleCurrentChange"
+                :current-page="dataPage.pageNum"
+                :total="dataTotal"
+                layout="prev, pager, next, jumper">
+                </el-pagination>
+            </div>
+        </div>
+        <!-- <div class="dtable">
             <el-table v-loading="listLoading" :data="tabledData" element-loading-text="Loading" stripe height="500">
             <el-table-column prop="title" label="节目名称" align="center" width="200" />
             <el-table-column prop="time" label="节目时间" align="center" />
@@ -52,7 +85,7 @@
                 layout="prev, pager, next, jumper">
                 </el-pagination>
             </div>
-        </div>
+        </div> -->
         </el-card>
         <!-- :modal="false" -->
         <el-dialog
@@ -72,7 +105,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getRecentProgram } from "@/api/programList/programList"
+import { getProgramList } from "@/api/programList/programList"
+import { MessageBox } from "element-ui"
 @Component
 export default class ProgramList extends Vue {
     private centerDialogVisible=false
@@ -152,10 +186,14 @@ export default class ProgramList extends Vue {
     }
 
     private load() {
-        getRecentProgram(this.dataPage).then((res) => {
+        getProgramList(this.dataPage).then((res) => {
             if (res) {
-                this.tableData = res.data
-                this.dataTotal = res.total
+                if (res.code < 200) {
+                    this.tableData = res.data
+                    this.dataTotal = res.total
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
             }
         })
     }

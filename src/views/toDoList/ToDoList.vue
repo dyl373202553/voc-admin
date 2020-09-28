@@ -6,7 +6,7 @@
           <el-tab-pane label="节目待办" name="first">
             <span slot="label">节目待办<el-badge :value="dataTotal" /></span>
             <div class="dtodo-dtable">
-              <el-table v-loading="listLoading" :data="programToDo" element-loading-text="Loading" height="580">
+              <el-table v-loading="listLoading" :data="programToDo" element-loading-text="Loading">
                 <el-table-column prop="title" label="待办名称" align="center" width="200" />
                 <el-table-column prop="createTime" label="时间" align="center" />
                 <el-table-column prop="content" label="内容" align="center" />
