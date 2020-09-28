@@ -14,7 +14,7 @@
         </div>
         <el-form ref="form">
           <div class="dsummary-mian">
-            <div class="dsummary-title">督办问题</div>
+            <div class="dsummary-title">督办事项</div>
             <div>
               <p>节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结</p>
               <p><span>责任部门：</span><span>@信息系统部 @技术规划部</span></p>

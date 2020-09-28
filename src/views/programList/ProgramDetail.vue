@@ -2,24 +2,24 @@
   <div class="app-container">
     <el-card class="box-card dpadding0">
       <div slot="header" class="clearfix">
-        <span class="header-title">节目查看</span>
+        <span class="header-title">节目查看 {{this.$route.params.promId}}</span>
       </div>
       <div class="dcontent">
         <div class="top">
           <h2 class="top-title">
-            客户之声第100期
+            {{this.title}}
           </h2>
           <div class="top-info">
-            <span>2019年12月24日</span>
-            <span>信息系统部-张三</span>
-            <span><i class="el-icon-view"/>10000</span>
-            <span><i class="el-icon-thumb" />447</span>
+            <span>{{this.time}}</span>
+            <span>{{this.speakers}}</span>
+            <span><img src="@/assets/images/icon_look.png"/>{{this.browerNum}}</span>
+            <span><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{this.praiseNum}}</span>
           </div>
         </div>
         <div class="main">
           <div>
             <div class="main-title">本期嘉宾</div>
-            <p>张三、王五、孙儿娘</p>
+            <p>{{this.guests}}</p>
           </div>
           <div>
             <div class="main-title">本期简介</div>
@@ -90,10 +90,44 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
+import { getProgramDetail } from "@/api/programList/programList"
+import { MessageBox } from "element-ui"
 import MessageBoard from "./MessageBoard.vue"
 @Component({
     components: { MessageBoard }
 })
 export default class ProgramDetail extends Vue {
+    private likeShow = "0"
+    private title = ""
+    private time = ""
+    private speakers = ""
+    private praiseNum = "" // 点赞数
+    private browerNum = "" // 预览人数
+    private guests = "" // 本期嘉宾
+
+    protected mounted() {
+        this.load()
+    }
+
+    private load() {
+        getProgramDetail({ id: this.$route.params.promId }).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    this.title = res.data.title
+                    this.time = res.data.liveEntity.startTime
+                    this.speakers = res.data.liveEntity.speakers
+                    this.praiseNum = res.data.praiseNum
+                    this.browerNum = res.data.browerNum
+                    this.guests = res.data.liveEntity.guests
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
+
+    private getLikeShow() {
+        this.likeShow = "1"
+    }
 }
 </script>
