@@ -38,10 +38,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
                 <div slot-scope="scope">
-                <router-link :to="{name:'ProgramDetail', params: {statusName:scope.row.statusName} }">
-                    <el-button type="text" size="small">进入</el-button>
-                </router-link>
-                <el-button type="text" size="small" @click="centerDialogVisible = true">进入-弹框</el-button>
+                <el-button type="text" size="small" @click="checkValid(scope.row.id, scope.row.liveEntity.startTime)">进入</el-button>
                 </div>
             </el-table-column>
             </el-table>
@@ -95,7 +92,7 @@
         width="25%"
         center
         >
-        <span>本期节目暂无开始。开始时间：2020年12月1日17:00，请稍后再试</span>
+        <span>本期节目暂无开始。开始时间：{{this.programTime}}，请稍后再试</span>
         <span slot="footer" class="dialog-footer dbtn">
             <el-button type="primary" round @click="centerDialogVisible = false">确 定</el-button>
         </span>
@@ -105,7 +102,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getProgramList } from "@/api/programList/programList"
+import { getProgramList, getEffectiveness } from "@/api/programList/programList"
 import { MessageBox } from "element-ui"
 @Component
 export default class ProgramList extends Vue {
@@ -173,6 +170,8 @@ export default class ProgramList extends Vue {
     }]
 
     private listLoading = false
+
+    private programTime = ""
     private tableData = []
     private dataTotal = 0
     private dataPage = {
@@ -206,6 +205,27 @@ export default class ProgramList extends Vue {
     private handleCurrentChange(val: number) {
         this.dataPage.pageNum = val
         this.load()
+    }
+
+    // 检查节目有效性 1：未开始，2：进行中，3：已结束
+    private checkValid(promId: string, time: string) {
+        getEffectiveness({ id: promId }).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    if (res.data !== "1") {
+                        this.$router.push({
+                            name: "ProgramDetail",
+                            params: { promId: promId }
+                        })
+                    } else {
+                        this.centerDialogVisible = true
+                        this.programTime = time
+                    }
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
     }
 }
 </script>

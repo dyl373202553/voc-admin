@@ -59,7 +59,7 @@
             :rules="[
             { required: true, message: '节目内容不能为空'}
         ]">
-            <EditorBar v-model="dataForm.content" :is-clear="isClear" @change="change" />
+            <EditorBar v-model="dataForm.content" :is-clear="isClear" />
         </el-form-item>
         <el-form-item label="上传附件">
             <el-upload
@@ -106,10 +106,6 @@ export default class ProgramRelease extends Vue {
     }]
 
     private isClear = false
-    private detail = ""
-    private change(val: any) {
-        console.log(val)
-    }
     /* 测试 */
 
     private dataOptions = []
