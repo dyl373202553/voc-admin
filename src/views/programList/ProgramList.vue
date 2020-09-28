@@ -11,12 +11,12 @@
                     <div class="dinput-search">输入查询</div>
                 </el-col>
                 <el-col :span="20">
-                    <el-input v-model="searchData" />
+                    <el-input v-model="dataPage.queryParam" placeholder="请输入直播关键字" />
                 </el-col>
                 <el-col :span="4">
                 <el-form-item class="dbtn">
-                    <el-button type="primary" round>查询</el-button>
-                    <el-button round>重置</el-button>
+                    <el-button type="primary" round @click="load">查询</el-button>
+                    <el-button round @click="rest">重置</el-button>
                 </el-form-item>
                 </el-col>
             </el-row>
@@ -110,7 +110,6 @@ import { MessageBox } from "element-ui"
 @Component
 export default class ProgramList extends Vue {
     private centerDialogVisible=false
-    private searchData = ""
     private tabledData= [{
         title: "客户之声第100期",
         time: "2019年2月4日 14:12",
@@ -178,7 +177,8 @@ export default class ProgramList extends Vue {
     private dataTotal = 0
     private dataPage = {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        queryParam: ""
     }
 
     protected mounted() {
@@ -196,6 +196,11 @@ export default class ProgramList extends Vue {
                 }
             }
         })
+    }
+
+    private rest() {
+        this.dataPage.queryParam = ""
+        this.load()
     }
 
     private handleCurrentChange(val: number) {

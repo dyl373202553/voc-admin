@@ -53,11 +53,12 @@ export const postProgramRelease = (
 /* 节目管理 */
 // 节目管理
 export const getProgramList = (
-    { pageNum, pageSize }: {
+    { pageNum, pageSize, queryParam }: {
         pageNum: number;
         pageSize: number;
+        queryParam: string;
     }
-) => { return getData(`${voc}/khzsProgram/data`, { pageNum, pageSize }) }
+) => { return getData(`${voc}/khzsProgram/data`, { pageNum, pageSize, queryParam }) }
 
 // 节目详情--编辑（进入详情）--（节目管理+节目列表）
 export const getProgramDetail = (

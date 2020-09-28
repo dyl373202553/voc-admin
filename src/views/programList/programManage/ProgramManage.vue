@@ -115,7 +115,8 @@ export default class ProgramManage extends Vue {
     private dataTotal = 0
     private dataPage = {
         pageNum: 1,
-        pageSize: 10
+        pageSize: 10,
+        queryParam: ""
     }
 
     protected mounted() {
