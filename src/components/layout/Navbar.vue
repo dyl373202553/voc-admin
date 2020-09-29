@@ -1,7 +1,7 @@
 <template>
   <div class="navbar">
     <div class="navbar-top">
-      <div class="navbar-info">上午好，客户体验管理部
+      <div class="navbar-info">{{this.showTime}}，{{this.userOrg}} {{userName}}
       </div>
     </div>
     <div class="navbar-bottom">
@@ -35,8 +35,38 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
+import { UserModule } from "@/store/module/user"
 @Component
 export default class Navbar extends Vue {
+    get userName() {
+        // @ts-ignore
+        return UserModule.user.userName
+    }
+
+    get userOrg() {
+        // @ts-ignore
+        return UserModule.user.org.name
+    }
+
+    private showTime = ""
+
+    protected mounted() {
+        this.getTime()
+    }
+
+    private getTime() {
+        const date = new Date()
+        const hour = date.getHours()
+        if (hour < 10) {
+            this.showTime = "上午好"
+        } else if (hour < 12) {
+            this.showTime = "中午好"
+        } else if (hour < 18) {
+            this.showTime = "下午好"
+        } else {
+            this.showTime = "晚上好"
+        }
+    }
 }
 </script>
 
