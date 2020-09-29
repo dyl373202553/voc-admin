@@ -41,14 +41,14 @@
                 <el-table-column prop="updateTime" label="时间" align="center" />
                 <el-table-column prop="content" label="内容" align="center" />
                 <el-table-column label="操作" align="center">
-                  <div>
-                    <router-link :to="{name:'OverseeAnswer', params: {statusName:'督办回答'} }">
+                  <template slot-scope="scope">
+                    <router-link :to="{name:'OverseeAnswer', params: {statusName:'督办回答', id:scope.row.id , programId:scope.row.businessId, superviseId:scope.row.superviseItemEntity.id} }">
                       <el-button type="text" size="small">督办回答处理</el-button>
                     </router-link>
                     <router-link :to="{name:'OverseeAnswer', params: {statusName:'举措确认'} }">
-                      <el-button type="text" size="small">举措确认处理</el-button>
+                      <el-button type="text" size="small">举措确认处理-管理员</el-button>
                     </router-link>
-                  </div>
+                  </template>
                 </el-table-column>
               </el-table>
               <div class="dpagination">

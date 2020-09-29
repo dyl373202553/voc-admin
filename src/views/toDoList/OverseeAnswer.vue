@@ -8,16 +8,16 @@
         <div class="dsummary-mian">
           <div class="dsummary-title">节目信息</div>
           <div>
-            <p><span>节目名称：</span><span>客户之声第100期</span></p>
-            <p><span>节目时间：</span><span>2019年3月12日 17:11-17:30</span></p>
+            <p><span>节目名称：</span><span>{{this.title}}</span></p>
+            <p><span>节目时间：</span><span>{{this.time}}</span></p>
           </div>
         </div>
         <el-form ref="form">
           <div class="dsummary-mian">
             <div class="dsummary-title">督办事项</div>
             <div>
-              <p>节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结节目小结</p>
-              <p><span>责任部门：</span><span>@信息系统部 @技术规划部</span></p>
+              <p>{{this.programOversee? this.programOversee : "无内容"}}</p>
+              <p><span>责任部门：</span><span>{{this.deptnamesData}}</span></p>
             </div>
           </div>
           <div v-show="$route.params.statusName === '督办回答'" class="dsummary-mian">
@@ -77,13 +77,8 @@
                 <el-upload
                     class="upload-demo"
                     action="https://jsonplaceholder.typicode.com/posts/"
-                    :on-preview="handlePreview"
-                    :on-remove="handleRemove"
-                    :before-remove="beforeRemove"
                     multiple
-                    :limit="3"
-                    :on-exceed="handleExceed"
-                    :file-list="fileList">
+                    >
                     <el-button size="small" type="primary" plain>附件上传</el-button>
                     <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
                 </el-upload>
@@ -126,11 +121,36 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
+import { getProgramDetail } from "@/api/programList/programList"
+import { MessageBox } from "element-ui"
 @Component
 export default class OverseeAnswer extends Vue {
     private centerDialogVisible =false
     private name =""
     private form ={}
     private dsummaryContent = ""
+
+    private title = ""
+    private time = ""
+    private programOversee =""
+    private deptnamesData = ""
+    protected mounted() {
+        this.load()
+    }
+
+    private load() {
+        getProgramDetail({ id: this.$route.params.programId }).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    this.title = res.data.title
+                    this.time = res.data.liveEntity.startTime
+                    this.programOversee = res.data.superviseItemEntity.content
+                    this.deptnamesData = res.data.superviseItemEntity.deptnames
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
 }
 </script>
