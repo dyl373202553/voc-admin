@@ -1,4 +1,4 @@
-import { postData } from "@/lib/js/request"
+import { postData, getDataUrl } from "@/lib/js/request"
 import { ConfigModule } from "@/store/module/config"
 const { uaa, user, voc } = ConfigModule
 
@@ -25,5 +25,5 @@ export const refresh: any = async (refresh_token: string): Promise<void> => {
 
 // 角色管理
 export const getRoleInfo: any = async () => {
-    return postData(`${voc}/khzsRoleConf/getRoleInfo`)
+    return getDataUrl(`${voc}/khzsRoleConf/getRoleInfo`)
 }
