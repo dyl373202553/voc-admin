@@ -7,27 +7,27 @@
       <div class="dcontent">
         <div class="top">
           <h2 class="top-title">
-            {{this.title}}
+            {{this.programForm.title}}
           </h2>
           <div class="top-info">
-            <span>{{this.time}}</span>
-            <span>{{this.speakers}}</span>
-            <span><img src="@/assets/images/icon_look.png"/>{{this.browerNum}}</span>
-            <span><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{this.praiseNum}}</span>
+            <span>{{this.programForm.time}}</span>
+            <span>{{this.programForm.speakers}}</span>
+            <span><img src="@/assets/images/icon_look.png"/>{{this.programForm.browerNum}}</span>
+            <span><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{this.programForm.praiseNum}}</span>
           </div>
         </div>
         <div class="main">
           <div>
             <div class="main-title">本期嘉宾</div>
-            <p>{{this.guests}}</p>
+            <p>{{this.programForm.guests}}</p>
           </div>
           <div>
             <div class="main-title">本期简介</div>
-            <p>从昨晚到今天全省不少地方都飘起雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到秦岭分水岭进行采访直上山过程中雪花漫天飞舞雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！</p>
+            <p>{{this.programForm.summary}}</p>
           </div>
           <div>
             <div class="main-title">节目内容</div>
-            <p>从昨晚到今天全省不少地方都飘起雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到秦岭分水岭进行采访直上山过程中雪花漫天飞舞雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到。      从昨晚到今天全省不少地方都飘起雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到秦岭分水岭进行采访直上山过程中雪花漫天飞舞雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！今天（5月9日）早上陕视新闻记者到雪花瞬间从夏天穿越到冬季！</p>
+            <pre v-html="this.programForm.content"></pre>
           </div>
           <div class="main-btn">
             <el-button v-show="likeShow===0" type="primary" round @click="getLikeShow">点赞支持一下</el-button>
@@ -98,12 +98,16 @@ import MessageBoard from "./MessageBoard.vue"
 })
 export default class ProgramDetail extends Vue {
     private likeShow = "0"
-    private title = ""
-    private time = ""
-    private speakers = ""
-    private praiseNum = "" // 点赞数
-    private browerNum = "" // 预览人数
-    private guests = "" // 本期嘉宾
+    private programForm = {
+        title: "",
+        time: "",
+        speakers: "",
+        praiseNum: "", // 点赞数
+        browerNum: "", // 预览人数
+        guests: "", // 本期嘉宾
+        summary: "", // 本期简介
+        content: "" // 节目内容
+    }
 
     protected mounted() {
         this.load()
@@ -113,12 +117,16 @@ export default class ProgramDetail extends Vue {
         getProgramDetail({ id: this.$route.params.promId }).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    this.title = res.data.title
-                    this.time = res.data.liveEntity.startTime
-                    this.speakers = res.data.liveEntity.speakers
-                    this.praiseNum = res.data.praiseNum
-                    this.browerNum = res.data.browerNum
-                    this.guests = res.data.liveEntity.guests
+                    this.programForm = {
+                        title: res.data.title,
+                        time: res.data.liveEntity.startTime,
+                        speakers: res.data.liveEntity.speakers,
+                        praiseNum: res.data.praiseNum, // 点赞数
+                        browerNum: res.data.browerNum, // 预览人数
+                        guests: res.data.liveEntity.guests, // 本期嘉宾
+                        summary: res.data.summary, // 本期简介
+                        content: res.data.content // 节目内容
+                    }
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
