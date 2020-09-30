@@ -44,41 +44,41 @@
               <div class="info-right">
                 <div>
                   <span class="info-title">刘晓彤</span>
-                  <span>    信息系统部</span>
+                  <span>信息系统部</span>
                 </div>
-                <p>雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天</p>
+                <p>{{this.supervise.content}}</p>
                 <div>
                   <span class="info-title">责任部门：</span>
-                  <span>@技术部 @规划部</span>
+                  <span>{{this.supervise.deptnames}}</span>
                 </div>
               </div>
             </div>
           </div>
           <div class="bottom-main">
             <div class="main-title">督办举措</div>
-            <div class="main-info">
+            <div class="main-info" v-for="(item, key) in superviseMeasuresList" :key="key">
               <div class="info-left">
                 <el-avatar src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2496227229,2115216729&fm=26&gp=0.jpg" />
               </div>
               <div class="info-right">
                 <div>
-                  <span class="info-title">刘晓彤</span>
-                  <span>    信息系统部</span>
+                  <span class="info-title">{{item.userName}}</span>
+                  <span>{{item.deptName}}</span>
                 </div>
-                <p>雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天</p>
+                <p>{{item.content}}</p>
                 <div>
                   <i class="el-icon-paperclip" />
-                  <span class="info-title">附件</span>
+                  <span class="info-title">{{item.fileIds}}</span>
                 </div>
               </div>
             </div>
           </div>
           <div class="bottom-main">
             <div class="main-title">直播小结</div>
-            <p>雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天</p>
+            <p>{{this.summary.content}}</p>
             <div>
               <i class="el-icon-paperclip" />
-              <span class="info-title">附件</span>
+              <span class="info-title">{{this.summary.fileIds}}</span>
             </div>
           </div>
         </div>
@@ -109,6 +109,18 @@ export default class ProgramDetail extends Vue {
         content: "" // 节目内容
     }
 
+    private supervise = { // 督办事项
+        content: "",
+        deptnames: ""
+    }
+
+    private summary = { // 直播小结
+        content: "",
+        fileIds: ""
+    }
+
+    private superviseMeasuresList= []
+
     protected mounted() {
         this.load()
     }
@@ -127,6 +139,17 @@ export default class ProgramDetail extends Vue {
                         summary: res.data.summary, // 本期简介
                         content: res.data.content // 节目内容
                     }
+                    this.supervise = {
+                        content: res.data.superviseItemEntity.content,
+                        deptnames: res.data.superviseItemEntity.deptnames
+                    }
+                    this.summary = {
+                        content: res.data.summaryEntity.content,
+                        fileIds: res.data.summaryEntity.fileIds
+                    }
+                    this.superviseMeasuresList = res.data.superviseItemEntity.superviseMeasuresList
+
+                    console.log(res.data.superviseItemEntity.superviseMeasuresList)
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
