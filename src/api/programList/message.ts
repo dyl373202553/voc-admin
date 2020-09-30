@@ -5,36 +5,37 @@ const { voc } = ConfigModule
 /* 留言管理 */
 // 新增、修改
 export const postMessageAdd = (
-    { programId, targetId, content, wonderfulFlag}: {
+    { programId, targetId, content, wonderfulFlag }: {
         programId: string;
         targetId: string;
         content: string;
-        wonderfulFlag: string; // 0：精彩留言，1：取消
+        wonderfulFlag: string; // 是否为精彩留言（0：是，1：否）
     }
 ) => { return postData(`${voc}/khzsComment/save`, { programId, targetId, content, wonderfulFlag }) }
 
 // 设置精彩留言
 export const postMessageSetWonderful = (
-    { id, wonderfulFlag}: {
+    { id, wonderfulFlag }: {
         id: string;
-        wonderfulFlag: string;  // 0：精彩留言，1：取消
+        wonderfulFlag: string; // 0：精彩留言，1：取消
     }
 ) => { return postData(`${voc}/khzsComment/save`, { id, wonderfulFlag }) }
 
 // 全部留言
 
 export const postMessageAll = (
-    { programId, pageNum, pageSize }: {
+    { programId, pageNum, pageSize, wonderfulFlag }: {
         programId: string;
-        pageNum: string;
-        pageSize: string;
+        pageNum: number;
+        pageSize: number;
+        wonderfulFlag: string; // 0：精彩留言，1：取消
     }
-) => { return getData(`${voc}/khzsComment/findList`, { programId, pageNum, pageSize }) }
+) => { return getData(`${voc}/khzsComment/data`, { programId, pageNum, pageSize, wonderfulFlag }) }
 
 // 点赞管理
 // 点赞新增、修改
 export const postLikeAdd = (
-    { programId, targetId}: {
+    { programId, targetId }: {
         programId: string;
         targetId: string;
     }

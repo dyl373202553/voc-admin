@@ -38,7 +38,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
                 <div slot-scope="scope">
-                <el-button type="text" size="small" @click="checkValid(scope.row.id, scope.row.liveEntity.startTime)">进入</el-button>
+                <el-button type="text" size="small" @click="checkValid(scope.row.id, scope.row.liveEntity.startTime, scope.row.liveId)">进入</el-button>
                 </div>
             </el-table-column>
             </el-table>
@@ -208,14 +208,14 @@ export default class ProgramList extends Vue {
     }
 
     // 检查节目有效性 1：未开始，2：进行中，3：已结束
-    private checkValid(promId: string, time: string) {
+    private checkValid(promId: string, time: string, liveId: string) {
         getEffectiveness({ id: promId }).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     if (res.data !== "1") {
                         this.$router.push({
                             name: "ProgramDetail",
-                            params: { promId: promId }
+                            params: { promId: promId, liveId: liveId }
                         })
                     } else {
                         this.centerDialogVisible = true

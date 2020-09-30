@@ -193,6 +193,13 @@
   .dliuyan {
       .bottom-main {
         border-bottom: 1px solid #EEEEEE;
+        .info-right {
+          .info {
+            span {
+              margin-right: 8px;
+            }
+          }
+        }
     }
   }
 
@@ -221,6 +228,10 @@
   .el-tabs__active-bar {
     top: 0;
     background-color: #4484F6;
+  }
+
+  .comment {
+    padding: 0 20px;
   }
 }
 
