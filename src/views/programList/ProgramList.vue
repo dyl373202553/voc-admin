@@ -28,13 +28,11 @@
             <el-table-column prop="liveEntity.startTime" label="节目时间" align="center" />
             <el-table-column prop="liveEntity.speakers" label="主讲人" align="center" />
             <el-table-column prop="superviseItemEntity.status" label="督办状态" align="center">
-                <div slot-scope="scope">
-                    <!-- 督办状态： 0:督办已完成， 1：督办未发布，2：督办未回复，3：督办未确认，4：本期无督办 -->
-                <!-- <span v-show="scope.row.statusName!=='督办已完成' && scope.row.statusName!=='本期无督办'" class="dred"> {{ scope.row.statusName }} </span>
-                <span v-show="scope.row.statusName==='督办已完成'" class="dblue"> {{ scope.row.statusName }} </span>
-                <span v-show="scope.row.statusName==='本期无督办'"> {{ scope.row.statusName }} </span> -->
-                {{ scope.row.superviseItemEntity.status }}
-                </div>
+                <!-- 督办状态： 0:督办已完成， 1：督办未发布，2：督办未回复，3：督办未确认，4：本期无督办 -->
+                <template slot-scope="scope">
+                    <span class="dblue" v-if="scope.row.status==='0'">{{getStatusName(scope.row.superviseItemEntity.status)}}</span>
+                    <span class="dred" v-if="scope.row.status!=='0'">{{getStatusName(scope.row.superviseItemEntity.status)}}</span>
+                </template>
             </el-table-column>
             <el-table-column label="操作" align="center">
                 <div slot-scope="scope">
@@ -103,6 +101,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { getProgramList, getEffectiveness } from "@/api/programList/programList"
+import { getViewStatus } from "@/api/dict"
 import { MessageBox } from "element-ui"
 @Component
 export default class ProgramList extends Vue {
@@ -180,8 +179,22 @@ export default class ProgramList extends Vue {
         queryParam: ""
     }
 
+    private status: any = []
+
     protected mounted() {
-        this.load()
+        // 督办状态： 督办未发布、督办未回复、督办未确认、本期无督办
+        const params = {
+            type: "khzs_supervise_item_status"
+        }
+        const status = getViewStatus(params)
+        const tableData = getProgramList(this.dataPage)
+        Promise.all([status, tableData]).then((res) => {
+            this.status = res[0]
+            this.tableData = res[1].data
+            this.dataTotal = res[1].total
+        }).catch(() => {
+            MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+        })
     }
 
     private load() {
@@ -226,6 +239,16 @@ export default class ProgramList extends Vue {
                 }
             }
         })
+    }
+
+    // 获取督办状态name
+    private getStatusName(cellValue: any) {
+        if (cellValue) {
+            return this.status.find((item: { value: any }) => {
+                return item.value === cellValue
+            })?.label
+        }
+        return "--"
     }
 }
 </script>
