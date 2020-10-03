@@ -132,19 +132,32 @@ export default class ProgramRelease extends Vue {
     }
 
     private load() {
-        getStudioList().then((res) => {
-            if (res) {
-                this.dataOptions = res.data
-                this.dataForm.liveId = res.data[0].id
-            }
+        const dataOptions = getStudioList()
+        const dataForm = getProgramName({ type: this.programType })
+        const kindList = getProgramKind({ type: "khzs_program_type" })
+        Promise.all([dataOptions, dataForm, kindList]).then((res) => {
+            this.dataOptions = res[0].data
+            this.dataForm.liveId = res[0].data[0].id
+            this.dataForm.title = res[1].data
+            this.kindList = res[2]
+            this.programType = "1"
+        }).catch(() => {
+            MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
         })
-        this.getName()
-        getProgramKind({ type: "khzs_program_type" }).then((res) => {
-            if (res) {
-                this.kindList = res
-                this.programType = "1"
-            }
-        })
+
+        // getStudioList().then((res) => {
+        //     if (res) {
+        //         this.dataOptions = res.data
+        //         this.dataForm.liveId = res.data[0].id
+        //     }
+        // })
+        // this.getName()
+        // getProgramKind({ type: "khzs_program_type" }).then((res) => {
+        //     if (res) {
+        //         this.kindList = res
+        //         this.programType = "1"
+        //     }
+        // })
     }
 
     private getName() {

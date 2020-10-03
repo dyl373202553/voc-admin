@@ -92,29 +92,40 @@ export default class OverseeCheck extends Vue {
     }
 
     private load() {
-        // 获取节目列表--主要是为了拿取节目时间
-        getProgramDetail({ id: this.$route.params.programId }).then((res) => {
-            if (res) {
-                if (res.code < 200) {
-                    this.programList.title = res.data.title
-                    this.programList.time = res.data.liveEntity.startTime
-                } else {
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                }
-            }
+        const programList = getProgramDetail({ id: this.$route.params.programId }) // 获取节目列表--主要是为了拿取节目时间
+        const programOversee = getOverseeDetail({ id: this.$route.params.id }) // 督办详情
+        Promise.all([programList, programOversee]).then((res) => {
+            this.programList.title = res[0].data.title
+            this.programList.time = res[0].data.liveEntity.startTime
+            this.programOversee = res[1].data.content
+            this.person = res[1].data.deptnames
+        }).catch(() => {
+            MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
         })
 
-        // 督办详情
-        getOverseeDetail({ id: this.$route.params.id }).then((res) => {
-            if (res) {
-                if (res.code < 200) {
-                    this.programOversee = res.data.content
-                    this.person = res.data.deptnames
-                } else {
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                }
-            }
-        })
+        // // 获取节目列表--主要是为了拿取节目时间
+        // getProgramDetail({ id: this.$route.params.programId }).then((res) => {
+        //     if (res) {
+        //         if (res.code < 200) {
+        //             this.programList.title = res.data.title
+        //             this.programList.time = res.data.liveEntity.startTime
+        //         } else {
+        //             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+        //         }
+        //     }
+        // })
+
+        // // 督办详情
+        // getOverseeDetail({ id: this.$route.params.id }).then((res) => {
+        //     if (res) {
+        //         if (res.code < 200) {
+        //             this.programOversee = res.data.content
+        //             this.person = res.data.deptnames
+        //         } else {
+        //             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+        //         }
+        //     }
+        // })
     }
 
     // 提交

@@ -120,26 +120,34 @@ export default class Home extends Vue {
     }
 
     private load() {
-        // 特别关注数据获取
-        getFocusList().then((res) => {
-            if (res) {
-                if (res.code < 200) {
-                    this.slideshowList = res.data
-                } else {
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                }
-            }
+        const slideshowList = getFocusList() // 特别关注数据获取
+        const recentList = getProgramList(this.dataPage) // 节目数据获取
+        Promise.all([slideshowList, recentList]).then((res) => {
+            this.slideshowList = res[0].data
+            this.recentList = res[1].data
+        }).catch(() => {
+            MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
         })
-        // 节目数据获取
-        getProgramList(this.dataPage).then((res) => {
-            if (res) {
-                if (res.code < 200) {
-                    this.recentList = res.data
-                } else {
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                }
-            }
-        })
+        // // 特别关注数据获取
+        // getFocusList().then((res) => {
+        //     if (res) {
+        //         if (res.code < 200) {
+        //             this.slideshowList = res.data
+        //         } else {
+        //             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+        //         }
+        //     }
+        // })
+        // // 节目数据获取
+        // getProgramList(this.dataPage).then((res) => {
+        //     if (res) {
+        //         if (res.code < 200) {
+        //             this.recentList = res.data
+        //         } else {
+        //             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+        //         }
+        //     }
+        // })
     }
 }
 </script>

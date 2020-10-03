@@ -188,26 +188,34 @@ export default class ToDoList extends Vue {
 
     protected mounted() {
         this.load()
-        this.load2()
     }
 
     private load() {
-        getToDoList(this.dataPage).then((res) => {
-            if (res) {
-                this.programToDo = res.data
-                this.dataTotal = res.total
-            }
+        const programToDo = getToDoList(this.dataPage)
+        const overseeToDo = getToDoList(this.dataOverseePage)
+        Promise.all([programToDo, overseeToDo]).then((res) => {
+            this.programToDo = res[0].data
+            this.dataTotal = res[0].total
+            this.overseeToDo = res[1].data
+            this.dataOverseeTotal = res[1].total
         })
+
+        // getToDoList(this.dataPage).then((res) => {
+        //     if (res) {
+        //         this.programToDo = res.data
+        //         this.dataTotal = res.total
+        //     }
+        // })
     }
 
-    private load2() {
-        getToDoList(this.dataOverseePage).then((res) => {
-            if (res) {
-                this.overseeToDo = res.data
-                this.dataOverseeTotal = res.total
-            }
-        })
-    }
+    // private load2() {
+    //     getToDoList(this.dataOverseePage).then((res) => {
+    //         if (res) {
+    //             this.overseeToDo = res.data
+    //             this.dataOverseeTotal = res.total
+    //         }
+    //     })
+    // }
 
     private handleCurrentChange(val: number) {
         this.dataPage.pageNum = val
