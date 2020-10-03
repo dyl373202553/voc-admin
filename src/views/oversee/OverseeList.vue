@@ -10,8 +10,9 @@
           <el-table-column prop="deptnames" label="协办部门" align="center"  />
           <el-table-column prop="status" label="督办状态" align="center">
             <template slot-scope="scope">
-              <span class="dblue" v-if="scope.row.status==='0'">{{getStatusName(scope.row.status)}}</span>
-              <span class="dred" v-if="scope.row.status!=='0'">{{getStatusName(scope.row.status)}}</span>
+                <span :class="{'dred':scope.row.status !== '0' ,'dblue':scope.row.status === '0'}">
+                {{getStatusName(scope.row.status)}}
+                </span>
             </template>
             <!-- <div slot-scope="scope">
                 <span v-show="scope.row.status==='0'"> {{ scope.row.status }}已完成 </span>

@@ -14,7 +14,9 @@
                     <!-- <span v-show="scope.row.viewStatus === '1'" class="dred">{{ scope.row.viewStatus }} 未开始</span>
                     <span v-show="scope.row.viewStatus === '3'" class="dblue">{{ scope.row.viewStatus }} 已下线</span>
                     <span v-show="scope.row.viewStatus === '2'" class="dgreen">{{ scope.row.viewStatus }} 进行中</span> -->
-                    <span class="dgreen">{{ ddd(scope.row.viewStatus) }}</span>
+                   <span :class="{'dred':scope.row.viewStatus === '1' ,'dblue':scope.row.viewStatus === '3','dgreen':scope.row.viewStatus === '2'}">
+                        {{getStatusName(scope.row.viewStatus)}}
+                    </span>
                 </div>
             </el-table-column>
             <el-table-column label="操作" width="150px">
@@ -55,29 +57,21 @@ export default class ContentManagement extends Vue {
         pageSize: 10
     }
 
-    private dlist = [
-        {
-            dictTypeId: "2d3008353d7c496a9b5197385f683a81",
-            label: "未开始",
-            value: "1",
-            orderId: 10
-        },
-        {
-            dictTypeId: "2d3008353d7c496a9b5197385f683a81",
-            label: "进行中",
-            value: "2",
-            orderId: 20
-        },
-        {
-            dictTypeId: "2d3008353d7c496a9b5197385f683a81",
-            label: "已下线",
-            value: "3",
-            orderId: 30
-        }
-    ]
+    private status: any = []
 
     protected mounted() {
-        this.load()
+        const params = {
+            type: "khzs_special_attention_status"
+        }
+        const status = getViewStatus(params)
+        const tableData = getSpecialFocusList(this.dataPage)
+        Promise.all([status, tableData]).then((res) => {
+            this.status = res[0]
+            this.tableData = res[1].data
+            this.dataTotal = res[1].total
+        }).catch(() => {
+            MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+        })
     }
 
     private load() {
@@ -120,13 +114,6 @@ export default class ContentManagement extends Vue {
         this.load()
     }
 
-    private ddd(a: any) {
-        for (let i = 0; i < this.dlist.length; i++) {
-            if (this.dlist[i].value === a) {
-                return this.dlist[i].label
-            }
-        }
-    }
     // private checkDetail(id: string) {
     //     alert(id)
     //     postSpecialFocusDetail(id).then((res) => {
@@ -135,6 +122,15 @@ export default class ContentManagement extends Vue {
     //         }
     //     })
     // }
+
+    private getStatusName(cellValue: any) {
+        if (cellValue) {
+            return this.status.find((item: { value: any }) => {
+                return item.value === cellValue
+            })?.label
+        }
+        return "--"
+    }
 }
 </script>
 <style lang="scss" scoped>
