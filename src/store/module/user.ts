@@ -6,7 +6,7 @@ import {
     getModule
 } from "vuex-module-decorators"
 import store from "@/store"
-import { login, refresh, getUser} from "@/api/user"
+import { login, refresh, getUser } from "@/api/user"
 
 import Cookies from "js-cookie"
 
