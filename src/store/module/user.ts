@@ -6,7 +6,7 @@ import {
     getModule
 } from "vuex-module-decorators"
 import store from "@/store"
-import { login, refresh, getUser, getRoleInfo } from "@/api/user"
+import { login, refresh, getUser} from "@/api/user"
 
 import Cookies from "js-cookie"
 
@@ -15,7 +15,7 @@ const RETOKEN = "kmportalrefreshtoken"
 const EXPIRESIN = "kmportalexpires_in"
 const BUILDTIME = "kmportalbuildTime"
 const USER = "user"
-const USERROLE = "userrole"
+// const USERROLE = "userrole"
 
 export interface UserState {
     token: any;
@@ -23,7 +23,7 @@ export interface UserState {
     expiresIn: any;
     buildTime: any;
     user: any;
-    userrole: any;
+    // userrole: any;
 }
 
 @Module({ dynamic: true, store, name: "user" })
@@ -33,7 +33,7 @@ class User extends VuexModule implements UserState {
     public buildTime = this.getBuildTimeValue()
     public token = this.getTokenValue()
     public user = this.getUserValue()
-    public userrole = this.getUserRole()
+    // public userrole = this.getUserRole()
 
     @Mutation
     private SET_TOKEN(token: any): void {
@@ -60,10 +60,10 @@ class User extends VuexModule implements UserState {
         this.user = user
     }
 
-    @Mutation
-    private SET_USERROLE(userrole: any) {
-        this.userrole = userrole
-    }
+    // @Mutation
+    // private SET_USERROLE(userrole: any) {
+    //     this.userrole = userrole
+    // }
 
     @Action
     public async isToken(): Promise<boolean> {
@@ -92,7 +92,7 @@ class User extends VuexModule implements UserState {
             this.SET_EXPIRESIN(expires_in)
             this.SET_BUILDTIME(new Date().getTime() - 60000)
             this.getUser()
-            this.getRoleInfo()
+            // this.getRoleInfo()
             return true
         }
         return false
@@ -108,12 +108,12 @@ class User extends VuexModule implements UserState {
         Cookies.set(USER, user)
     }
 
-    @Action
-    public async getRoleInfo() {
-        const { userRole } = await getRoleInfo()
-        this.SET_USERROLE(userRole)
-        Cookies.set(USERROLE, userRole)
-    }
+    // @Action
+    // public async getRoleInfo() {
+    //     const { userRole } = await getRoleInfo()
+    //     this.SET_USERROLE(userRole)
+    //     Cookies.set(USERROLE, userRole)
+    // }
 
     @Action
     initialize({ userName, passWord }: { userName: string; passWord: string }) {
@@ -180,14 +180,14 @@ class User extends VuexModule implements UserState {
         return JSON.parse(String(Cookies.get(USER)))
     }
 
-    @Action
-    public async getUserRole() {
-        const isToken = await this.isToken()
-        if (!isToken) {
-            return {}
-        }
-        return String(Cookies.get(USERROLE))
-    }
+    // @Action
+    // public async getUserRole() {
+    //     const isToken = await this.isToken()
+    //     if (!isToken) {
+    //         return {}
+    //     }
+    //     return String(Cookies.get(USERROLE))
+    // }
 
     @Action
     public async monitor() {
