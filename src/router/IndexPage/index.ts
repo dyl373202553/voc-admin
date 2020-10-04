@@ -1,13 +1,17 @@
+import { UserModule } from "@/store/module/user"
+console.log(UserModule.userrole)
 export default [
     {
         path: "/",
         name: "home",
+        role: "all",
         meta: { title: "首页" },
         component: () => import("@/views/IndexPage/Home.vue")
     },
     {
         path: "/toDolist",
         name: "ToDoList",
+        role: "all",
         meta: { title: "待办工作" },
         component: () => import("@/views/toDoList/ToDoList.vue")
     },
@@ -15,6 +19,7 @@ export default [
         path: "/OverseeAnswer",
         name: "OverseeAnswer",
         hidden: true,
+        role: "all",
         component: () => import("@/views/toDoList/OverseeAnswer.vue"),
         meta: {
             title: "督办回答"
@@ -23,6 +28,7 @@ export default [
     {
         path: "/programList",
         meta: { title: "我的节目" },
+        role: "all",
         component: () => import("@/components/layout/AppMain.vue"),
         children: [
             {
@@ -37,6 +43,7 @@ export default [
             {
                 path: "/ProgramList",
                 name: "ProgramList",
+                role: "all",
                 component: () => import("@/views/programList/ProgramList.vue"),
                 meta: {
                     title: "节目列表"
@@ -54,6 +61,7 @@ export default [
             {
                 path: "/CreateStudio",
                 name: "CreateStudio",
+                role: 0,
                 component: () => import("@/views/programList/CreateStudio.vue"),
                 meta: {
                     title: "创建直播间"
@@ -62,6 +70,7 @@ export default [
             {
                 path: "/ProgramRelease",
                 name: "ProgramRelease",
+                role: "all",
                 component: () => import("@/views/programList/ProgramRelease.vue"),
                 meta: {
                     title: "发布节目"
@@ -70,6 +79,7 @@ export default [
             {
                 path: "/ProgramManage",
                 name: "ProgramManage",
+                role: "all",
                 component: () => import("@/views/programList/programManage/ProgramManage.vue"),
                 meta: {
                     title: "节目管理"
@@ -80,11 +90,13 @@ export default [
     {
         path: "/SpecialFocus",
         meta: { title: "特别关注" },
+        role: 0,
         component: () => import("@/components/layout/AppMain.vue"),
         children: [
             {
                 path: "/SpecialFocus",
                 name: "SpecialFocus",
+                role: 0,
                 component: () => import("@/views/specialFocus/SpecialFocus.vue"),
                 meta: {
                     title: "发布特别关注"
@@ -93,6 +105,7 @@ export default [
             {
                 path: "/ContentManagement",
                 name: "ContentManagement",
+                role: 0,
                 component: () => import("@/views/specialFocus/ContentManagement.vue"),
                 meta: {
                     title: "内容管理"
@@ -103,6 +116,7 @@ export default [
     {
         path: "/OverseeList",
         name: "OverseeList",
+        role: 0,
         component: () => import("@/views/oversee/OverseeList.vue"),
         meta: {
             title: "督办管理"
@@ -120,6 +134,7 @@ export default [
     {
         path: "/dataExport",
         name: "DataExport",
+        role: 0,
         component: () => import("@/views/dataExport/DataExport.vue"),
         meta: {
             title: "数据导出"

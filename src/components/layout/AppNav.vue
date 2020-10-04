@@ -7,7 +7,7 @@
                 >
                 <template v-for="item in indexPage">
                     <el-menu-item
-                        v-if="(!item.children || item.children.length==0) && !item.hidden"
+                        v-if="(!item.children || item.children.length==0) && !item.hidden && (item.role=== userrole || item.role === 'all')"
                         :key="item.path"
                         :index="item.path"
                         @click="toPage(item.path)"
@@ -15,7 +15,7 @@
                         <span slot="title">&nbsp;&nbsp;&nbsp;&nbsp;{{item.meta.title}}</span>
                     </el-menu-item>
                     <el-submenu
-                        v-if="item.children && item.children.length>0"
+                        v-if="item.children && item.children.length>0 && (item.role=== userrole || item.role === 'all')"
                         :key="item.path"
                         :index="item.children[0].path">
                         <template slot="title">
@@ -24,7 +24,7 @@
                             </template>
                         </template>
                         <div v-for="(child,childindex) in item.children"  :key="childindex">
-                            <el-menu-item class="two-menu" v-if="!child.hidden" :index="child.path" @click="toPage(child.path)">
+                            <el-menu-item class="two-menu" v-if="!child.hidden && (child.role=== userrole || child.role === 'all')" :index="child.path" @click="toPage(child.path)">
                             {{child.meta.title}}
                             </el-menu-item>
                         </div>
@@ -44,19 +44,22 @@
 import { Component, Vue } from "vue-property-decorator"
 // @ts-ignore
 import indexPage from "@/router/IndexPage"
+import { UserModule } from "@/store/module/user"
+
 @Component
 export default class AppNav extends Vue {
     $router: any;
     $route: any;
 
     private indexPage = indexPage
+    get userrole() {
+        // @ts-ignore
+        return UserModule.userrole
+    }
 
     get routerName() {
         return this.$route.name
     }
-
-    // protected mounted() {
-    // }
 
     private navChange(name: string) {
         this.$router.push({ name })
