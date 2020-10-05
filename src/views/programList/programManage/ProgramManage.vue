@@ -11,11 +11,11 @@
                 <el-table-column prop="liveEntity.speakers" label="主讲人" align="center" />
                 <el-table-column label="操作" align="center">
                     <div slot-scope="scope">
-                    <router-link v-if="scope.row.liveEntity.summaryFlag === '0' && !scope.row.summaryEntity"
+                    <router-link v-if="scope.row.liveEntity.summaryFlag === '0' && !scope.row.summaryEntity && userrole===0"
                         :to="{name:'ProgramSummary', params: { summaryName:'发布小结', id:scope.row.id } }">
                         <el-button type="text" size="small">发布小结</el-button>
                     </router-link>
-                    <router-link v-if="scope.row.liveEntity.summaryFlag === '0' && scope.row.summaryEntity"
+                    <router-link v-if="scope.row.liveEntity.summaryFlag === '0' && scope.row.summaryEntity && userrole===0"
                         :to="{name:'ProgramSummary', params: { summaryName:'管理小结', id:scope.row.id } }">
                         <el-button type="text" size="small">管理小结</el-button>
                     </router-link>
@@ -45,6 +45,7 @@
 import { Component, Vue } from "vue-property-decorator"
 import { getProgramList, getProgramDelete } from "@/api/programList/programList"
 import { MessageBox } from "element-ui"
+import { UserModule } from "@/store/module/user"
 @Component
 export default class ProgramManage extends Vue {
     private tabledData = [{
@@ -110,6 +111,11 @@ export default class ProgramManage extends Vue {
     }]
 
     private listLoading = false
+
+    get userrole() {
+        // @ts-ignore
+        return UserModule.userrole
+    }
 
     private tableData = []
     private dataTotal = 0
