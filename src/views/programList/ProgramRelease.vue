@@ -142,7 +142,7 @@ export default class ProgramRelease extends Vue {
             this.kindList = res[2]
             this.programType = "1"
         }).catch(() => {
-            MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            // MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
         })
 
         // getStudioList().then((res) => {
@@ -205,7 +205,7 @@ export default class ProgramRelease extends Vue {
         postProgramRelease(this.dataForm).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    MessageBox.alert(res.message, "成功", { type: "success" })
+                    MessageBox.alert(`发布成功`, "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
