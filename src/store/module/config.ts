@@ -25,6 +25,7 @@ class Config extends VuexModule implements ConfigState {
     public voc = `moa-customervoice/api/modules` // 客户之声
     public dict = `configure-system/api/dict/sysDictType/data`
     public dictValue = `configure-system/api/server/dict/getDictValueList`
+    public addressBook = `app-address/api/bluepage` // 通讯录
 }
 
 export const ConfigModule = getModule(Config)
