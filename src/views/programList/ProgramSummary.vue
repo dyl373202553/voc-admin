@@ -46,7 +46,7 @@
         <div class="bottom dbtn">
           <el-button round>返回</el-button>
           <el-button type="primary" round :disabled="!summaryContent" @click="onSubmit">提交</el-button>
-          <el-button v-show="$route.params.summaryName !=='发布小结'" type="danger" plain round>删除</el-button>
+          <el-button v-show="$route.params.summaryName !=='发布小结'" type="danger" plain round @click="summaryDelete">删除</el-button>
         </div>
       </div>
     </el-card>
@@ -65,7 +65,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { postProgramSummary, getProgramDetail } from "@/api/programList/programList"
+import { postProgramSummary, getProgramDetail, postProgramSummaryDelete } from "@/api/programList/programList"
 import { MessageBox } from "element-ui"
 import { getOrgFirst, getOrgTree } from "@/api/addressBook"
 @Component
@@ -119,6 +119,25 @@ export default class ProgramSummary extends Vue {
             if (res) {
                 if (res.code < 200) {
                     MessageBox.alert(res.message, "成功", { type: "success" })
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
+
+    // 删除小结
+    private summaryDelete() {
+        const params = {
+            id: this.summaryId
+        }
+        postProgramSummaryDelete(params).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    MessageBox.alert(res.message, "成功", { type: "success" })
+                    this.$router.push({
+                        name: "ProgramManage"
+                    })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }

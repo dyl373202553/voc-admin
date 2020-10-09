@@ -84,3 +84,10 @@ export const postProgramSummary = (
         id: string; // 修改时传递ID，新增不传
     }
 ) => { return postData(`${voc}/khzsSummary/save`, { programId, content, deptnames, fileIds, id }) }
+
+// 节目管理-发布小结+管理小结--删除小结
+export const postProgramSummaryDelete = (
+    { id }: {
+        id: string;
+    }
+) => { return postData(`${voc}/khzsSummary/delete`, { id }) }
