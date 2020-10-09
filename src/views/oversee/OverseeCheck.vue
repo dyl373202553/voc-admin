@@ -31,14 +31,6 @@
           <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>责任部门</div>
           <div>
             <el-input v-model="deptnamesData" placeholder="请选择参与部门"  @focus="dialogTableVisible = true" suffix-icon="el-icon-s-home" />
-            <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
-                <el-scrollbar class="tree_div_tree">
-                    <el-tree  highlight-current show-checkbox :props="defaultProps" ref="treeDepartment" node-key="id" :default-checked-keys="departmentArr"
-                        lazy :load="loadAllDepartment">
-                    </el-tree>
-                    <el-button type="primary" round @click="submitTree">确认</el-button>
-                </el-scrollbar>
-            </el-dialog>
           </div>
         </div>
         <div v-show="$route.params.status !== '1'" class="dsummary-mian">
@@ -77,6 +69,16 @@
         </div>
       </div>
     </el-card>
+    <el-dialog title="责任部门" :visible.sync="dialogTableVisible">
+        <template>
+            <div class="app-container" style="height:600px;overflow:auto">
+                <el-tree  highlight-current show-checkbox :props="defaultProps" ref="treeDepartment" node-key="id" :default-checked-keys="departmentArr"
+                    lazy :load="loadAllDepartment">
+                </el-tree>
+                <el-button type="primary" round @click="submitTree">确认</el-button>
+            </div>
+        </template>
+    </el-dialog>
   </div>
 </template>
 
