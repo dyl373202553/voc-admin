@@ -30,7 +30,15 @@
         <div v-show="$route.params.status === '1'" class="dsummary-mian">
           <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>责任部门</div>
           <div>
-            <el-input v-model="deptnamesData" placeholder="请选择参与部门" suffix-icon="el-icon-s-home" />
+            <el-input v-model="deptnamesData" placeholder="请选择参与部门"  @focus="dialogTableVisible = true" suffix-icon="el-icon-s-home" />
+            <el-dialog title="收货地址" :visible.sync="dialogTableVisible">
+                <el-scrollbar class="tree_div_tree">
+                    <el-tree  highlight-current show-checkbox :props="defaultProps" ref="treeDepartment" node-key="id" :default-checked-keys="departmentArr"
+                        lazy :load="loadAllDepartment">
+                    </el-tree>
+                    <el-button type="primary" round @click="submitTree">确认</el-button>
+                </el-scrollbar>
+            </el-dialog>
           </div>
         </div>
         <div v-show="$route.params.status !== '1'" class="dsummary-mian">
@@ -77,16 +85,26 @@ import { Component, Vue } from "vue-property-decorator"
 import { getProgramDetail } from "@/api/programList/programList"
 import { postOverseeAdd, getOverseeDetail, postOverseeCancel } from "@/api/oversee/oversee"
 import { MessageBox } from "element-ui"
+import { getOrgFirst, getOrgTree } from "@/api/addressBook"
 @Component
 export default class OverseeCheck extends Vue {
     private programOversee = "";
-    private deptnamesData = "[{'deptCode':'201000000','deptName':'信息系统部'},{'deptCode':'202000000','deptName':'网络部'}]";
+    private deptnamesData = "";
     private person = ""
     private programList= {
         title: "",
         time: ""
     }
 
+    private dialogTableVisible = false
+
+    private defaultProps={
+        children: "children",
+        label: "label",
+        isLeaf: "isLeaf"
+    }
+
+    private departmentArr= []
     protected mounted() {
         this.load()
     }
@@ -130,6 +148,7 @@ export default class OverseeCheck extends Vue {
 
     // 提交
     private submit() {
+        console.log(this.deptnamesData)
         const params = {
             id: this.$route.params.id, // ID
             content: this.programOversee, // 内容
@@ -157,6 +176,101 @@ export default class OverseeCheck extends Vue {
                 }
             }
         })
+    }
+
+    // 部门获取
+    private loadAllDepartment(node: any, resolve: (arg0: {}[]) => any) {
+        if (node.level === 0) {
+            const params = {
+                moaFlag: "1"
+            }
+            getOrgFirst(params).then(res => {
+                if (res.code === 0) {
+                    const leaderList = res.data.childOrgList
+                    const brr = [] // 组装部门数据
+                    for (let i = 0; i < leaderList.length; i++) {
+                        const obj: any = {}
+                        obj.isLeaf = false // 是否有下级
+                        obj.disabled = false // 是否可以选择
+                        obj.id = leaderList[i].orgCode
+                        obj.label = leaderList[i].orgName
+                        obj.level = leaderList[i].level
+                        brr.push(obj)
+                    }
+                    return resolve(brr)
+                }
+            })
+        } else if (node.level === 1) {
+            if (node.data.level === 1) {
+                node.data.disabled = false
+                node.loading = false
+                node.isLeaf = true
+            } else {
+                const params = {
+                    orgCode: node.data.id
+                }
+                getOrgTree(params).then(res => {
+                    const childList = res.data.childList
+                    const arr = []
+                    for (let i = 0; i < childList.length; i++) {
+                        const obj: any = {}
+                        obj.isLeaf = false
+                        obj.disabled = false
+                        obj.id = childList[i].orgCode
+                        obj.label = childList[i].orgName
+                        obj.extendProperty = childList[i].extendProperty
+                        obj.level = childList[i].level
+                        arr.push(obj)
+                    }
+                    return resolve(arr)
+                })
+            }
+        } else if (node.level === 2) {
+            if (node.data.extendProperty.hasChildOrg === 1) {
+                const params = {
+                    orgCode: node.data.id
+                }
+                getOrgTree(params).then(res => {
+                    const childList = res.data.childList
+                    const arr = []
+                    for (let i = 0; i < childList.length; i++) {
+                        const obj: any = {}
+                        obj.isLeaf = false
+                        obj.disabled = false
+                        obj.id = childList[i].orgCode
+                        obj.label = childList[i].orgName
+                        obj.extendProperty = childList[i].extendProperty
+                        obj.level = childList[i].level
+                        arr.push(obj)
+                    }
+                    return resolve(arr)
+                })
+            } else {
+                node.data.disabled = false
+                node.loading = false
+                node.isLeaf = true
+            }
+        } else if (node.level === 3) {
+            node.data.disabled = false
+            node.loading = false
+            node.isLeaf = true
+        }
+    }
+
+    private dataList: any = []
+    private submitTree() {
+        // @ts-ignore
+        this.dataList = this.$refs.treeDepartment.getCheckedNodes()
+        const arr = []
+        for (let i = 0; i < this.dataList.length; i++) {
+            if (this.dataList[i].extendProperty) {
+                const obj: any = {}
+                obj.deptCode = this.dataList[i].id.toString()
+                obj.deptName = this.dataList[i].label.toString()
+                arr.push(JSON.stringify(obj))
+            }
+        }
+        this.deptnamesData = "[" + arr.toString() + "]"
     }
 }
 </script>
