@@ -18,7 +18,7 @@
             <el-tab-pane label="精彩留言" name="first">
                 <div class="bottom dliuyan">
                     <div class="bottom-main" v-for="(item, key) in messageList" :key="key">
-                        <div class="main-info">
+                        <div class="main-info" v-if="item.wonderfulFlag === '0'">
                             <div class="info-left">
                                 <el-avatar src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2496227229,2115216729&fm=26&gp=0.jpg" />
                             </div>
@@ -29,7 +29,7 @@
                                     <span class="fr time">{{item.updateTime}}</span>
                                 </div>
                                 <p>{{item.content}}</p>
-                                 <div class="text-right margin-top10 info">
+                                <div class="text-right margin-top10 info">
                                     <span class="fl wonderful" v-show="item.wonderfulFlag === '0'">精彩留言</span>
                                     <span><img src="@/assets/images/icon_repeat.png"/></span>
                                     <span><img src="@/assets/images/icon_like.png"/></span>
@@ -38,12 +38,13 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
             </el-tab-pane>
             <el-tab-pane label="全部留言" name="fourth">
                 <span slot="label">全部留言（{{this.allTotal}}）</span>
                 <div class="bottom dliuyan">
-                    <div class="bottom-main" v-for="(item, key) in messageAllList" :key="key">
+                    <div class="bottom-main" v-for="(item, key) in messageList" :key="key">
                         <div class="main-info">
                             <div class="info-left">
                                 <el-avatar src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2496227229,2115216729&fm=26&gp=0.jpg" />
@@ -90,29 +91,9 @@ export default class MessageBoard extends Vue {
     private messageAllList = []
     protected mounted() {
         this.load()
-        this.load2()
     }
 
     private load() {
-        const dataPage = {
-            pageNum: 1,
-            pageSize: 10,
-            programId: this.$route.params.liveId,
-            wonderfulFlag: "0" // 是否为精彩留言（0：是，1：否）
-        }
-        postMessageAll(dataPage).then((res) => {
-            if (res) {
-                if (res.code < 200) {
-                    this.messageList = res.data
-                    this.allTotal = res.total
-                } else {
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                }
-            }
-        })
-    }
-
-    private load2() {
         const dataPage = {
             pageNum: 1,
             pageSize: 10,
@@ -122,7 +103,7 @@ export default class MessageBoard extends Vue {
         postMessageAll(dataPage).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    this.messageAllList = res.data
+                    this.messageList = res.data
                     this.allTotal = res.total
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
@@ -141,7 +122,7 @@ export default class MessageBoard extends Vue {
         postMessageAdd(dataMessagePage).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    this.load2()
+                    this.load()
                     MessageBox.alert(`提交成功`, "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
