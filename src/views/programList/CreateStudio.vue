@@ -26,8 +26,6 @@
           <el-upload
             class="upload-image"
             action="https://jsonplaceholder.typicode.com/posts/"
-            :on-preview="handlePreview"
-            :on-remove="handleRemove"
             :file-list="fileList"
             list-type="picture"
             :limit="1"
@@ -42,7 +40,7 @@
             :rules="[
             { required: true, message: '节目主讲人不能为空'}
             ]">
-          <el-input v-model="dataForm.speakersData" placeholder="请选择主讲人"/>
+          <el-input v-model="dataForm.speakersData" placeholder="请选择主讲人"  @focus="dialogTableVisible = true" suffix-icon="el-icon-s-home" />
         </el-form-item>
         <el-form-item label="本期嘉宾"
             prop="guests"
@@ -78,6 +76,16 @@
         </el-form-item>
       </el-form>
     </el-card>
+    <el-dialog title="通讯录" :visible.sync="dialogTableVisible">
+        <template>
+            <div class="app-container" style="height:600px;overflow:auto">
+                <el-tree  highlight-current show-checkbox :props="defaultProps" ref="treeDepartment" node-key="id" :default-checked-keys="departmentArr"
+                    lazy :load="loadAll">
+                </el-tree>
+                <el-button type="primary" round @click="submitTree">确认</el-button>
+            </div>
+        </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -87,11 +95,13 @@ import { postCreateStudio } from "@/api/programList/programList"
 // import { day } from "@/lib/js/unitls"
 import { MessageBox } from "element-ui"
 import { day } from "@/lib/js/unitls"
+import { getOrgFirst, getUserListBySecondCode, getOrgTree } from "@/api/addressBook"
 
 @Component
 export default class CreateStudio extends Vue {
     private fileList = [{ name: "food2.jpeg", url: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600835517648&di=66a169c2743457deb998e954546616a0&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Fback_pic%2F05%2F49%2F55%2F635acaccbda9696.jpg" }]
 
+    private dialogTableVisible = false
     private dataForm = {
         startTime: "",
         endTime: "",
@@ -101,6 +111,14 @@ export default class CreateStudio extends Vue {
         superviseFlag: "1", // 是否发布督办举措 0:是 1：否
         summaryFlag: "1" // 是否发布节目小结 0:是 1：否
     }
+
+    private defaultProps={
+        children: "children",
+        label: "label",
+        isLeaf: "isLeaf"
+    }
+
+    private departmentArr= []
 
     private onSubmit() {
         this.dataForm.startTime = day(this.dataForm.startTime, "YYYY-MM-DD HH:mm:ss")
@@ -125,38 +143,197 @@ export default class CreateStudio extends Vue {
         })
     }
 
-    private handleRemove(file: any, fileList: any) {
-        console.log(file, fileList)
+    // private handleRemove(file: any, fileList: any) {
+    //     console.log(file, fileList)
+    // }
+
+    // private handlePreview(file: any) {
+    //     console.log(file)
+    // }
+
+    // private handleExceed(file: any) {
+    //     alert("超出数量")
+    //     console.log(file)
+    // }
+
+    // private handleOut(file: any) {
+    //     console.log(file)
+    //     // var testmsg = file.name.substring(file.name.lastIndexOf('.') + 1)
+    //     // const extension = testmsg === 'png'
+    //     // const extension2 = testmsg === 'jpg'
+    //     // const isLt2M = file.size / 1024 / 1024 < 1 // 这里做文件大小限制
+    //     // if (!extension && !extension2) {
+    //     //   this.$message({
+    //     //     message: '上传文件只能是 png、jpg格式!',
+    //     //     type: 'warning'
+    //     //   })
+    //     // }
+    //     // if (!isLt2M) {
+    //     //   this.$message({
+    //     //     message: '上传文件大小不能超过 1MB!',
+    //     //     type: 'warning'
+    //     //   })
+    //     // }
+    //     // return extension || extension2 && isLt2M
+    // }
+
+    // 通讯录获取
+    private loadAll(node: any, resolve: (arg0: {}[]) => any) {
+        if (node.level === 0) {
+            const params = {
+                moaFlag: "1"
+            }
+            getOrgFirst(params).then(res => {
+                if (res.code === 0) {
+                    const leaderList = res.data.childOrgList
+                    const brr = [] // 组装部门数据
+                    for (let i = 0; i < leaderList.length; i++) {
+                        const obj: any = {}
+                        obj.isLeaf = false // 是否有下级
+                        obj.disabled = true // 是否可以选择
+                        obj.id = leaderList[i].orgCode
+                        obj.label = leaderList[i].orgName
+                        obj.level = leaderList[i].level
+                        brr.push(obj)
+                    }
+                    return resolve(brr)
+                }
+            })
+        } else if (node.level === 1) {
+            if (node.data.level === 1) {
+                const params = {
+                    orgCode: node.data.id
+                }
+                getUserListBySecondCode(params).then(res => {
+                    if (res.code === 0) {
+                        const userList = res.data
+                        const arr = []
+                        for (let i = 0; i < userList.length; i++) {
+                            const obj: any = {}
+                            obj.isLeaf = true
+                            obj.id = userList[i].userCode
+                            obj.label = userList[i].userName
+                            obj.res = userList[i]
+                            arr.push(obj)
+                        }
+                        return resolve(arr)
+                    }
+                })
+            } else {
+                const params = {
+                    orgCode: node.data.id
+                }
+                getOrgTree(params).then(res => {
+                    const leaderList = res.data.leaderList
+                    const childList = res.data.childList
+                    const arr = []
+                    for (let i = 0; i < leaderList.length; i++) {
+                        const obj: any = {}
+                        obj.isLeaf = true
+                        obj.id = leaderList[i].userCode
+                        obj.label = leaderList[i].userName
+                        obj.res = leaderList[i]
+                        // obj.icon = LOGIN_URL + leaderList[i].imgB
+                        arr.push(obj)
+                    }
+                    for (let i = 0; i < childList.length; i++) {
+                        const obj: any = {}
+                        obj.isLeaf = false
+                        obj.disabled = true
+                        obj.id = childList[i].orgCode
+                        obj.label = childList[i].orgName
+                        obj.extendProperty = childList[i].extendProperty
+                        obj.level = childList[i].level
+                        arr.push(obj)
+                    }
+                    return resolve(arr)
+                })
+            }
+        } else if (node.level === 2) {
+            if (node.data.extendProperty.hasChildOrg === 1) {
+                const params = {
+                    orgCode: node.data.id
+                }
+                getOrgTree(params).then(res => {
+                    const leaderList = res.data.leaderList
+                    const childList = res.data.childList
+                    const arr = []
+                    for (let i = 0; i < leaderList.length; i++) {
+                        const obj: any = {}
+                        obj.isLeaf = true
+                        obj.id = leaderList[i].userCode
+                        obj.label = leaderList[i].userName
+                        obj.res = leaderList[i]
+                        // obj.icon = LOGIN_URL + leaderList[i].imgB
+                        arr.push(obj)
+                    }
+                    for (let i = 0; i < childList.length; i++) {
+                        const obj: any = {}
+                        obj.isLeaf = false
+                        obj.disabled = true
+                        obj.id = childList[i].orgCode
+                        obj.label = childList[i].orgName
+                        obj.extendProperty = childList[i].extendProperty
+                        obj.level = childList[i].level
+                        arr.push(obj)
+                    }
+                    return resolve(arr)
+                })
+            } else {
+                const params = {
+                    orgCode: node.data.id
+                }
+                getUserListBySecondCode(params).then((res) => {
+                    if (res.code === 0) {
+                        const userList = res.data
+                        const arr = []
+                        for (let i = 0; i < userList.length; i++) {
+                            const obj: any = {}
+                            obj.isLeaf = true
+                            obj.id = userList[i].userCode
+                            obj.label = userList[i].userName
+                            obj.res = userList[i]
+                            arr.push(obj)
+                        }
+                        return resolve(arr)
+                    }
+                })
+            }
+        } else if (node.level === 3) {
+            const params = {
+                orgCode: node.data.id
+            }
+            getUserListBySecondCode(params).then(res => {
+                if (res.code === 0) {
+                    const userList = res.data
+                    const arr = []
+                    for (let i = 0; i < userList.length; i++) {
+                        const obj: any = {}
+                        obj.isLeaf = true
+                        obj.id = userList[i].userCode
+                        obj.label = userList[i].userName
+                        obj.res = userList[i]
+                        arr.push(obj)
+                    }
+                    return resolve(arr)
+                }
+            })
+        }
     }
 
-    private handlePreview(file: any) {
-        console.log(file)
-    }
-
-    private handleExceed(file: any) {
-        alert("超出数量")
-        console.log(file)
-    }
-
-    private handleOut(file: any) {
-        console.log(file)
-        // var testmsg = file.name.substring(file.name.lastIndexOf('.') + 1)
-        // const extension = testmsg === 'png'
-        // const extension2 = testmsg === 'jpg'
-        // const isLt2M = file.size / 1024 / 1024 < 1 // 这里做文件大小限制
-        // if (!extension && !extension2) {
-        //   this.$message({
-        //     message: '上传文件只能是 png、jpg格式!',
-        //     type: 'warning'
-        //   })
-        // }
-        // if (!isLt2M) {
-        //   this.$message({
-        //     message: '上传文件大小不能超过 1MB!',
-        //     type: 'warning'
-        //   })
-        // }
-        // return extension || extension2 && isLt2M
+    private dataList: any = []
+    private submitTree() {
+        // @ts-ignore
+        this.dataList = this.$refs.treeDepartment.getCheckedNodes()
+        const arr = []
+        for (let i = 0; i < this.dataList.length; i++) {
+            const obj: any = {}
+            obj.userCode = this.dataList[i].res.userCode.toString()
+            obj.userName = this.dataList[i].res.userName.toString()
+            obj.deptName = this.dataList[i].res.orgName.toString()
+            arr.push(JSON.stringify(obj))
+        }
+        this.dataForm.speakersData = "[" + arr.toString() + "]"
     }
 }
 </script>
