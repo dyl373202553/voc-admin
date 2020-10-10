@@ -6,13 +6,13 @@ const { voc } = ConfigModule
 
 // 数据导出--列表
 export const getDataExportList = (
-    {  pageNum, pageSize, startTime, endTime, dept2Code, dept3Code }: {
+    { pageNum, pageSize, startTime, endTime, dept2Code, dept3Code }: {
         pageNum: number;
         pageSize: number;
-        startTime: string; // 非必填
-        endTime: string; // 非必填
-        dept2Code: string; // 节目发布二级部门 非必填
-        dept3Code: string; // 节目发布三级部门 非必填
+        startTime?: string; // 非必填
+        endTime?: string; // 非必填
+        dept2Code?: string; // 节目发布二级部门 非必填
+        dept3Code?: string; // 节目发布三级部门 非必填
     }
 ) => { return getData(`${voc}/khzsProgram/dataExportData`, { pageNum, pageSize, startTime, endTime, dept2Code, dept3Code }) }
 
@@ -34,4 +34,3 @@ export const postExportAll = (
         ids: string; // 节目ID，多个以','相隔 非必填
     }
 ) => { return postData(`${voc}/khzsProgram/exportAll`, { startTime, endTime, dept2Code, dept3Code, ids }) }
-

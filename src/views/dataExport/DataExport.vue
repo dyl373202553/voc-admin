@@ -53,7 +53,6 @@
           border
           fit
           highlight-current-row
-          height="500"
         >
           <el-table-column type="selection" align="center" />
           <!-- <el-table-column align="center" label="Id" width="95">
@@ -68,23 +67,23 @@
           </el-table-column>
           <el-table-column label="主讲人" align="center">
             <div slot-scope="scope">
-              {{ scope.row.title }}
+              {{ scope.row.liveEntity.speakers }}
             </div>
           </el-table-column>
           <el-table-column align="center" label="节目时间">
             <div slot-scope="scope">
               <i class="el-icon-time" />
-              <span>{{ scope.row.title }}</span>
+              <span>{{ scope.row.liveEntity.startTime }}</span>
             </div>
           </el-table-column>
           <el-table-column label="点赞数" align="center">
             <div slot-scope="scope">
-              {{ scope.row.title }}
+              {{ scope.row.praiseNum  }}
             </div>
           </el-table-column>
           <el-table-column label="评论数" align="center">
             <div slot-scope="scope">
-              {{ scope.row.title }}
+              {{ scope.row.commentNum  }}
             </div>
           </el-table-column>
           <el-table-column label="操作" align="center">
@@ -113,6 +112,8 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
+import { getDataExportList } from "@/api/dataExport/dataExport"
+import { MessageBox } from "element-ui"
 @Component
 export default class OverseeCheck extends Vue {
     private form = {
@@ -121,7 +122,7 @@ export default class OverseeCheck extends Vue {
         name: ""
     }
 
-    private tableData = [{ // 点赞榜
+    private tabledData = [{ // 点赞榜
         title: "客户之声第100期",
         departmentCooperation: "综合部 信息系统部",
         status: "other",
@@ -172,5 +173,33 @@ export default class OverseeCheck extends Vue {
         status: "4",
         statusName: "督办已完成"
     }]
+
+    private tableData = []
+    private dataTotal = 0
+    private dataPage = {
+        pageNum: 1,
+        pageSize: 10,
+        startTime: "", // 非必填
+        endTime: "", // 非必填
+        dept2Code: "", // 节目发布二级部门 非必填
+        dept3Code: "" // 节目发布三级部门 非必填
+    }
+
+    protected mounted() {
+        this.load()
+    }
+
+    private load() {
+        getDataExportList(this.dataPage).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    this.tableData = res.data
+                    this.dataTotal = res.total
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
 }
 </script>
