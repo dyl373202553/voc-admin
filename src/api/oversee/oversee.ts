@@ -54,8 +54,8 @@ export const postOverseeMakesure = (
 
 // 督办管理-督办举措-退回（批量）
 export const postOverseeBack = (
-    { ids, content }: {
+    { ids, rerurnOpinion }: {
         ids: string; // ID
-        content: string;
+        rerurnOpinion: string;
     }
-) => { return postData(`${voc}/khzsSuperviseMeasures/returnMeasures`, { ids, content }) }
+) => { return postData(`${voc}/khzsSuperviseMeasures/returnMeasures`, { ids, rerurnOpinion }) }

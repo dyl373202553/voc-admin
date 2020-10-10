@@ -2,8 +2,8 @@
   <div class="app-container">
         <el-card class="box-card dpadding0">
         <div slot="header" class="clearfix">
-            <span class="header-title" v-if="$route.params.status === '3'">举措确认</span>
-            <span class="header-title" v-if="$route.params.status === '2'">督办回答</span>
+            <span class="header-title" v-if="this.status === '3'">举措确认</span>
+            <span class="header-title" v-if="this.status === '2'">督办回答</span>
         </div>
         <div class="dsummary">
             <div class="dsummary-mian">
@@ -21,7 +21,7 @@
                 <p><span>责任部门：</span><span>{{this.deptnamesData}}</span></p>
                 </div>
             </div>
-            <div v-show="$route.params.status === '2'" class="dsummary-mian">
+            <div v-show="this.status === '2'" class="dsummary-mian">
                 <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>督办举措</div>
                 <el-input
                     v-model="dsummaryContent"
@@ -30,7 +30,7 @@
                     placeholder="请输入举措内容"
                 />
             </div>
-            <div v-show="$route.params.status === '3'" class="dsummary-mian">
+            <div v-show="this.status === '3'" class="dsummary-mian">
                 <div class="main-info" v-for="(item, key) in superviseMeasuresList" :key="key">
                     <div class="info-left">
                         <el-avatar src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2496227229,2115216729&fm=26&gp=0.jpg" />
@@ -52,7 +52,7 @@
                     </div>
                 </div>
             </div>
-            <div v-show="$route.params.status === '2'" class="dsummary-mian">
+            <div v-show="this.status === '2'" class="dsummary-mian">
                 <div class="dsummary-title">上传附件</div>
                 <div>
                     <el-upload
@@ -65,11 +65,11 @@
                     </el-upload>
                 </div>
             </div>
-            <div v-show="$route.params.status === '2'" class="bottom dbtn">
+            <div v-show="this.status === '2'" class="bottom dbtn">
                 <el-button round>取消</el-button>
                 <el-button type="primary" round :disabled="!dsummaryContent" @click="superviseMeasuresSubmit">提交</el-button>
             </div>
-            <div v-show="$route.params.status === '3'" class="bottom dbtn">
+            <div v-show="this.status === '3'" class="bottom dbtn">
                 <el-button type="danger" round plain @click="centerDialogVisible = true">一键退回</el-button>
                 <el-button type="primary" round>一键确认</el-button>
                 <el-button type="danger" round @click="overseeCancel">撤销督办</el-button>
@@ -86,7 +86,7 @@
         >
             <template>
                 <el-input
-                    v-model="this.returnOpinion"
+                    v-model="returnOpinion"
                     type="textarea"
                     :rows="3"
                     placeholder="请填写退回意见"
@@ -106,6 +106,7 @@ import { postOverseeMeasure, getOverseeDetail, postOverseeCancel, postOverseeMak
 import { MessageBox } from "element-ui"
 @Component
 export default class OverseeAnswer extends Vue {
+    private status = ""
     private centerDialogVisible =false
     private dsummaryContent = ""
     private programList= {
@@ -127,6 +128,7 @@ export default class OverseeAnswer extends Vue {
         getOverseeDetail({ id: this.$route.params.businessId }).then((res) => {
             if (res) {
                 if (res.code < 200) {
+                    this.status = res.data.status
                     this.programList.title = res.data.programTitle
                     this.superviseMeasuresList = res.data.superviseMeasuresList
                     const programId = res.data.programId
@@ -203,7 +205,7 @@ export default class OverseeAnswer extends Vue {
         this.centerDialogVisible = false
         const params = {
             ids: this.returnOpinionId,
-            content: "退回"
+            rerurnOpinion: this.returnOpinion
         }
         postOverseeBack(params).then((res) => {
             if (res) {
