@@ -45,9 +45,9 @@
                             <i class="el-icon-paperclip" />
                             <span class="info-title">{{item.fileIds}}</span>
                         </div>
-                        <div class="text-center dbtn">
-                            <el-button type="danger" round plain @click="centerDialogVisible = true">退回</el-button>
-                            <el-button type="primary" round>确认</el-button>
+                        <div class="text-center dbtn" v-if="item.status === '1' ">
+                            <el-button type="danger" round plain @click="backDialog(item.id)">退回</el-button>
+                            <el-button type="primary" round @click="overseeMakesureComfire(item.id)">确认</el-button>
                         </div>
                     </div>
                 </div>
@@ -78,24 +78,23 @@
         </div>
         </el-card>
         <el-dialog
-        custom-class="info-dialog"
-        title="请填写退回意见(选填)"
-        :visible.sync="centerDialogVisible"
-        width="25%"
-        center
+            custom-class="info-dialog"
+            title="请填写退回意见(选填)"
+            :visible.sync="centerDialogVisible"
+            width="25%"
+            center
         >
-        <el-form :model="form">
-            <el-input
-            v-model="this.name"
-            type="textarea"
-            :rows="3"
-            :maxlength="50"
-            placeholder="请填写退回意见"
-            />
-        </el-form>
-        <span slot="footer" class="dialog-footer dbtn">
-            <el-button type="primary" round @click="centerDialogVisible = false">提 交</el-button>
-        </span>
+            <template>
+                <el-input
+                    v-model="this.returnOpinion"
+                    type="textarea"
+                    :rows="3"
+                    placeholder="请填写退回意见"
+                />
+                <span slot="footer" class="dialog-footer dbtn">
+                    <el-button type="primary" round @click="backOption">提 交</el-button>
+                </span>
+            </template>
         </el-dialog>
     </div>
 </template>
@@ -103,20 +102,19 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { getProgramDetail } from "@/api/programList/programList"
-import { postOverseeMeasure, getOverseeDetail, postOverseeCancel } from "@/api/oversee/oversee"
+import { postOverseeMeasure, getOverseeDetail, postOverseeCancel, postOverseeMakesure, postOverseeBack } from "@/api/oversee/oversee"
 import { MessageBox } from "element-ui"
 @Component
 export default class OverseeAnswer extends Vue {
     private centerDialogVisible =false
-    private name =""
-    private form ={}
-
     private dsummaryContent = ""
     private programList= {
         title: "",
         time: ""
     }
 
+    private returnOpinion ="" // 退回意见
+    private returnOpinionId =""
     private superviseMeasuresList= [] // 督办举措
 
     private programOversee =""
@@ -171,6 +169,43 @@ export default class OverseeAnswer extends Vue {
     // 撤销
     private overseeCancel() {
         postOverseeCancel({ id: this.$route.params.id }).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    MessageBox.alert(res.message, "成功", { type: "success" })
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
+
+    // 举措确认
+    private overseeMakesureComfire(id: string) {
+        postOverseeMakesure({ ids: id }).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    MessageBox.alert(res.message, "成功", { type: "success" })
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
+
+    // 退回弹框
+    private backDialog(id: string) {
+        this.centerDialogVisible = true
+        this.returnOpinionId = id
+    }
+
+    // 举措退回
+    private backOption() {
+        this.centerDialogVisible = false
+        const params = {
+            ids: this.returnOpinionId,
+            content: "退回"
+        }
+        postOverseeBack(params).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     MessageBox.alert(res.message, "成功", { type: "success" })

@@ -45,7 +45,7 @@ export const postOverseeMeasure = (
     }
 ) => { return postData(`${voc}/khzsSuperviseMeasures/save`, { todoId, content, fileIds, id }) }
 
-// 督办管理-督办举措-确认（批量）
+// 督办管理-督办举措-确认（批量） 督办举措状态（0：已确认，1：未确认，2：被退回） ,
 export const postOverseeMakesure = (
     { ids }: {
         ids: string; // ID
