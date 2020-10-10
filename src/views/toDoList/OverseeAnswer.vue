@@ -86,7 +86,7 @@
           </div>
           <div v-show="$route.params.statusName === '督办回答'" class="bottom dbtn">
             <el-button round>取消</el-button>
-            <el-button type="primary" round :disabled="!dsummaryContent">提交</el-button>
+            <el-button type="primary" round :disabled="!dsummaryContent" @click="superviseMeasuresSubmit">提交</el-button>
           </div>
           <div v-show="$route.params.statusName === '举措确认'" class="bottom dbtn">
             <el-button type="danger" round plain @click="centerDialogVisible = true">一键退回</el-button>
@@ -122,6 +122,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { getProgramDetail } from "@/api/programList/programList"
+import { postOverseeMeasure, getOverseeDetail } from "@/api/oversee/oversee"
 import { MessageBox } from "element-ui"
 @Component
 export default class OverseeAnswer extends Vue {
@@ -139,13 +140,40 @@ export default class OverseeAnswer extends Vue {
     }
 
     private load() {
-        getProgramDetail({ id: this.$route.params.programId }).then((res) => {
+        getOverseeDetail({ id: this.$route.params.businessId }).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    this.title = res.data.title
-                    this.time = res.data.liveEntity.startTime
-                    this.programOversee = res.data.superviseItemEntity.content
-                    this.deptnamesData = res.data.superviseItemEntity.deptnames
+                    this.title = res.data.programTitle
+                    const programId = res.data.programId
+                    getProgramDetail({ id: programId }).then((res) => {
+                        if (res) {
+                            if (res.code < 200) {
+                                this.time = res.data.liveEntity.startTime
+                                this.programOversee = res.data.superviseItemEntity.content
+                                this.deptnamesData = res.data.superviseItemEntity.deptnames
+                            } else {
+                                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                            }
+                        }
+                    })
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
+
+    private superviseMeasuresSubmit() {
+        const params = {
+            todoId: this.$route.params.id, // 待办ID
+            content: this.dsummaryContent, // 督办举措内容
+            fileIds: "附件id", // 附件
+            id: "" // ID
+        }
+        postOverseeMeasure(params).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    MessageBox.alert(`提交成功`, "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
