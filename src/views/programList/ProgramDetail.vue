@@ -35,7 +35,7 @@
           </div>
         </div>
         <div class="bottom">
-          <div class="bottom-main">
+          <div class="bottom-main" v-if="this.allList.superviseItemEntity">
             <div class="main-title">督办事项</div>
             <div class="main-info">
               <div class="info-left">
@@ -43,8 +43,8 @@
               </div>
               <div class="info-right">
                 <div>
-                  <span class="info-title">刘晓彤</span>
-                  <span>信息系统部</span>
+                  <span class="info-title">userCode为空</span>
+                  <span>userCode为空</span>
                 </div>
                 <p>{{this.supervise.content}}</p>
                 <div>
@@ -73,7 +73,7 @@
               </div>
             </div>
           </div>
-          <div class="bottom-main">
+          <div class="bottom-main" v-if="this.allList.summaryEntity">
             <div class="main-title">直播小结</div>
             <p>{{this.summary.content}}</p>
             <div>
@@ -98,6 +98,7 @@ import MessageBoard from "./MessageBoard.vue"
 })
 export default class ProgramDetail extends Vue {
     private likeShow = "0"
+    private allList = []
     private programForm = {
         title: "",
         time: "",
@@ -115,8 +116,8 @@ export default class ProgramDetail extends Vue {
     }
 
     private summary = { // 直播小结
-        content: "",
-        fileIds: ""
+        content: " ",
+        fileIds: " "
     }
 
     private superviseMeasuresList= []
@@ -129,6 +130,7 @@ export default class ProgramDetail extends Vue {
         getProgramDetail({ id: this.$route.params.promId }).then((res) => {
             if (res) {
                 if (res.code < 200) {
+                    this.allList = res.data
                     this.programForm = {
                         title: res.data.title,
                         time: res.data.liveEntity.startTime,
@@ -139,17 +141,21 @@ export default class ProgramDetail extends Vue {
                         summary: res.data.summary, // 本期简介
                         content: res.data.content // 节目内容
                     }
-                    this.supervise = {
-                        content: res.data.superviseItemEntity.content,
-                        deptnames: res.data.superviseItemEntity.deptnames
+                    if (res.data.superviseItemEntity) {
+                        this.supervise = {
+                            content: res.data.superviseItemEntity.content,
+                            deptnames: res.data.superviseItemEntity.deptnames
+                        }
                     }
-                    this.summary = {
-                        content: res.data.summaryEntity.content,
-                        fileIds: res.data.summaryEntity.fileIds
+                    if (res.data.summaryEntity) {
+                        this.summary = {
+                            content: res.data.summaryEntity.content,
+                            fileIds: res.data.summaryEntity.fileIds
+                        }
                     }
-                    this.superviseMeasuresList = res.data.superviseItemEntity.superviseMeasuresList
-
-                    console.log(res.data.superviseItemEntity.superviseMeasuresList)
+                    if (res.data.superviseItemEntity.superviseMeasuresList) {
+                        this.superviseMeasuresList = res.data.superviseItemEntity.superviseMeasuresList
+                    }
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
