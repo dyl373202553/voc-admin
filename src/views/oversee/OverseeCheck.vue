@@ -38,23 +38,26 @@
             <el-input v-model="deptnamesData" placeholder="请选择参与部门"  @focus="dialogTableVisible = true" suffix-icon="el-icon-s-home" />
         </div>
         <div v-show="$route.params.status !== '1'" class="dsummary-mian">
-          <div class="dsummary-title">督办举措</div>
-          <div v-show="$route.params.status !== '2'" class="main-info">
-            <div class="info-left">
-              <el-avatar src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2496227229,2115216729&fm=26&gp=0.jpg" />
-            </div>
-            <div class="info-right">
-              <div>
-                <span class="info-title">刘晓彤</span>
-                <span>    信息系统部</span>
-              </div>
-              <p>雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天雪花漫天飞舞雪花瞬间从夏天</p>
-              <div>
-                <i class="el-icon-paperclip" />
-                <span class="info-title">附件</span>
-              </div>
-            </div>
-          </div>
+            <div class="dsummary-title">督办举措</div>
+            <template v-show="$route.params.status !== '2'">
+                <div class="main-info" v-for="(item, key) in superviseMeasuresList" :key="key">
+                    <div class="info-left">
+                    <el-avatar src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2496227229,2115216729&fm=26&gp=0.jpg" />
+                    </div>
+                    <div class="info-right">
+                    <div>
+                        <span class="info-title">{{item.userName}}</span>
+                        <span>{{item.deptName}}</span>
+                    </div>
+                    <p>{{item.content}}</p>
+                    <div>
+                        <i class="el-icon-paperclip" />
+                        <span class="info-title">{{item.fileIds}}</span>
+                    </div>
+                    </div>
+                </div>
+            </template>
+
           <div v-show="$route.params.status === '2'" class="main-info">
             暂无内容！
           </div>
@@ -99,6 +102,8 @@ export default class OverseeCheck extends Vue {
         time: ""
     }
 
+    private superviseMeasuresList= [] // 督办举措
+
     private dialogTableVisible = false
 
     private defaultProps={
@@ -118,6 +123,7 @@ export default class OverseeCheck extends Vue {
         Promise.all([programList, programOversee]).then((res) => {
             this.programList.title = res[0].data.title
             this.programList.time = res[0].data.liveEntity.startTime
+            this.superviseMeasuresList = res[1].data.superviseMeasuresList
             this.programOversee = res[1].data.content
             this.person = res[1].data.deptnames
         }).catch(() => {
