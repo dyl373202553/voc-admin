@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card class="box-card dpadding0">
       <div slot="header" class="clearfix">
-        <span class="header-title">督办查看{{ $route.params.status }}</span>
+        <span class="header-title">督办查看</span>
       </div>
       <div class="dsummary">
         <div class="dsummary-mian">
@@ -11,30 +11,31 @@
             <p><span>节目名称：</span><span>{{this.programList.title}}</span></p>
             <p><span>节目时间：</span><span>{{this.programList.time}}</span></p>
             <p><span>督办状态：</span>
-              <span v-show="$route.params.status === '0'" class="dblue">{{ $route.params.status }}</span>
-              <span v-show="$route.params.status !== '0'" class="dred">{{ $route.params.status }}</span>
+              <span v-if="$route.params.status === '0'" class="dblue">{{ $route.params.statusName }}</span>
+              <span v-if="$route.params.status !== '0'" class="dred">{{ $route.params.statusName }}</span>
             </p>
           </div>
         </div>
         <div class="dsummary-mian">
           <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>督办事项</div>
-          <div>
-            <el-input
-              v-model="programOversee"
-              type="textarea"
-              :rows="3"
-              placeholder="请填写督办事项"
-            />
-          </div>
+            <template>
+                    <el-input v-if="$route.params.status === '1'"
+                    v-model="programOversee"
+                    type="textarea"
+                    :rows="3"
+                    placeholder="请填写督办事项"
+                    />
+                    <p v-if="$route.params.status !== '1'">{{this.programOversee}}</p>
+            </template>
+            <template>
+                <div v-show="$route.params.status !== '1'">
+                    <p><span>责任部门：</span><span>{{this.person}}</span></p>
+                </div>
+            </template>
         </div>
         <div v-show="$route.params.status === '1'" class="dsummary-mian">
-          <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>责任部门</div>
-          <div>
+            <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>责任部门</div>
             <el-input v-model="deptnamesData" placeholder="请选择参与部门"  @focus="dialogTableVisible = true" suffix-icon="el-icon-s-home" />
-          </div>
-        </div>
-        <div v-show="$route.params.status !== '1'" class="dsummary-mian">
-            <p><span>责任部门：</span><span>{{this.person}}</span></p>
         </div>
         <div v-show="$route.params.status !== '1'" class="dsummary-mian">
           <div class="dsummary-title">督办举措</div>

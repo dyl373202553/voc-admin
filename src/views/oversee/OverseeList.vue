@@ -25,7 +25,8 @@
 
           <el-table-column label="操作" align="center">
             <div slot-scope="scope">
-              <router-link v-if=" scope.row.status!=='4'" :to="{name:'OverseeCheck', params: {status:scope.row.status, programId:scope.row.programId, id:scope.row.id} }">
+              <router-link v-if=" scope.row.status!=='4'" :to="{name:'OverseeCheck',
+                params: {status:scope.row.status, statusName:getStatusName(scope.row.status), programId:scope.row.programId, id:scope.row.id} }">
                 <el-button type="text" size="small">查看</el-button>
               </router-link>
             </div>
