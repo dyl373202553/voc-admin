@@ -70,8 +70,8 @@
                 <el-button type="primary" round :disabled="!dsummaryContent" @click="superviseMeasuresSubmit">提交</el-button>
             </div>
             <div v-show="this.status === '3'" class="bottom dbtn">
-                <el-button type="danger" round plain @click="centerDialogVisible = true">一键退回</el-button>
-                <el-button type="primary" round>一键确认</el-button>
+                <el-button type="danger" round plain @click="allBack">一键退回</el-button>
+                <el-button type="primary" round @click="allMakesureComfire">一键确认</el-button>
                 <el-button type="danger" round @click="overseeCancel">撤销督办</el-button>
             </div>
             </el-form>
@@ -116,7 +116,7 @@ export default class OverseeAnswer extends Vue {
 
     private returnOpinion ="" // 退回意见
     private returnOpinionId =""
-    private superviseMeasuresList= [] // 督办举措
+    private superviseMeasuresList: any= [] // 督办举措
 
     private programOversee =""
     private deptnamesData = ""
@@ -194,6 +194,15 @@ export default class OverseeAnswer extends Vue {
         })
     }
 
+    // 一键确认
+    private allMakesureComfire() {
+        const arr = []
+        for (let i = 0; i < this.superviseMeasuresList.length; i++) {
+            arr.push(this.superviseMeasuresList[i].id)
+        }
+        this.overseeMakesureComfire(arr.toString())
+    }
+
     // 退回弹框
     private backDialog(id: string) {
         this.centerDialogVisible = true
@@ -216,6 +225,16 @@ export default class OverseeAnswer extends Vue {
                 }
             }
         })
+    }
+
+    // 一键退回
+    private allBack() {
+        this.centerDialogVisible = true
+        const arr = []
+        for (let i = 0; i < this.superviseMeasuresList.length; i++) {
+            arr.push(this.superviseMeasuresList[i].id)
+        }
+        this.returnOpinionId = arr.toString()
     }
 }
 </script>
