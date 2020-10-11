@@ -5,32 +5,32 @@
         <span class="header-title">查询条件</span>
       </div>
       <div>
-        <el-form ref="form" :model="form">
+        <el-form ref="form" :model="dataForm">
           <el-row :gutter="40">
             <el-col :span="12">
               <el-form-item label="节目开始时间">
-                <el-date-picker v-model="form.date1" type="date" placeholder="请选择开始时间" suffix-icon="el-icon-date" style="width:100%" />
+                <el-date-picker v-model="dataForm.startTime" type="datetime" placeholder="请选择开始时间" suffix-icon="el-icon-date" style="width:100%" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="节目结束时间">
-                <el-date-picker v-model="form.date2" type="date" placeholder="请选择结束时间" suffix-icon="el-icon-date" style="width:100%" />
+                <el-date-picker v-model="dataForm.endTime" type="date" placeholder="请选择结束时间" suffix-icon="el-icon-date" style="width:100%" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="二级部门选择">
-                <el-input v-model="form.name" suffix-icon="el-icon-s-home" />
+                <el-input v-model="dataForm.dept2Code" suffix-icon="el-icon-s-home" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="三级部门选择">
-                <el-input v-model="form.name" suffix-icon="el-icon-s-home" />
+                <el-input v-model="dataForm.dept3Code" suffix-icon="el-icon-s-home" />
               </el-form-item>
             </el-col>
             <el-col :span="24">
               <el-form-item class="text-center dbtn">
-                <el-button round>重置</el-button>
-                <el-button type="primary" round>查询</el-button>
+                <el-button round @click="rest">重置</el-button>
+                <el-button type="primary" round @click="search">查询</el-button>
               </el-form-item>
             </el-col>
           </el-row>
@@ -103,7 +103,13 @@
           </el-table-column> -->
         </el-table>
         <div class="dpagination">
-          <el-pagination background layout="prev, pager, next, jumper" :total="30" />
+           <el-pagination
+            background
+            @current-change="handleCurrentChange"
+            :current-page="dataForm.pageNum"
+            :total="dataTotal"
+            layout="prev, pager, next, jumper">
+            </el-pagination>
         </div>
       </div>
     </el-card>
@@ -114,83 +120,26 @@
 import { Component, Vue } from "vue-property-decorator"
 import { getDataExportList } from "@/api/dataExport/dataExport"
 import { MessageBox } from "element-ui"
+import { day } from "@/lib/js/unitls"
 @Component
 export default class OverseeCheck extends Vue {
-    private form = {
-        date1: "",
-        date2: "",
-        name: ""
+    private dataForm = {
+        pageNum: 1,
+        pageSize: 10,
+        startTime: "",
+        endTime: "",
+        dept2Code: "",
+        dept3Code: ""
     }
-
-    private tabledData = [{ // 点赞榜
-        title: "客户之声第100期",
-        departmentCooperation: "综合部 信息系统部",
-        status: "other",
-        statusName: "--"
-    }, {
-        title: "客户之声第100期",
-        departmentCooperation: "综合部 信息系统部",
-        status: "1",
-        statusName: "督办未发布"
-    }, {
-        title: "客户之声第100期",
-        departmentCooperation: "综合部 信息系统部",
-        status: "4",
-        statusName: "督办已完成"
-    }, {
-        title: "客户之声第100期",
-        departmentCooperation: "综合部 信息系统部",
-        status: "3",
-        statusName: "督办未确认"
-    }, {
-        title: "客户之声第100期",
-        departmentCooperation: "综合部 信息系统部",
-        status: "2",
-        statusName: "督办未回复"
-    }, {
-        title: "客户之声第100期",
-        departmentCooperation: "综合部 信息系统部",
-        status: "2",
-        statusName: "督办未回复"
-    }, {
-        title: "客户之声第100期",
-        departmentCooperation: "综合部 信息系统部",
-        status: "4",
-        statusName: "督办已完成"
-    }, {
-        title: "客户之声第100期",
-        departmentCooperation: "综合部 信息系统部",
-        status: "4",
-        statusName: "督办已完成"
-    }, {
-        title: "客户之声第100期",
-        departmentCooperation: "综合部 信息系统部",
-        status: "3",
-        statusName: "督办未确认"
-    }, {
-        title: "客户之声第100期",
-        departmentCooperation: "综合部 信息系统部",
-        status: "4",
-        statusName: "督办已完成"
-    }]
 
     private tableData = []
     private dataTotal = 0
-    private dataPage = {
-        pageNum: 1,
-        pageSize: 10,
-        startTime: "", // 非必填
-        endTime: "", // 非必填
-        dept2Code: "", // 节目发布二级部门 非必填
-        dept3Code: "" // 节目发布三级部门 非必填
-    }
-
     protected mounted() {
         this.load()
     }
 
     private load() {
-        getDataExportList(this.dataPage).then((res) => {
+        getDataExportList(this.dataForm).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.tableData = res.data
@@ -200,6 +149,33 @@ export default class OverseeCheck extends Vue {
                 }
             }
         })
+    }
+
+    private search() {
+        if (this.dataForm.startTime) {
+            this.dataForm.startTime = day(this.dataForm.startTime, "YYYY-MM-DD HH:mm:ss")
+        }
+        if (this.dataForm.endTime) {
+            this.dataForm.endTime = day(this.dataForm.endTime, "YYYY-MM-DD HH:mm:ss")
+        }
+        this.load()
+    }
+
+    private rest() {
+        this.dataForm = {
+            pageNum: 1,
+            pageSize: 10,
+            startTime: "",
+            endTime: "",
+            dept2Code: "",
+            dept3Code: ""
+        }
+        this.load()
+    }
+
+    private handleCurrentChange(val: number) {
+        this.dataForm.pageNum = val
+        this.load()
     }
 }
 </script>
