@@ -45,8 +45,8 @@
               </div>
               <div class="info-right">
                 <div>
-                  <span class="info-title">userCode为空</span>
-                  <span>userCode为空</span>
+                  <span class="info-title">{{this.supervise.userCode}}</span>
+                  <span>部门没有字段</span>
                 </div>
                 <p>{{this.supervise.content}}</p>
                 <div>
@@ -116,7 +116,8 @@ export default class ProgramDetail extends Vue {
 
     private supervise = { // 督办事项
         content: "",
-        deptnames: ""
+        deptnames: "",
+        userCode: ""
     }
 
     private summary = { // 直播小结
@@ -150,7 +151,8 @@ export default class ProgramDetail extends Vue {
                     if (res.data.superviseItemEntity) {
                         this.supervise = {
                             content: res.data.superviseItemEntity.content,
-                            deptnames: res.data.superviseItemEntity.deptnames
+                            deptnames: res.data.superviseItemEntity.deptnames,
+                            userCode: res.data.superviseItemEntity.userCode
                         }
                     }
                     if (res.data.summaryEntity) {

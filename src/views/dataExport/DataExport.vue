@@ -40,7 +40,7 @@
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span class="header-title">列表</span>
-        <span class="fr dexport">
+        <span class="fr dexport" @click="exportAll">
           <i class="el-icon-s-unfold" />
           导出
         </span>
@@ -53,6 +53,7 @@
           border
           fit
           highlight-current-row
+          @selection-change="changeSelect"
         >
           <el-table-column type="selection" align="center" />
           <!-- <el-table-column align="center" label="Id" width="95">
@@ -87,8 +88,8 @@
             </div>
           </el-table-column>
           <el-table-column label="操作" align="center">
-            <div>
-              <el-button type="text" size="small">点赞详情</el-button>
+            <div slot-scope="scope">
+              <el-button type="text" size="small" @click="likeDetail(scope.row.id)">点赞详情</el-button>
               <el-button type="text" size="small">评论详情</el-button>
             </div>
           </el-table-column>
@@ -120,7 +121,9 @@
 import { Component, Vue } from "vue-property-decorator"
 import { getDataExportList } from "@/api/dataExport/dataExport"
 import { MessageBox } from "element-ui"
-import { day } from "@/lib/js/unitls"
+import { day, handleDownloadFile } from "@/lib/js/unitls"
+import axios from "axios"
+import { UserModule } from "@/store/module/user"
 @Component
 export default class OverseeCheck extends Vue {
     private dataForm = {
@@ -134,6 +137,13 @@ export default class OverseeCheck extends Vue {
 
     private tableData = []
     private dataTotal = 0
+    private selectList = ""
+
+    get userToken() {
+        // @ts-ignore
+        return UserModule.token
+    }
+
     protected mounted() {
         this.load()
     }
@@ -176,6 +186,69 @@ export default class OverseeCheck extends Vue {
     private handleCurrentChange(val: number) {
         this.dataForm.pageNum = val
         this.load()
+    }
+
+    //  导出详情
+    private likeDetail(id: string) {
+        console.log(id)
+        // const params = {
+        //     ids: id
+        // }
+        // postExportAll(params).then((res) => {
+        //     if (res) {
+        //         const fileName = "ddd.xls"
+        //         const blob = new Blob([res.data], { type: "application/vnd.ms-excel" })
+        //         handleDownloadFile(blob, fileName)
+        //     }
+        // })
+        axios({
+            method: "get",
+            url: `/vue-potal/moa-customervoice/api/modules/khzsProgram/exportProgramData?id=7199a569581f401481acbd47483fb31f&type=2`,
+            responseType: "blob", // arraybuffer
+            headers: {
+                // "Content-Type": "application/json;charset=UTF-8",
+                Authorization: `Bearer ${this.userToken}`
+            }
+        })
+            .then((res) => {
+                const fileName = "yyy.xls"
+                // const fileName = this.exportParams.fileName + this.exportParams.checkNo + '.xls';
+                const blob = new Blob([res.data], { type: "application/vnd.ms-excel" })
+                handleDownloadFile(blob, fileName)
+            })
+            .catch(function (error) { // 请求失败处理
+                MessageBox.alert(error, "失败", { type: "error" })
+            })
+    }
+
+    // 导出数据--选择-多选择
+    private changeSelect(selection: any) {
+        const arr = []
+        for (let i = 0; i < selection.length; i++) {
+            arr.push(selection[i].id)
+        }
+        this.selectList = arr.join(",")
+    }
+
+    private exportAll() {
+        axios({
+            method: "get",
+            url: `/vue-potal/moa-customervoice/api/modules/khzsProgram/exportAll?ids=${this.selectList}`,
+            responseType: "blob", // arraybuffer
+            headers: {
+                // "Content-Type": "application/json;charset=UTF-8",
+                Authorization: `Bearer ${this.userToken}`
+            }
+        })
+            .then((res) => {
+                const dateName = day(new Date(), "YYYY-MM-DD")
+                const fileName = "列表导出" + dateName + ".xls"
+                const blob = new Blob([res.data], { type: "application/vnd.ms-excel" })
+                handleDownloadFile(blob, fileName)
+            })
+            .catch(function (error) { // 请求失败处理
+                MessageBox.alert(error, "失败", { type: "error" })
+            })
     }
 }
 </script>

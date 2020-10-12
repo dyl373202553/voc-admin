@@ -1,4 +1,4 @@
-import { getData, postData } from "@/lib/js/request"
+import { getData } from "@/lib/js/request"
 import { ConfigModule } from "@/store/module/config"
 const { voc } = ConfigModule
 
@@ -22,15 +22,11 @@ export const postLikeReplyExport = (
         id: string;
         type: string; // 1：评论数据，2：点赞数据
     }
-) => { return postData(`${voc}/khzsProgram/exportProgramData`, { id, type }) }
+) => { return getData(`${voc}/khzsProgram/exportProgramData`, { id, type }) }
 
 // 全量数据导出
 export const postExportAll = (
-    { startTime, endTime, dept2Code, dept3Code, ids }: {
-        startTime: string; // 非必填
-        endTime: string; // 非必填
-        dept2Code: string; // 非必填
-        dept3Code: string; // 非必填
+    { ids }: {
         ids: string; // 节目ID，多个以','相隔 非必填
     }
-) => { return postData(`${voc}/khzsProgram/exportAll`, { startTime, endTime, dept2Code, dept3Code, ids }) }
+) => { return getData(`${voc}/khzsProgram/exportAll`, { ids }) }

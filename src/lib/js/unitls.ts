@@ -53,3 +53,17 @@ export function getFileIcon(value: string) {
         return `http://172.30.200.237/resources/${value}`
     }
 }
+
+export const handleDownloadFile = (blob: Blob, fileName: string) => {
+    if (window.navigator.msSaveOrOpenBlob) {
+        window.navigator.msSaveOrOpenBlob(blob, fileName)
+    } else {
+        const url = window.URL.createObjectURL(blob)
+        const link = document.createElement("a")
+        link.href = url
+        link.setAttribute("download", fileName)
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+    }
+}
