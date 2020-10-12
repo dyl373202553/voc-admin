@@ -13,6 +13,7 @@
             <span>{{this.programForm.time}}</span>
             <span>{{this.programForm.speakers}}</span>
             <span><img src="@/assets/images/icon_look.png"/>{{this.programForm.browerNum}}</span>
+            <!-- 点赞数 -->
             <span><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{this.programForm.praiseNum}}</span>
           </div>
         </div>
@@ -30,8 +31,9 @@
             <pre v-html="this.programForm.content"></pre>
           </div>
           <div class="main-btn">
-            <el-button v-show="likeShow===0" type="primary" round @click="getLikeShow">点赞支持一下</el-button>
-            <el-button v-show="likeShow===1" type="info" round>您已点过赞啦</el-button>
+            <!-- ownerPraiseStatus个人点赞状态（0：是，1：否） , -->
+            <el-button v-if="this.programForm.likeShow === '1'" type="primary" round @click="getLikeShow">点赞支持一下</el-button>
+            <el-button v-if="this.programForm.likeShow === '0'" type="info" round>您已点过赞啦</el-button>
           </div>
         </div>
         <div class="bottom">
@@ -91,13 +93,14 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { getProgramDetail } from "@/api/programList/programList"
+import { postLikeAdd } from "@/api/programList/message"
 import { MessageBox } from "element-ui"
 import MessageBoard from "./MessageBoard.vue"
 @Component({
     components: { MessageBoard }
 })
 export default class ProgramDetail extends Vue {
-    private likeShow = "0"
+    // ownerPraiseStatus个人点赞状态（0：是，1：否） ,-->
     private allList = []
     private programForm = {
         title: "",
@@ -107,7 +110,8 @@ export default class ProgramDetail extends Vue {
         browerNum: "", // 预览人数
         guests: "", // 本期嘉宾
         summary: "", // 本期简介
-        content: "" // 节目内容
+        content: "", // 节目内容
+        likeShow: "1" // 个人点赞
     }
 
     private supervise = { // 督办事项
@@ -139,8 +143,10 @@ export default class ProgramDetail extends Vue {
                         browerNum: res.data.browerNum, // 预览人数
                         guests: res.data.liveEntity.guests, // 本期嘉宾
                         summary: res.data.summary, // 本期简介
-                        content: res.data.content // 节目内容
+                        content: res.data.content, // 节目内容
+                        likeShow: res.data.ownerPraiseStatus
                     }
+                    console.log()
                     if (res.data.superviseItemEntity) {
                         this.supervise = {
                             content: res.data.superviseItemEntity.content,
@@ -164,7 +170,22 @@ export default class ProgramDetail extends Vue {
     }
 
     private getLikeShow() {
-        this.likeShow = "1"
+        const params = {
+            programId: this.$route.params.promId,
+            targetId: this.$route.params.promId
+        }
+        postLikeAdd(params).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    MessageBox.alert("操作成功", "成功", { type: "success" })
+                    this.programForm.likeShow = "0"
+                } else {
+                    MessageBox.alert(`操作失败`, "失败", { type: "error" })
+                }
+            } else {
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            }
+        })
     }
 }
 </script>
