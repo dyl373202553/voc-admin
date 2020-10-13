@@ -147,7 +147,6 @@ export default class ProgramDetail extends Vue {
                         content: res.data.content, // 节目内容
                         likeShow: res.data.ownerPraiseStatus
                     }
-                    console.log()
                     if (res.data.superviseItemEntity) {
                         this.supervise = {
                             content: res.data.superviseItemEntity.content,

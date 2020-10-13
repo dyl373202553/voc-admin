@@ -12,7 +12,7 @@
                         />
                     </template>
                     <div class="text-right margin-top10">
-                        <el-button type="primary" round @click="onSubmit">评论</el-button>
+                        <el-button type="primary" round @click="onSubmit" :disabled="this.message === '' ">评论</el-button>
                     </div>
                 </div>
             <el-tab-pane label="精彩留言" name="first">
@@ -62,6 +62,20 @@
                                     <span><img src="@/assets/images/icon_like.png"/></span>
                                     <span>删除</span>
                                 </div>
+                                <div class="text-right margin-top10 info">
+                                    <template>
+                                        <el-input
+                                            v-model="backMessage"
+                                            type="textarea"
+                                            :rows="4"
+                                            placeholder="说点什么吧"
+                                        />
+                                    </template>
+                                    <div class="text-right margin-top10">
+                                        <el-button type="primary" round @click="onBackSubmit(item.id)">回复</el-button>
+                                    </div>
+                                    <span><img src="@/assets/images/icon_like.png"/></span>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -80,6 +94,7 @@ import { MessageBox } from "element-ui"
 export default class MessageBoard extends Vue {
     private activeName = "first"
     private likeShow = 0
+    private backMessage = ""
     private message = ""
     private getLikeShow() {
         this.likeShow = this.likeShow + 1
@@ -97,7 +112,7 @@ export default class MessageBoard extends Vue {
         const dataPage = {
             pageNum: 1,
             pageSize: 10,
-            programId: this.$route.params.liveId,
+            programId: this.$route.params.promId,
             wonderfulFlag: "" // 是否为精彩留言（0：是，1：否）
         }
         postMessageAll(dataPage).then((res) => {
@@ -112,14 +127,8 @@ export default class MessageBoard extends Vue {
         })
     }
 
-    private onSubmit() {
-        const dataMessagePage = {
-            content: this.message,
-            targetId: this.$route.params.liveId,
-            programId: this.$route.params.liveId,
-            wonderfulFlag: "1"
-        }
-        postMessageAdd(dataMessagePage).then((res) => {
+    private postMessage(params: any) {
+        postMessageAdd(params).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.load()
@@ -129,6 +138,26 @@ export default class MessageBoard extends Vue {
                 }
             }
         })
+    }
+
+    private onSubmit() {
+        const dataMessagePage = {
+            content: this.message,
+            targetId: this.$route.params.promId,
+            programId: this.$route.params.promId,
+            wonderfulFlag: "1"
+        }
+        this.postMessage(dataMessagePage)
+    }
+
+    private onBackSubmit(id: string) {
+        const dataMessagePage = {
+            content: "回复",
+            targetId: id,
+            programId: this.$route.params.promId,
+            wonderfulFlag: "1"
+        }
+        this.postMessage(dataMessagePage)
     }
 }
 </script>
