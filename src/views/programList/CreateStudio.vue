@@ -351,7 +351,6 @@ export default class CreateStudio extends Vue {
         })
             .then((res: any) => {
                 if (res) {
-                    console.log(res)
                     if (res.data.code < 200) {
                         // 上传成功
                         this.dataForm.logoUrl = res.data.data.filePath
