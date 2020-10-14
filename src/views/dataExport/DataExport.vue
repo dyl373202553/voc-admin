@@ -89,19 +89,10 @@
           </el-table-column>
           <el-table-column label="操作" align="center">
             <div slot-scope="scope">
-              <el-button type="text" size="small" @click="likeDetail(scope.row.id)">点赞详情</el-button>
-              <el-button type="text" size="small">评论详情</el-button>
+              <el-button type="text" size="small" @click="likeDetail('2', scope.row.id, '点赞详情')">点赞详情</el-button>
+              <el-button type="text" size="small" @click="likeDetail('1', scope.row.id, '评论详情')">评论详情</el-button>
             </div>
           </el-table-column>
-          <!-- <el-table-column align="center" label="Actions" width="120">
-            <template>
-              <router-link :to="'/programList/CreateStudio'">
-                <el-button type="primary" size="small" icon="el-icon-edit">
-                  Editdddd
-                </el-button>
-              </router-link>
-            </template>
-          </el-table-column> -->
         </el-table>
         <div class="dpagination">
            <el-pagination
@@ -188,22 +179,11 @@ export default class OverseeCheck extends Vue {
         this.load()
     }
 
-    //  导出详情
-    private likeDetail(id: string) {
-        console.log(id)
-        // const params = {
-        //     ids: id
-        // }
-        // postExportAll(params).then((res) => {
-        //     if (res) {
-        //         const fileName = "ddd.xls"
-        //         const blob = new Blob([res.data], { type: "application/vnd.ms-excel" })
-        //         handleDownloadFile(blob, fileName)
-        //     }
-        // })
+    //  导出详情或点赞
+    private likeDetail(type: string, id: string, name: string) {
         axios({
             method: "get",
-            url: `/vue-potal/moa-customervoice/api/modules/khzsProgram/exportProgramData?id=7199a569581f401481acbd47483fb31f&type=2`,
+            url: `/vue-potal/moa-customervoice/api/modules/khzsProgram/exportProgramData?id=${id}&type=${type}`,
             responseType: "blob", // arraybuffer
             headers: {
                 // "Content-Type": "application/json;charset=UTF-8",
@@ -211,8 +191,8 @@ export default class OverseeCheck extends Vue {
             }
         })
             .then((res) => {
-                const fileName = "yyy.xls"
-                // const fileName = this.exportParams.fileName + this.exportParams.checkNo + '.xls';
+                const dateName = day(new Date(), "YYYY-MM-DD")
+                const fileName = name + dateName + ".xls"
                 const blob = new Blob([res.data], { type: "application/vnd.ms-excel" })
                 handleDownloadFile(blob, fileName)
             })
