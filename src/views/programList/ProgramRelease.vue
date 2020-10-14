@@ -62,12 +62,15 @@
             <EditorBar v-model="dataForm.content" :is-clear="isClear" />
         </el-form-item>
         <el-form-item label="上传附件">
-            <el-upload
-                class="upload-demo"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :limit="1"
+          <el-upload
+                class="upload-image"
+                :action="' '"
+                :auto-upload="false"
+                :limit="3"
+                :on-change="handleAvatarChangeIcon"
+                ref="uploadicon"
                 >
-                <el-button size="small" type="primary" plain>附件上传</el-button>
+                 <el-button size="small" type="primary" plain>附件上传</el-button>
                 <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
           </el-upload>
         </el-form-item>
@@ -76,6 +79,7 @@
           <el-button type="primary" round @click="onSubmit"
           :disabled="!(dataForm.liveId && dataForm.title && dataForm.summary && dataForm.content)"
           >提交</el-button>
+          <el-button plain round @click="saveFile">上传文件</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -84,30 +88,22 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { postProgramRelease, getStudioList, getProgramDetail } from "@/api/programList/programList"
+import { getStudioList, getProgramDetail, postProgramRelease } from "@/api/programList/programList"
 import { getProgramName, getProgramKind } from "@/api/dict"
 import { MessageBox } from "element-ui"
 import EditorBar from "@/components/wangEnditor/Editoritem.vue"
+import { UserModule } from "@/store/module/user"
+import axios from "axios"
 @Component({
     components: { EditorBar }
 })
 export default class ProgramRelease extends Vue {
-    /* 测试 */
-    private value = "1"
-    private options = [{
-        value: "1",
-        label: "2020年08月15日 17:00--17:30"
-    }, {
-        value: "2",
-        label: "2020年09月15日 17:00--17:30"
-    }, {
-        value: "3",
-        label: "2020年10月15日 17:00--17:30"
-    }]
+    get userToken() {
+        // @ts-ignore
+        return UserModule.token
+    }
 
     private isClear = false
-    /* 测试 */
-
     private dataOptions = []
     private kindList = []
     private programType = "1"
@@ -117,7 +113,7 @@ export default class ProgramRelease extends Vue {
         title: "", // 节目名称
         summary: "", // 节目简介
         content: "", // 节目内容
-        fileIds: "附件id12", // 附件id
+        fileIds: "", // 附件id
         id: ""
     }
 
@@ -144,20 +140,6 @@ export default class ProgramRelease extends Vue {
         }).catch(() => {
             // MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
         })
-
-        // getStudioList().then((res) => {
-        //     if (res) {
-        //         this.dataOptions = res.data
-        //         this.dataForm.liveId = res.data[0].id
-        //     }
-        // })
-        // this.getName()
-        // getProgramKind({ type: "khzs_program_type" }).then((res) => {
-        //     if (res) {
-        //         this.kindList = res
-        //         this.programType = "1"
-        //     }
-        // })
     }
 
     private getName() {
@@ -202,6 +184,7 @@ export default class ProgramRelease extends Vue {
     // 提交
     private onSubmit() {
         this.dataForm.type = this.programType
+        console.log(this.dataForm)
         postProgramRelease(this.dataForm).then((res) => {
             if (res) {
                 if (res.code < 200) {
@@ -211,6 +194,57 @@ export default class ProgramRelease extends Vue {
                 }
             }
         })
+    }
+
+    // 上传附件
+    private dfile: any
+    private iconformData = {
+        img: "",
+        name: ""
+    }
+
+    private hideUploadIcon: any
+    private handleAvatarChangeIcon(file: any, fileList: any) {
+        this.dfile = file
+        const isLt2M = file.raw.size / 1024 / 1024 < 0.5
+        this.hideUploadIcon = fileList.length >= 1
+        if (!isLt2M) {
+            this.$message.error("上传图片大小不能超过 200kb!")
+            return false
+        } else {
+            this.iconformData.img = file.raw // 图片的url
+            this.iconformData.name = file.name // 图片的名字
+        }
+    }
+
+    private saveFile() {
+        const formData = new FormData()
+        formData.append("file", this.dfile.raw) // 传参改为formData格式
+        axios({
+            method: "post",
+            url: `/vue-potal/portal-file/api/file/provider/uploadfile?busSource=moa-customervoice`, // 请求后端的url
+            headers: {
+                "Content-Type": "multipart/form-data", // 设置headers
+                Authorization: `Bearer ${this.userToken}`
+            },
+            data: formData
+        })
+            .then((res: any) => {
+                if (res) {
+                    if (res.data.code < 200) {
+                        // 上传成功
+                        this.dataForm.fileIds = res.data.data.fileId
+                        MessageBox.alert("上传成功", "成功", { type: "success" })
+                    }
+                } else {
+                    // 上传失败
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            })
+            .catch(() => {
+                // 请求失败
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            })
     }
 }
 </script>

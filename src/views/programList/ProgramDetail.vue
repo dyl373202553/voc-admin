@@ -178,7 +178,6 @@ export default class ProgramDetail extends Vue {
         postLikeAdd(params).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    MessageBox.alert("操作成功", "成功", { type: "success" })
                     this.programForm.likeShow = "0"
                 } else {
                     MessageBox.alert(`操作失败`, "失败", { type: "error" })

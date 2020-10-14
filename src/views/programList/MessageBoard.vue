@@ -59,7 +59,8 @@
                                 <div class="text-right margin-top10 info">
                                     <span class="fl wonderful" v-show="item.wonderfulFlag === '0'">精彩留言</span>
                                     <span><img src="@/assets/images/icon_repeat.png"/></span>
-                                    <span @click="getLike(item.id)"><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{item.praiseNum}}</span>
+                                    <span v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)"><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{item.praiseNum}}</span>
+                                    <span v-if="item.ownerPraiseStatus ==='0'" ><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{item.praiseNum}}</span>
                                     <span>删除</span>
                                 </div>
                                 <div class="text-right margin-top10 info">
