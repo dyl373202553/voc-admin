@@ -32,7 +32,7 @@
                                 <div class="text-right margin-top10 info">
                                     <span class="fl wonderful" v-show="item.wonderfulFlag === '0'">精彩留言</span>
                                     <span><img src="@/assets/images/icon_repeat.png"/></span>
-                                    <span><img src="@/assets/images/icon_like.png"/></span>
+                                    <span @click="getLike(item.id)"><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{item.praiseNum}}</span>
                                     <span>删除</span>
                                 </div>
                             </div>
@@ -59,7 +59,7 @@
                                 <div class="text-right margin-top10 info">
                                     <span class="fl wonderful" v-show="item.wonderfulFlag === '0'">精彩留言</span>
                                     <span><img src="@/assets/images/icon_repeat.png"/></span>
-                                    <span><img src="@/assets/images/icon_like.png"/></span>
+                                    <span @click="getLike(item.id)"><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{item.praiseNum}}</span>
                                     <span>删除</span>
                                 </div>
                                 <div class="text-right margin-top10 info">
@@ -88,7 +88,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { postMessageAll, postMessageAdd } from "@/api/programList/message"
+import { postMessageAll, postMessageAdd, postLikeAdd } from "@/api/programList/message"
 import { MessageBox } from "element-ui"
 @Component
 export default class MessageBoard extends Vue {
@@ -158,6 +158,26 @@ export default class MessageBoard extends Vue {
             wonderfulFlag: "1"
         }
         this.postMessage(dataMessagePage)
+    }
+
+    // 点赞
+    private getLike(id: string) {
+        console.log(id)
+        const params = {
+            programId: this.$route.params.promId,
+            targetId: id
+        }
+        postLikeAdd(params).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    MessageBox.alert("操作成功", "成功", { type: "success" })
+                } else {
+                    MessageBox.alert(`操作失败`, "失败", { type: "error" })
+                }
+            } else {
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            }
+        })
     }
 }
 </script>
