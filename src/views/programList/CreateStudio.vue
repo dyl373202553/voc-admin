@@ -23,17 +23,20 @@
             :rules="[
             { required: true, message: '节目封面不能为空'}
             ]">
-          <el-upload
-            class="upload-image"
-            action="https://jsonplaceholder.typicode.com/posts/"
-            :file-list="fileList"
-            list-type="picture"
-            :limit="1"
-            accept=".png, .jpg, .jpeg"
-          >
-            <el-button size="small" type="primary" plain>上传封面</el-button>
-            <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于2M的文件，支持格式jpg/png/jpeg;</span>
-          </el-upload>
+           <el-upload
+                class="upload-image"
+                :action="' '"
+                list-type="picture"
+                :auto-upload="false"
+                :limit="1"
+                :on-change="handleAvatarChangeIcon"
+                ref="uploadicon"
+                >
+                <!-- <i class="el-icon-plus"></i> -->
+                <el-button size="small" type="primary" plain>上传封面</el-button>
+                <el-button size="small" type="primary" plain @click="saveFile">上传到服务器</el-button>
+                <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于2M的文件，支持格式jpg/png/jpeg;</span>
+            </el-upload>
         </el-form-item>
         <el-form-item label="节目主讲人"
             prop="speakersData"
@@ -96,17 +99,22 @@ import { postCreateStudio } from "@/api/programList/programList"
 import { MessageBox } from "element-ui"
 import { day } from "@/lib/js/unitls"
 import { getOrgFirst, getUserListBySecondCode, getOrgTree } from "@/api/addressBook"
+import { UserModule } from "@/store/module/user"
+import axios from "axios"
 
 @Component
 export default class CreateStudio extends Vue {
-    private fileList = [{ name: "food2.jpeg", url: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600835517648&di=66a169c2743457deb998e954546616a0&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Fback_pic%2F05%2F49%2F55%2F635acaccbda9696.jpg" }]
+    get userToken() {
+        // @ts-ignore
+        return UserModule.token
+    }
 
     private dialogTableVisible = false
     private dataForm = {
         startTime: "",
         endTime: "",
-        logoUrl: "http://www.managershare.com/uploads/2015/01/14210532585795.jpg",
-        speakersData: "[{'userCode':'fuhao','userName':'傅浩','deptName':'信息系统部'}]", // 节目主讲人
+        logoUrl: "",
+        speakersData: "", // 节目主讲人
         guests: "", // 本期嘉宾
         superviseFlag: "1", // 是否发布督办举措 0:是 1：否
         summaryFlag: "1" // 是否发布节目小结 0:是 1：否
@@ -142,40 +150,6 @@ export default class CreateStudio extends Vue {
             }
         })
     }
-
-    // private handleRemove(file: any, fileList: any) {
-    //     console.log(file, fileList)
-    // }
-
-    // private handlePreview(file: any) {
-    //     console.log(file)
-    // }
-
-    // private handleExceed(file: any) {
-    //     alert("超出数量")
-    //     console.log(file)
-    // }
-
-    // private handleOut(file: any) {
-    //     console.log(file)
-    //     // var testmsg = file.name.substring(file.name.lastIndexOf('.') + 1)
-    //     // const extension = testmsg === 'png'
-    //     // const extension2 = testmsg === 'jpg'
-    //     // const isLt2M = file.size / 1024 / 1024 < 1 // 这里做文件大小限制
-    //     // if (!extension && !extension2) {
-    //     //   this.$message({
-    //     //     message: '上传文件只能是 png、jpg格式!',
-    //     //     type: 'warning'
-    //     //   })
-    //     // }
-    //     // if (!isLt2M) {
-    //     //   this.$message({
-    //     //     message: '上传文件大小不能超过 1MB!',
-    //     //     type: 'warning'
-    //     //   })
-    //     // }
-    //     // return extension || extension2 && isLt2M
-    // }
 
     // 通讯录获取
     private loadAll(node: any, resolve: (arg0: {}[]) => any) {
@@ -334,6 +308,64 @@ export default class CreateStudio extends Vue {
             arr.push(JSON.stringify(obj))
         }
         this.dataForm.speakersData = "[" + arr.toString() + "]"
+    }
+
+    // 上传图片
+    private dfile: any
+    private iconformData = {
+        img: "",
+        name: ""
+    }
+
+    private hideUploadIcon: any
+
+    private handleAvatarChangeIcon(file: any, fileList: any) {
+        const isJPG = file.raw.type === "image/jpeg"
+        const isPNG = file.raw.type === "image/png"
+        this.dfile = file
+        const isLt2M = file.raw.size / 1024 / 1024 < 0.5
+        this.hideUploadIcon = fileList.length >= 1
+        if (!isPNG && !isJPG) {
+            this.$message.error("上传图片只能是 JPG/PNG 格式!")
+            return false
+        } else if (!isLt2M) {
+            this.$message.error("上传图片大小不能超过 200kb!")
+            return false
+        } else if (isLt2M && (isPNG || isJPG)) {
+            this.iconformData.img = file.raw // 图片的url
+            this.iconformData.name = file.name // 图片的名字
+        }
+    }
+
+    private saveFile() {
+        const formData = new FormData()
+        formData.append("file", this.dfile.raw) // 传参改为formData格式
+        axios({
+            method: "post",
+            url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=ceshi&isystemName=1`, // 请求后端的url
+            headers: {
+                "Content-Type": "multipart/form-data", // 设置headers
+                Authorization: `Bearer ${this.userToken}`
+            },
+            data: formData
+        })
+            .then((res: any) => {
+                if (res) {
+                    console.log(res)
+                    if (res.data.code < 200) {
+                        // 上传成功
+                        this.dataForm.logoUrl = res.data.data.filePath
+                        MessageBox.alert("上传成功", "成功", { type: "success" })
+                    }
+                } else {
+                    // 上传失败
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            })
+            .catch(() => {
+                // 请求失败
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            })
     }
 }
 </script>

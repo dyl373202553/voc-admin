@@ -27,7 +27,7 @@
                 <el-card class="card-img">
                     <div class="box-card-img">
                     <!-- <img :src="value.img" class="image"> -->
-                    <el-image :src="value.liveEntity.logoUrl" fit="cover" class="image" />
+                    <el-image :src="`/resources/`+ value.liveEntity.logoUrl" fit="cover" class="image" />
                     </div>
                     <div class="box-card-info">
                     <div class="title">{{ value.title }}</div>

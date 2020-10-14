@@ -67,6 +67,14 @@ module.exports = {
                 pathRewrite: {
                     "^/vue-potal": "/vue-potal"
                 }
+            },
+            "/resources": {
+                target: "http://211.136.25.148:6080/",
+                ws: true,
+                changeOrigin: true,
+                pathRewrite: {
+                    "^/resources": "/resources"
+                }
             }
         },
         // before: app => { },
