@@ -9,7 +9,7 @@
                 <el-carousel-item v-for="(item, key) in slideshowList" :key="key">
                     <div>
                     <!-- <el-image :src="item.img" fit="contain" class="image" /> -->
-                    <img :src="item.content" class="image" style="width:100%;height: 400px;">
+                    <img :src="`/resources/`+ item.content" class="image" style="width:100%;height: 400px;">
                     </div>
                 </el-carousel-item>
                 </el-carousel>

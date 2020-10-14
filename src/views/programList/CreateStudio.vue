@@ -342,7 +342,7 @@ export default class CreateStudio extends Vue {
         formData.append("file", this.dfile.raw) // 传参改为formData格式
         axios({
             method: "post",
-            url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=ceshi&isystemName=1`, // 请求后端的url
+            url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsLive&isystemName=1`, // 请求后端的url
             headers: {
                 "Content-Type": "multipart/form-data", // 设置headers
                 Authorization: `Bearer ${this.userToken}`
