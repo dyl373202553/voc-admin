@@ -15,9 +15,9 @@
                         <div>已选择联系人</div>
                     </div>
                     <div class="selecteContain">
-                        <div v-for="pr in selInfoArr" class="nameShow" :key="pr.orgCode">
-                            {{pr.orgName}}
-                            <el-button icon="el-icon-delete" class="dbtn-del" @click="delPerson(pr.orgCode)"/>
+                        <div v-for="pr in selInfoArr" class="nameShow" :key="pr.id">
+                            {{pr.label}}
+                            <el-button icon="el-icon-delete" class="dbtn-del" @click="delPerson(pr.id)"/>
                         </div>
                     </div>
                 </div>
@@ -151,14 +151,16 @@ export default class SpecialFocus extends Vue {
     }
 
     private handleChangeClick(data: any, isCheck: any) {
-        if (data.isLeaf === false) {} else {
+        console.log(data)
+        if (data.isLeaf === true) {} else {
             if (isCheck) {
                 // @ts-ignore
                 this.$refs.tree1.setChecked(data.id, true)
                 if ((this.selIdArr.indexOf(data.id) === -1)) {
-                    this.selInfoArr.push(data.res)
-                    this.selIdArr.push(data.id)
-                    console.log(this.selInfoArr)
+                    if (data.extendProperty) {
+                        this.selInfoArr.push(data)
+                        this.selIdArr.push(data.id)
+                    }
                 }
             } else {
                 // @ts-ignore
@@ -166,12 +168,11 @@ export default class SpecialFocus extends Vue {
                 if (this.selIdArr.indexOf(data.id) > -1) {
                     this.removeAaary(this.selIdArr, data.id)
                     for (let i = 0; i < this.selInfoArr.length; i++) {
-                        if (this.selInfoArr[i].orgCode === data.id) {
+                        if (this.selInfoArr[i].id === data.id) {
                             this.removeAaary(this.selInfoArr, this.selInfoArr[i])
                         }
                     }
                 }
-                console.log(this.selInfoArr)
             }
         }
     }
@@ -186,7 +187,7 @@ export default class SpecialFocus extends Vue {
     private delPerson(id: any) {
         this.removeAaary(this.selIdArr, id)
         for (let i = 0; i < this.selInfoArr.length; i++) {
-            if (this.selInfoArr[i].orgCode === id) {
+            if (this.selInfoArr[i].id === id) {
                 this.removeAaary(this.selInfoArr, this.selInfoArr[i])
             }
         }
@@ -213,7 +214,7 @@ export default class SpecialFocus extends Vue {
     }
 
     private sureSelect() {
-        this.$emit("func", this.selInfoArr)
+        this.$emit("funcs", this.selInfoArr)
     }
 
     // private dataList: any = []
@@ -244,4 +245,22 @@ export default class SpecialFocus extends Vue {
 </script>
 
 <style scoped>
+    .treePerson {
+        height: 400px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+    .ReleaseBox {
+        position: absolute;
+        right: 20px;
+    }
+    .ReleaseBox .el-button {
+        padding: 10px 30px;
+    }
+    .dbtn-del {
+        border: none;
+    }
+    .dbtn-del:hover {
+        background: transparent;
+    }
 </style>
