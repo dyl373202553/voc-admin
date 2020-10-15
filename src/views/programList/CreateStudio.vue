@@ -42,7 +42,7 @@
             :rules="[
             { required: true, message: '节目主讲人不能为空'}
             ]">
-          <el-input v-model="dataForm.speakersData" placeholder="请选择主讲人"  @focus="dialogTableVisible = true" suffix-icon="el-icon-s-home" />
+          <el-input v-model="speakersData" placeholder="请选择主讲人"  @focus="dialogTableVisible = true" suffix-icon="el-icon-s-home" />
         </el-form-item>
         <el-form-item label="本期嘉宾"
             prop="guests"
@@ -116,6 +116,8 @@ export default class CreateStudio extends Vue {
         summaryFlag: "1" // 是否发布节目小结 0:是 1：否
     }
 
+    private speakersData ="" // 保存主讲人
+
     private defaultProps={
         children: "children",
         label: "label",
@@ -152,14 +154,17 @@ export default class CreateStudio extends Vue {
         this.dialogTableVisible = false
         this.dataList = data
         const arr = []
+        const brr = []
         for (let i = 0; i < this.dataList.length; i++) {
             const obj: any = {}
             obj.userCode = this.dataList[i].userCode.toString()
             obj.userName = this.dataList[i].userName.toString()
             obj.deptName = this.dataList[i].orgName.toString()
             arr.push(JSON.stringify(obj))
+            brr.push(JSON.stringify(obj.userName))
         }
         this.dataForm.speakersData = "[" + arr.toString() + "]"
+        this.speakersData = brr.toString()
     }
 
     // 上传图片

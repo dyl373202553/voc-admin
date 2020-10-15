@@ -13,10 +13,6 @@
                 <div class="selected">
                     <div class="flex acenter between">
                         <div>已选择联系人</div>
-                        <div class="flex acenter">
-                            <div class="iconfont icon-icon_delete"></div>
-                            <div @click="clearAll">清空</div>
-                        </div>
                     </div>
                     <div class="selecteContain">
                         <div v-for="pr in selInfoArr" class="nameShow" :key="pr.userCode">
@@ -27,8 +23,9 @@
                 </div>
             </el-col>
         </el-row>
-          <div class="ReleaseBox">
-            <div class="sureBtn" @click="sureSelect()">确定</div>
+        <div class="ReleaseBox">
+            <el-button size="small" type="danger" @click="clearAll" round>清空</el-button>
+            <el-button size="small" type="primary" @click="sureSelect()" round>确定</el-button>
         </div>
     </div>
 </template>
@@ -291,5 +288,18 @@ export default class SpecialFocus extends Vue {
         background: gainsboro;
         overflow-y: auto;
         overflow-x: hidden;
+    }
+    .ReleaseBox {
+        position: absolute;
+        right: 20px;
+    }
+    .ReleaseBox .el-button {
+        padding: 10px 30px;
+    }
+    .dbtn-del {
+        border: none;
+    }
+    .dbtn-del:hover {
+        background: transparent;
     }
 </style>
