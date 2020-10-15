@@ -31,22 +31,23 @@
         </div>
         <div class="dsummary-mian">
           <div class="dsummary-title">上传附件</div>
-          <div>
-            <el-upload
-                class="upload-demo"
-                action="https://jsonplaceholder.typicode.com/posts/"
-                multiple
+          <el-upload
+                class="upload-image"
+                :action="' '"
+                :auto-upload="false"
                 :limit="3"
+                :on-change="handleAvatarChangeIcon"
+                ref="uploadicon"
                 >
-                <el-button size="small" type="primary" plain>附件上传</el-button>
+                 <el-button size="small" type="primary" plain>附件上传</el-button>
                 <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
-            </el-upload>
-        </div>
+          </el-upload>
         </div>
         <div class="bottom dbtn">
           <el-button round>返回</el-button>
           <el-button type="primary" round :disabled="!summaryContent" @click="onSubmit">提交</el-button>
           <el-button v-show="$route.params.summaryName !=='发布小结'" type="danger" plain round @click="summaryDelete">删除</el-button>
+          <el-button plain round @click="saveFile">上传文件</el-button>
         </div>
       </div>
     </el-card>
@@ -68,13 +69,21 @@ import { Component, Vue } from "vue-property-decorator"
 import { postProgramSummary, getProgramDetail, postProgramSummaryDelete } from "@/api/programList/programList"
 import { MessageBox } from "element-ui"
 import { getOrgFirst, getOrgTree } from "@/api/addressBook"
+import { UserModule } from "@/store/module/user"
+import axios from "axios"
 @Component
 export default class ProgramSummary extends Vue {
+    get userToken() {
+        // @ts-ignore
+        return UserModule.token
+    }
+
     private summaryContent = "";
     private programTitle= "";
     private programTime= "";
     private summaryId= "";
     private deptnamesData = "";
+    private fileIds = "";
     private dialogTableVisible = false
 
     private defaultProps={
@@ -112,7 +121,7 @@ export default class ProgramSummary extends Vue {
             programId: this.$route.params.id, // 节目ID
             content: this.summaryContent, // 小结内容
             deptnames: this.deptnamesData, // 参与部门，多个以‘;’想个，只做显示
-            fileIds: "附件id12", // 附件id
+            fileIds: this.fileIds, // 附件id
             id: this.summaryId // 修改时传递ID，新增不传
         }
         postProgramSummary(params).then((res) => {
@@ -238,6 +247,57 @@ export default class ProgramSummary extends Vue {
             }
         }
         this.deptnamesData = "[" + arr.toString() + "]"
+    }
+
+    // 上传附件
+    private dfile: any
+    private iconformData = {
+        img: "",
+        name: ""
+    }
+
+    private hideUploadIcon: any
+    private handleAvatarChangeIcon(file: any, fileList: any) {
+        this.dfile = file
+        const isLt2M = file.raw.size / 1024 / 1024 < 0.5
+        this.hideUploadIcon = fileList.length >= 1
+        if (!isLt2M) {
+            this.$message.error("上传图片大小不能超过 200kb!")
+            return false
+        } else {
+            this.iconformData.img = file.raw // 图片的url
+            this.iconformData.name = file.name // 图片的名字
+        }
+    }
+
+    private saveFile() {
+        const formData = new FormData()
+        formData.append("file", this.dfile.raw) // 传参改为formData格式
+        axios({
+            method: "post",
+            url: `/vue-potal/portal-file/api/file/provider/uploadfile?busSource=moa-customervoice`, // 请求后端的url
+            headers: {
+                "Content-Type": "multipart/form-data", // 设置headers
+                Authorization: `Bearer ${this.userToken}`
+            },
+            data: formData
+        })
+            .then((res: any) => {
+                if (res) {
+                    if (res.data.code < 200) {
+                        // 上传成功
+                        this.fileIds = res.data.data.fileId
+                        MessageBox.alert("上传成功", "成功", { type: "success" })
+                    }
+                } else {
+                    // 上传失败
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            })
+            .catch(() => {
+                // 请求失败
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            })
     }
 }
 </script>

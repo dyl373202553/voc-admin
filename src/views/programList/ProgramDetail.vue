@@ -79,8 +79,10 @@
             <div class="main-title">直播小结</div>
             <p>{{this.summary.content}}</p>
             <div>
-              <i class="el-icon-paperclip" />
-              <span class="info-title">{{this.summary.fileIds}}</span>
+                <a @click="haveDownload()">
+                    <i class="el-icon-paperclip" />
+                    <span class="info-title">{{this.summary.fileIds}}</span>
+                </a>
             </div>
           </div>
         </div>
@@ -96,10 +98,16 @@ import { getProgramDetail } from "@/api/programList/programList"
 import { postLikeAdd } from "@/api/programList/message"
 import { MessageBox } from "element-ui"
 import MessageBoard from "./MessageBoard.vue"
+import { UserModule } from "@/store/module/user"
 @Component({
     components: { MessageBoard }
 })
 export default class ProgramDetail extends Vue {
+    get userToken() {
+        // @ts-ignore
+        return UserModule.token
+    }
+
     // ownerPraiseStatus个人点赞状态（0：是，1：否） ,-->
     private allList = []
     private programForm = {
@@ -186,6 +194,15 @@ export default class ProgramDetail extends Vue {
                 MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
             }
         })
+    }
+
+    // 文件下载
+    private haveDownload() {
+        const link = document.createElement("a")
+        link.setAttribute("download", "附件")
+        link.href = `/vue-potal/portal-file/api/file/provider/download?fileId=${this.summary.fileIds}&access_token=${this.userToken}`
+        const oh = document.body
+        oh.appendChild(link).click()
     }
 }
 </script>
