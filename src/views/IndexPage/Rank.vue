@@ -49,7 +49,7 @@
                   </el-table>
                 </el-tab-pane>
               </el-tabs>
-              <span class="fr dspan-info"># 所有统计数据截止2019年12月31日23:23，每周更新一次 #</span>
+              <span class="fr dspan-info"># 所有统计数据截止  {{this.rankListTime}}，每周更新一次 #</span>
             </div>
           </el-tab-pane>
           <el-tab-pane>
@@ -98,7 +98,7 @@
                   </el-table>
                 </el-tab-pane>
               </el-tabs>
-              <span class="fr dspan-info"># 所有统计数据截止2019年12月31日23:23，每周更新一次 #</span>
+              <span class="fr dspan-info"># 所有统计数据截止  {{this.rankListTime}}，每周更新一次 #</span>
             </div>
           </el-tab-pane>
         </el-tabs>
@@ -109,45 +109,20 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { getRankList } from "@/api/IndexPage/home"
+import { day } from "@/lib/js/unitls"
 @Component
 export default class Home extends Vue {
     private rankList = "first"
     private likenum = "first"
     private activeName = "first"
     private activeNametabs = "first"
-    private tableData = [{ // 点赞榜
-        rank: "1",
-        name: "王小虎",
-        department: "信息系统部",
-        likenum: "113345"
-    }, {
-        rank: "2",
-        name: "张三",
-        department: "技术规划部",
-        likenum: "113345"
-    }, {
-        rank: "3",
-        name: "李四",
-        department: "党委办公室(党群工作部、职能管理部党委)",
-        likenum: "113345"
-    }, {
-        rank: "4",
-        name: "天天",
-        department: "法律事务部",
-        likenum: "11345"
-    }, {
-        rank: "5",
-        name: "小敏",
-        department: "全业务交付运营中心",
-        likenum: "11345"
-    }]
-
     private dataPage = {
         pageNum: "1",
         pageSize: "10"
     }
 
     private rankListData = []
+    private rankListTime=""
 
     protected mounted() {
         this.load()
@@ -157,6 +132,7 @@ export default class Home extends Vue {
         getRankList().then((res) => {
             if (res) {
                 this.rankListData = res.data
+                this.rankListTime = day(res.data[0].updateTime, "YYYY年MM月DD日 HH:mm:ss")
             }
         })
     }
