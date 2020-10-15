@@ -34,7 +34,6 @@
                 >
                 <!-- <i class="el-icon-plus"></i> -->
                 <el-button size="small" type="primary" plain>上传封面</el-button>
-                <el-button size="small" type="primary" plain @click="saveFile">上传到服务器</el-button>
                 <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于2M的文件，支持格式jpg/png/jpeg;</span>
             </el-upload>
         </el-form-item>
@@ -76,18 +75,12 @@
           <el-button type="primary" round @click="onSubmit"
             :disabled="!(dataForm.speakersData && dataForm.guests && dataForm.startTime && dataForm.endTime)"
           >提交</el-button>
+          <el-button size="small" type="primary" plain @click="saveFile" round>上传到服务器</el-button>
         </el-form-item>
       </el-form>
     </el-card>
-    <el-dialog title="通讯录" :visible.sync="dialogTableVisible">
-        <template>
-            <div class="app-container" style="height:600px;overflow:auto">
-                <el-tree  highlight-current show-checkbox :props="defaultProps" ref="treeDepartment" node-key="id" :default-checked-keys="departmentArr"
-                    lazy :load="loadAll">
-                </el-tree>
-                <el-button type="primary" round @click="submitTree">确认</el-button>
-            </div>
-        </template>
+    <el-dialog title="通讯录" :visible.sync="dialogTableVisible" >
+        <TreePerson @func="getMsgFormSon" />
     </el-dialog>
   </div>
 </template>
@@ -95,14 +88,16 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { postCreateStudio } from "@/api/programList/programList"
+import TreePerson from "@/components/addressBook/TreePerson.vue"
 // import { day } from "@/lib/js/unitls"
 import { MessageBox } from "element-ui"
 import { day } from "@/lib/js/unitls"
-import { getOrgFirst, getUserListBySecondCode, getOrgTree } from "@/api/addressBook"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
 
-@Component
+@Component({
+    components: { TreePerson }
+})
 export default class CreateStudio extends Vue {
     get userToken() {
         // @ts-ignore
@@ -110,6 +105,7 @@ export default class CreateStudio extends Vue {
     }
 
     private dialogTableVisible = false
+    private dataList: any = [] // 保存通讯录传过来的数据
     private dataForm = {
         startTime: "",
         endTime: "",
@@ -151,160 +147,16 @@ export default class CreateStudio extends Vue {
         })
     }
 
-    // 通讯录获取
-    private loadAll(node: any, resolve: (arg0: {}[]) => any) {
-        if (node.level === 0) {
-            const params = {
-                moaFlag: "1"
-            }
-            getOrgFirst(params).then(res => {
-                if (res.code === 0) {
-                    const leaderList = res.data.childOrgList
-                    const brr = [] // 组装部门数据
-                    for (let i = 0; i < leaderList.length; i++) {
-                        const obj: any = {}
-                        obj.isLeaf = false // 是否有下级
-                        obj.disabled = true // 是否可以选择
-                        obj.id = leaderList[i].orgCode
-                        obj.label = leaderList[i].orgName
-                        obj.level = leaderList[i].level
-                        brr.push(obj)
-                    }
-                    return resolve(brr)
-                }
-            })
-        } else if (node.level === 1) {
-            if (node.data.level === 1) {
-                const params = {
-                    orgCode: node.data.id
-                }
-                getUserListBySecondCode(params).then(res => {
-                    if (res.code === 0) {
-                        const userList = res.data
-                        const arr = []
-                        for (let i = 0; i < userList.length; i++) {
-                            const obj: any = {}
-                            obj.isLeaf = true
-                            obj.id = userList[i].userCode
-                            obj.label = userList[i].userName
-                            obj.res = userList[i]
-                            arr.push(obj)
-                        }
-                        return resolve(arr)
-                    }
-                })
-            } else {
-                const params = {
-                    orgCode: node.data.id
-                }
-                getOrgTree(params).then(res => {
-                    const leaderList = res.data.leaderList
-                    const childList = res.data.childList
-                    const arr = []
-                    for (let i = 0; i < leaderList.length; i++) {
-                        const obj: any = {}
-                        obj.isLeaf = true
-                        obj.id = leaderList[i].userCode
-                        obj.label = leaderList[i].userName
-                        obj.res = leaderList[i]
-                        // obj.icon = LOGIN_URL + leaderList[i].imgB
-                        arr.push(obj)
-                    }
-                    for (let i = 0; i < childList.length; i++) {
-                        const obj: any = {}
-                        obj.isLeaf = false
-                        obj.disabled = true
-                        obj.id = childList[i].orgCode
-                        obj.label = childList[i].orgName
-                        obj.extendProperty = childList[i].extendProperty
-                        obj.level = childList[i].level
-                        arr.push(obj)
-                    }
-                    return resolve(arr)
-                })
-            }
-        } else if (node.level === 2) {
-            if (node.data.extendProperty.hasChildOrg === 1) {
-                const params = {
-                    orgCode: node.data.id
-                }
-                getOrgTree(params).then(res => {
-                    const leaderList = res.data.leaderList
-                    const childList = res.data.childList
-                    const arr = []
-                    for (let i = 0; i < leaderList.length; i++) {
-                        const obj: any = {}
-                        obj.isLeaf = true
-                        obj.id = leaderList[i].userCode
-                        obj.label = leaderList[i].userName
-                        obj.res = leaderList[i]
-                        // obj.icon = LOGIN_URL + leaderList[i].imgB
-                        arr.push(obj)
-                    }
-                    for (let i = 0; i < childList.length; i++) {
-                        const obj: any = {}
-                        obj.isLeaf = false
-                        obj.disabled = true
-                        obj.id = childList[i].orgCode
-                        obj.label = childList[i].orgName
-                        obj.extendProperty = childList[i].extendProperty
-                        obj.level = childList[i].level
-                        arr.push(obj)
-                    }
-                    return resolve(arr)
-                })
-            } else {
-                const params = {
-                    orgCode: node.data.id
-                }
-                getUserListBySecondCode(params).then((res) => {
-                    if (res.code === 0) {
-                        const userList = res.data
-                        const arr = []
-                        for (let i = 0; i < userList.length; i++) {
-                            const obj: any = {}
-                            obj.isLeaf = true
-                            obj.id = userList[i].userCode
-                            obj.label = userList[i].userName
-                            obj.res = userList[i]
-                            arr.push(obj)
-                        }
-                        return resolve(arr)
-                    }
-                })
-            }
-        } else if (node.level === 3) {
-            const params = {
-                orgCode: node.data.id
-            }
-            getUserListBySecondCode(params).then(res => {
-                if (res.code === 0) {
-                    const userList = res.data
-                    const arr = []
-                    for (let i = 0; i < userList.length; i++) {
-                        const obj: any = {}
-                        obj.isLeaf = true
-                        obj.id = userList[i].userCode
-                        obj.label = userList[i].userName
-                        obj.res = userList[i]
-                        arr.push(obj)
-                    }
-                    return resolve(arr)
-                }
-            })
-        }
-    }
-
-    private dataList: any = []
-    private submitTree() {
-        // @ts-ignore
-        this.dataList = this.$refs.treeDepartment.getCheckedNodes()
+    // 获取通讯录传回的数据
+    private getMsgFormSon(data: string|any[]) {
+        this.dialogTableVisible = false
+        this.dataList = data
         const arr = []
         for (let i = 0; i < this.dataList.length; i++) {
             const obj: any = {}
-            obj.userCode = this.dataList[i].res.userCode.toString()
-            obj.userName = this.dataList[i].res.userName.toString()
-            obj.deptName = this.dataList[i].res.orgName.toString()
+            obj.userCode = this.dataList[i].userCode.toString()
+            obj.userName = this.dataList[i].userName.toString()
+            obj.deptName = this.dataList[i].orgName.toString()
             arr.push(JSON.stringify(obj))
         }
         this.dataForm.speakersData = "[" + arr.toString() + "]"
