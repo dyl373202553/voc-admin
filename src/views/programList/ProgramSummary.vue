@@ -51,15 +51,8 @@
         </div>
       </div>
     </el-card>
-     <el-dialog title="参与部门" :visible.sync="dialogTableVisible">
-        <template>
-            <div class="app-container" style="height:600px;overflow:auto">
-                <el-tree  highlight-current show-checkbox :props="defaultProps" ref="treeDepartment" node-key="id" :default-checked-keys="departmentArr"
-                    lazy :load="loadAllDepartment">
-                </el-tree>
-                <el-button type="primary" round @click="submitTree">确认</el-button>
-            </div>
-        </template>
+    <el-dialog title="参与部门" :visible.sync="dialogTableVisible">
+       <TreeDepartment @funcs="getMsgFormSon" />
     </el-dialog>
   </div>
 </template>
@@ -67,11 +60,13 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { postProgramSummary, getProgramDetail, postProgramSummaryDelete } from "@/api/programList/programList"
+import TreeDepartment from "@/components/addressBook/TreeDepartment.vue"
 import { MessageBox } from "element-ui"
-import { getOrgFirst, getOrgTree } from "@/api/addressBook"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
-@Component
+@Component({
+    components: { TreeDepartment }
+})
 export default class ProgramSummary extends Vue {
     get userToken() {
         // @ts-ignore
@@ -83,6 +78,7 @@ export default class ProgramSummary extends Vue {
     private programTime= "";
     private summaryId= "";
     private deptnamesData = "";
+    private dataList: any = []
     private fileIds = "";
     private dialogTableVisible = false
 
@@ -154,101 +150,6 @@ export default class ProgramSummary extends Vue {
         })
     }
 
-    // 部门获取
-    private loadAllDepartment(node: any, resolve: (arg0: {}[]) => any) {
-        if (node.level === 0) {
-            const params = {
-                moaFlag: "1"
-            }
-            getOrgFirst(params).then(res => {
-                if (res.code === 0) {
-                    const leaderList = res.data.childOrgList
-                    const brr = [] // 组装部门数据
-                    for (let i = 0; i < leaderList.length; i++) {
-                        const obj: any = {}
-                        obj.isLeaf = false // 是否有下级
-                        obj.disabled = false // 是否可以选择
-                        obj.id = leaderList[i].orgCode
-                        obj.label = leaderList[i].orgName
-                        obj.level = leaderList[i].level
-                        brr.push(obj)
-                    }
-                    return resolve(brr)
-                }
-            })
-        } else if (node.level === 1) {
-            if (node.data.level === 1) {
-                node.data.disabled = false
-                node.loading = false
-                node.isLeaf = true
-            } else {
-                const params = {
-                    orgCode: node.data.id
-                }
-                getOrgTree(params).then(res => {
-                    const childList = res.data.childList
-                    const arr = []
-                    for (let i = 0; i < childList.length; i++) {
-                        const obj: any = {}
-                        obj.isLeaf = false
-                        obj.disabled = false
-                        obj.id = childList[i].orgCode
-                        obj.label = childList[i].orgName
-                        obj.extendProperty = childList[i].extendProperty
-                        obj.level = childList[i].level
-                        arr.push(obj)
-                    }
-                    return resolve(arr)
-                })
-            }
-        } else if (node.level === 2) {
-            if (node.data.extendProperty.hasChildOrg === 1) {
-                const params = {
-                    orgCode: node.data.id
-                }
-                getOrgTree(params).then(res => {
-                    const childList = res.data.childList
-                    const arr = []
-                    for (let i = 0; i < childList.length; i++) {
-                        const obj: any = {}
-                        obj.isLeaf = false
-                        obj.disabled = false
-                        obj.id = childList[i].orgCode
-                        obj.label = childList[i].orgName
-                        obj.extendProperty = childList[i].extendProperty
-                        obj.level = childList[i].level
-                        arr.push(obj)
-                    }
-                    return resolve(arr)
-                })
-            } else {
-                node.data.disabled = false
-                node.loading = false
-                node.isLeaf = true
-            }
-        } else if (node.level === 3) {
-            node.data.disabled = false
-            node.loading = false
-            node.isLeaf = true
-        }
-    }
-
-    private dataList: any = []
-    private submitTree() {
-        // @ts-ignore
-        this.dataList = this.$refs.treeDepartment.getCheckedNodes()
-        const arr = []
-        for (let i = 0; i < this.dataList.length; i++) {
-            if (this.dataList[i].extendProperty) {
-                const obj: any = {}
-                obj.deptCode = this.dataList[i].id.toString()
-                obj.deptName = this.dataList[i].label.toString()
-                arr.push(JSON.stringify(obj))
-            }
-        }
-        this.deptnamesData = "[" + arr.toString() + "]"
-    }
-
     // 上传附件
     private dfile: any
     private iconformData = {
@@ -298,6 +199,24 @@ export default class ProgramSummary extends Vue {
                 // 请求失败
                 MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
             })
+    }
+
+    // 获取通讯录传回的数据 -责任部门返回数据
+    private getMsgFormSon(data: string|any[]) {
+        this.dialogTableVisible = false
+        this.dataList = data
+        // const arr = []
+        const brr = []
+        for (let i = 0; i < this.dataList.length; i++) {
+            if (this.dataList[i].extendProperty) {
+                const obj: any = {}
+                // obj.deptCode = this.dataList[i].id.toString()
+                obj.deptName = this.dataList[i].label.toString()
+                // arr.push(JSON.stringify(obj))
+                brr.push(obj.deptName)
+            }
+        }
+        this.deptnamesData = brr.toString()
     }
 }
 </script>

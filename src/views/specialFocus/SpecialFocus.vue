@@ -43,7 +43,6 @@
                         list-type="picture"
                         :auto-upload="false"
                         :limit="1"
-                        :on-progress="progress"
                         :on-change="handleAvatarChangeIcon"
                         ref="uploadicon"
                         >

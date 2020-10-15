@@ -223,6 +223,7 @@ export default class SpecialFocus extends Vue {
                 if ((this.selIdArr.indexOf(data.id) === -1)) {
                     this.selInfoArr.push(data.res)
                     this.selIdArr.push(data.id)
+                    console.log(this.selInfoArr)
                 }
             } else {
                 // @ts-ignore
@@ -237,7 +238,6 @@ export default class SpecialFocus extends Vue {
                 }
             }
         }
-        console.log(this.selIdArr)
     }
 
     private clearAll() {
@@ -285,7 +285,6 @@ export default class SpecialFocus extends Vue {
 <style scoped>
     .treePerson {
         height: 400px;
-        background: gainsboro;
         overflow-y: auto;
         overflow-x: hidden;
     }

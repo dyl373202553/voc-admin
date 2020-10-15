@@ -48,73 +48,16 @@ import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
 @Component
 export default class ProgramManage extends Vue {
-    private tabledData = [{
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "党委办公室（党群工作部、职能管理部党委）-张三",
-        status: "1",
-        statusName: "未开始"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "党委办公室（党群工作部、职能管理部党委）-张三",
-        status: "1",
-        statusName: "未开始"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "党委办公室（党群工作部、职能管理部党委）-张三",
-        status: "2",
-        statusName: "进行中"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        status: "3",
-        statusName: "已下线"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        status: "2",
-        statusName: "进行中"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        status: "3",
-        statusName: "已下线"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        status: "1",
-        statusName: "未开始"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        tatus: "2",
-        statusName: "进行中"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        status: "3",
-        statusName: "已下线"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        status: "2",
-        statusName: "进行中"
-    }]
-
     private listLoading = false
 
     get userrole() {
         // @ts-ignore
         return UserModule.userrole
+    }
+
+    get userCode() {
+        // @ts-ignore
+        return UserModule.user.userCode
     }
 
     private tableData = []
