@@ -1,30 +1,32 @@
 <template>
     <div class="app-container">
-        <el-card class="box-card fl" style="width:48%">
-            <el-scrollbar class="tree_div_tree">
-                <el-tree  highlight-current show-checkbox :props="defaultProps" ref="tree1" node-key="id" :default-checked-keys="selIdArr"
-                    lazy :load="loadAll"  @check-change="handleChangeClick" @node-click="handleNodeClick1"
-                    @node-expand="handleExpandClick">
-                </el-tree>
-            </el-scrollbar>
-        </el-card>
-        <el-card class="box-card fr" style="width:48%">
-        <div class="selected">
-            <div class="flex acenter between">
-                <div>已选择联系人</div>
-                <div class="flex acenter">
-                    <div class="iconfont icon-icon_delete"></div>
-                    <div @click="clearAll">清空</div>
+        <el-row :gutter="20">
+            <el-col :span="12">
+                <div class="treePerson">
+                    <el-tree  highlight-current show-checkbox :props="defaultProps" ref="tree1" node-key="id" :default-checked-keys="selIdArr"
+                        lazy :load="loadAll"  @check-change="handleChangeClick" @node-click="handleNodeClick"
+                        @node-expand="handleExpandClick">
+                    </el-tree>
                 </div>
-            </div>
-            <div class="selecteContain">
-                <div v-for="pr in selInfoArr" class="nameShow" :key="pr.userCode">
-                    {{pr.userName}}
-                    <el-button icon="el-icon-delete" class="dbtn-del" @click="delPerson(pr.userCode)"/>
+            </el-col>
+            <el-col :span="12">
+                <div class="selected">
+                    <div class="flex acenter between">
+                        <div>已选择联系人</div>
+                        <div class="flex acenter">
+                            <div class="iconfont icon-icon_delete"></div>
+                            <div @click="clearAll">清空</div>
+                        </div>
+                    </div>
+                    <div class="selecteContain">
+                        <div v-for="pr in selInfoArr" class="nameShow" :key="pr.userCode">
+                            {{pr.userName}}
+                            <el-button icon="el-icon-delete" class="dbtn-del" @click="delPerson(pr.userCode)"/>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        </el-card>
+            </el-col>
+        </el-row>
           <div class="ReleaseBox">
             <div class="sureBtn" @click="sureSelect()">确定</div>
         </div>
@@ -191,7 +193,7 @@ export default class SpecialFocus extends Vue {
         }
     }
 
-    private handleNodeClick1(data: { isLeaf: any; isCheck: boolean; disabled: boolean }) {
+    private handleNodeClick(data: { isLeaf: any; isCheck: boolean; disabled: boolean }) {
         if (data.isLeaf) {
             if (data.isCheck) {
                 // @ts-ignore
@@ -284,4 +286,10 @@ export default class SpecialFocus extends Vue {
 </script>
 
 <style scoped>
+    .treePerson {
+        height: 400px;
+        background: gainsboro;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
 </style>
