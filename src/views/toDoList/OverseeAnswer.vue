@@ -33,9 +33,9 @@
             <div v-show="this.status === '3'" class="dsummary-mian">
                 <div class="main-info" v-for="(item, key) in superviseMeasuresList" :key="key">
                     <div class="info-left">
-                        <el-avatar src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2496227229,2115216729&fm=26&gp=0.jpg" />
-                        </div>
-                        <div class="info-right">
+                        <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
+                    </div>
+                    <div class="info-right">
                         <div>
                             <span class="info-title">{{item.userName}}</span>
                             <span>{{item.deptName}}</span>
