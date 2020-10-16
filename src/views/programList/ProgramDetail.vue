@@ -37,7 +37,7 @@
           </div>
         </div>
         <div class="bottom">
-          <div class="bottom-main" v-if="this.allList.superviseItemEntity">
+          <div class="bottom-main" v-if="this.allList.superviseItemEntity && this.allList.superviseItemEntity.status!=='4'">
             <div class="main-title">督办事项</div>
             <div class="main-info">
               <div class="info-left">
@@ -56,7 +56,7 @@
               </div>
             </div>
           </div>
-          <div class="bottom-main">
+          <div class="bottom-main" v-if="this.allList.superviseItemEntity.status!=='4'">
             <div class="main-title">督办举措</div>
             <div class="main-info" v-for="(item, key) in superviseMeasuresList" :key="key">
               <div class="info-left">
