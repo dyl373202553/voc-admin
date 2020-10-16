@@ -37,7 +37,7 @@
           </div>
         </div>
         <div class="bottom">
-          <div class="bottom-main" v-if="this.allList.superviseItemEntity && this.allList.superviseItemEntity.status!=='4'">
+          <div class="bottom-main" v-if="this.allList.superviseItemEntity">
             <div class="main-title">督办事项</div>
             <div class="main-info">
               <div class="info-left">
@@ -56,7 +56,7 @@
               </div>
             </div>
           </div>
-          <div class="bottom-main" v-if="this.allList.superviseItemEntity.status!=='4'">
+          <div class="bottom-main">
             <div class="main-title">督办举措</div>
             <div class="main-info" v-for="(item, key) in superviseMeasuresList" :key="key">
               <div class="info-left">
@@ -68,7 +68,7 @@
                   <span>{{item.deptName}}</span>
                 </div>
                 <p>{{item.content}}</p>
-                <div>
+                <div class="downloadClick" @click="haveDownload(item.fileIds)">
                   <i class="el-icon-paperclip" />
                   <span class="info-title">{{item.fileIds}}</span>
                 </div>
@@ -78,11 +78,9 @@
           <div class="bottom-main" v-if="this.allList.summaryEntity">
             <div class="main-title">直播小结</div>
             <p>{{this.summary.content}}</p>
-            <div>
-                <a @click="haveDownload">
-                    <i class="el-icon-paperclip" />
-                    <span class="info-title">{{this.summary.fileIds}}</span>
-                </a>
+            <div class="downloadClick" @click="haveDownload('zhibo')">
+                <i class="el-icon-paperclip" />
+                <span class="info-title">{{this.summary.fileIds}}</span>
             </div>
           </div>
         </div>
@@ -98,16 +96,11 @@ import { getProgramDetail } from "@/api/programList/programList"
 import { postLikeAdd } from "@/api/programList/message"
 import { MessageBox } from "element-ui"
 import MessageBoard from "./MessageBoard.vue"
-import { UserModule } from "@/store/module/user"
+import { handleDownload } from "@/lib/js/unitls"
 @Component({
     components: { MessageBoard }
 })
 export default class ProgramDetail extends Vue {
-    get userToken() {
-        // @ts-ignore
-        return UserModule.token
-    }
-
     // ownerPraiseStatus个人点赞状态（0：是，1：否） ,-->
     private allList = []
     private programForm = {
@@ -197,12 +190,13 @@ export default class ProgramDetail extends Vue {
     }
 
     // 文件下载
-    private haveDownload() {
-        const link = document.createElement("a")
-        link.setAttribute("download", "附件")
-        link.href = `/vue-potal/portal-file/api/file/provider/download?fileId=${this.summary.fileIds}&access_token=${this.userToken}`
-        const oh = document.body
-        oh.appendChild(link).click()
+    private haveDownload(fileId: any) {
+        console.log(fileId)
+        if (fileId === "zhibo") {
+            handleDownload(this.summary.fileIds)
+        } else {
+            handleDownload(fileId)
+        }
     }
 }
 </script>

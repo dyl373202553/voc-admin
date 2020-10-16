@@ -240,3 +240,6 @@ table {
 .dsummary .dsummary-mian .main-info .info-right .downloadClick .info-title:hover {
   color: #4484F6;
 }
+.downloadClick span:hover {
+  color: #4484F6 !important;
+  }

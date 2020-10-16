@@ -67,6 +67,7 @@ import TreeDepartment from "@/components/addressBook/TreeDepartment.vue"
 import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
+import { handleDownload } from "@/lib/js/unitls"
 @Component({
     components: { TreeDepartment }
 })
@@ -224,11 +225,7 @@ export default class ProgramSummary extends Vue {
 
     // 文件下载
     private haveDownload() {
-        const link = document.createElement("a")
-        link.setAttribute("download", "附件")
-        link.href = `/vue-potal/portal-file/api/file/provider/download?fileId=${this.fileIds}&access_token=${this.userToken}`
-        const oh = document.body
-        oh.appendChild(link).click()
+        handleDownload(this.fileIds)
     }
 }
 </script>

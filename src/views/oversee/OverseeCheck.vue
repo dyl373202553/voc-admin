@@ -85,16 +85,11 @@ import { getProgramDetail } from "@/api/programList/programList"
 import TreeDepartment from "@/components/addressBook/TreeDepartment.vue"
 import { postOverseeAdd, getOverseeDetail, postOverseeCancel } from "@/api/oversee/oversee"
 import { MessageBox } from "element-ui"
-import { UserModule } from "@/store/module/user"
+import { handleDownload } from "@/lib/js/unitls"
 @Component({
     components: { TreeDepartment }
 })
 export default class OverseeCheck extends Vue {
-    get userToken() {
-        // @ts-ignore
-        return UserModule.token
-    }
-
     private programOversee = "";
     private deptnamesData = "";
     private deptnamesDataList = "";
@@ -186,12 +181,8 @@ export default class OverseeCheck extends Vue {
     }
 
     // 文件下载
-    private haveDownload(fileIds: string) {
-        const link = document.createElement("a")
-        link.setAttribute("download", "附件")
-        link.href = `/vue-potal/portal-file/api/file/provider/download?fileId=${fileIds}&access_token=${this.userToken}`
-        const oh = document.body
-        oh.appendChild(link).click()
+    private haveDownload(fileIds: any) {
+        handleDownload(fileIds)
     }
 }
 </script>

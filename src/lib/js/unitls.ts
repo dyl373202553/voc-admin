@@ -1,4 +1,5 @@
 import dayjs from "dayjs"
+import { UserModule } from "@/store/module/user"
 export function deepCopy(templateData: object, type = -1, field = "") {
     const data = JSON.parse(JSON.stringify(templateData))
     switch (type) {
@@ -54,6 +55,7 @@ export function getFileIcon(value: string) {
     }
 }
 
+// 导出表格
 export const handleDownloadFile = (blob: Blob, fileName: string) => {
     if (window.navigator.msSaveOrOpenBlob) {
         window.navigator.msSaveOrOpenBlob(blob, fileName)
@@ -66,4 +68,14 @@ export const handleDownloadFile = (blob: Blob, fileName: string) => {
         link.click()
         document.body.removeChild(link)
     }
+}
+
+// 下载文件
+export const handleDownload = (fildIds: any) => {
+    const access_token: any = UserModule.token
+    const link = document.createElement("a")
+    link.setAttribute("download", "附件")
+    link.href = `/vue-potal/portal-file/api/file/provider/download?fileId=${fildIds}&access_token=${access_token}`
+    const oh = document.body
+    oh.appendChild(link).click()
 }
