@@ -79,7 +79,7 @@
             <div class="main-title">直播小结</div>
             <p>{{this.summary.content}}</p>
             <div>
-                <a @click="haveDownload()">
+                <a @click="haveDownload">
                     <i class="el-icon-paperclip" />
                     <span class="info-title">{{this.summary.fileIds}}</span>
                 </a>

@@ -30,18 +30,22 @@
           </div>
         </div>
         <div class="dsummary-mian">
-          <div class="dsummary-title">上传附件</div>
-          <el-upload
-                class="upload-image"
-                :action="' '"
-                :auto-upload="false"
-                :limit="3"
-                :on-change="handleAvatarChangeIcon"
-                ref="uploadicon"
-                >
-                 <el-button size="small" type="primary" plain>附件上传</el-button>
-                <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
-          </el-upload>
+            <div class="dsummary-title">上传附件</div>
+            <el-upload
+                    class="upload-image"
+                    :action="' '"
+                    :auto-upload="false"
+                    :limit="3"
+                    :on-change="handleAvatarChangeIcon"
+                    ref="uploadicon"
+                    >
+                    <el-button size="small" type="primary" plain>附件上传</el-button>
+                    <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
+            </el-upload>
+            <div class="downloadClick" @click="haveDownload">
+                <i class="el-icon-paperclip" />
+                <span class="info-title">{{this.fileIds}}</span>
+            </div>
         </div>
         <div class="bottom dbtn">
           <el-button round>返回</el-button>
@@ -103,6 +107,7 @@ export default class ProgramSummary extends Vue {
                         this.summaryContent = res.data.summaryEntity.content
                         this.summaryId = res.data.summaryEntity.id
                         this.deptnamesData = res.data.summaryEntity.deptnames
+                        this.fileIds = res.data.summaryEntity.fileIds
                     }
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
@@ -216,5 +221,19 @@ export default class ProgramSummary extends Vue {
         }
         this.deptnamesData = brr.toString()
     }
+
+    // 文件下载
+    private haveDownload() {
+        const link = document.createElement("a")
+        link.setAttribute("download", "附件")
+        link.href = `/vue-potal/portal-file/api/file/provider/download?fileId=${this.fileIds}&access_token=${this.userToken}`
+        const oh = document.body
+        oh.appendChild(link).click()
+    }
 }
 </script>
+<style lang="scss" scoped>
+    .downloadClick .info-title:hover {
+    color: #4484F6;
+    }
+</style>

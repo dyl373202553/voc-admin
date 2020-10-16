@@ -50,7 +50,7 @@
                         <span>{{item.deptName}}</span>
                     </div>
                     <p>{{item.content}}</p>
-                    <div>
+                    <div class="downloadClick" @click="haveDownload(item.fileIds)">
                         <i class="el-icon-paperclip" />
                         <span class="info-title">{{item.fileIds}}</span>
                     </div>
@@ -58,7 +58,7 @@
                 </div>
             </template>
 
-          <div v-show="$route.params.status === '2'" class="main-info">
+          <div v-show="$route.params.status === '2' && this.superviseMeasuresList.length===0" class="main-info">
             暂无内容！
           </div>
         </div>
@@ -85,10 +85,16 @@ import { getProgramDetail } from "@/api/programList/programList"
 import TreeDepartment from "@/components/addressBook/TreeDepartment.vue"
 import { postOverseeAdd, getOverseeDetail, postOverseeCancel } from "@/api/oversee/oversee"
 import { MessageBox } from "element-ui"
+import { UserModule } from "@/store/module/user"
 @Component({
     components: { TreeDepartment }
 })
 export default class OverseeCheck extends Vue {
+    get userToken() {
+        // @ts-ignore
+        return UserModule.token
+    }
+
     private programOversee = "";
     private deptnamesData = "";
     private deptnamesDataList = "";
@@ -177,6 +183,15 @@ export default class OverseeCheck extends Vue {
         }
         this.deptnamesData = "[" + arr.toString() + "]"
         this.deptnamesDataList = brr.toString()
+    }
+
+    // 文件下载
+    private haveDownload(fileIds: string) {
+        const link = document.createElement("a")
+        link.setAttribute("download", "附件")
+        link.href = `/vue-potal/portal-file/api/file/provider/download?fileId=${fileIds}&access_token=${this.userToken}`
+        const oh = document.body
+        oh.appendChild(link).click()
     }
 }
 </script>

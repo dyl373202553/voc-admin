@@ -234,3 +234,9 @@ body > .el-container {
 table {
   width: 100% !important
 }
+.downloadClick {
+  cursor: pointer;
+}
+.dsummary .dsummary-mian .main-info .info-right .downloadClick .info-title:hover {
+  color: #4484F6;
+}
