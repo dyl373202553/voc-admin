@@ -208,8 +208,7 @@ export default class SpecialFocus extends Vue {
         }
     }
 
-    private handleExpandClick(data: { disabled: boolean }, node: any, self: any) {
-        console.log(self)
+    private handleExpandClick(data: { disabled: boolean }) {
         if (data.disabled) {
             data.disabled = false
         }
@@ -223,7 +222,6 @@ export default class SpecialFocus extends Vue {
                 if ((this.selIdArr.indexOf(data.id) === -1)) {
                     this.selInfoArr.push(data.res)
                     this.selIdArr.push(data.id)
-                    console.log(this.selInfoArr)
                 }
             } else {
                 // @ts-ignore

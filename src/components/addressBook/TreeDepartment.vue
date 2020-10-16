@@ -151,7 +151,6 @@ export default class SpecialFocus extends Vue {
     }
 
     private handleChangeClick(data: any, isCheck: any) {
-        console.log(data)
         if (data.isLeaf === true) {} else {
             if (isCheck) {
                 // @ts-ignore
@@ -216,31 +215,6 @@ export default class SpecialFocus extends Vue {
     private sureSelect() {
         this.$emit("funcs", this.selInfoArr)
     }
-
-    // private dataList: any = []
-    // private speakersData = ""
-    // private submitTree() {
-    //     // @ts-ignore
-    //     this.dataList = this.$refs.treeDepartment.getCheckedNodes()
-    //     // @ts-ignore
-    //     console.log(this.$refs.treeDepartment.getCheckedNodes())
-    //     // @ts-ignore
-    //     // this.departmentArr = this.$refs.treeDepartment.getCheckedNodes()
-    //     // const arr = []
-    //     for (let i = 0; i < this.dataList.length; i++) {
-    //         if (this.dataList[i].extendProperty) {
-    //             // const obj: any = {}
-    //             // obj.deptCode = this.dataList[i].id.toString()
-    //             // obj.deptName = this.dataList[i].label.toString()
-    //             // arr.push(JSON.stringify(obj))
-    //             this.departmentArr.push(this.dataList[i])
-    //         }
-    //     }
-    //     // @ts-ignore
-    //     console.log(this.$refs.treeDepartment.getCheckedKeys())
-    //     // @ts-ignore
-    //     // this.deptnamesData = "[" + arr.toString() + "]"
-    // }
 }
 </script>
 

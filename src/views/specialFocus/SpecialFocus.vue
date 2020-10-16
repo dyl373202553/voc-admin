@@ -49,7 +49,6 @@
                         <el-button size="small" type="primary" plain>上传封面</el-button>
                         <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于150M的文件，支持格式png/jpg/mp4/wma</span>
                     </el-upload>
-                    <el-button size="small" type="primary" plain @click="saveFile">上传到服务器</el-button>
                     <el-col :span="24" v-show="$route.params.id && $route.params.viewStatus === '3'">
                         <img :src="dataForm.content"/>
                     </el-col>
@@ -118,20 +117,47 @@ export default class SpecialFocus extends Vue {
         if (this.$route.params.id) {
             this.dataForm.id = this.$route.params.id
         }
-        postSpecialFocus(this.dataForm).then((res) => {
-            if (res) {
-                if (res.code === 0) {
-                    MessageBox.alert(res.message, "成功", { type: "success" })
-                    this.dataForm.endTime = ""
-                    this.dataForm.startTime = ""
-                    this.dataForm.content = ""
-                } else {
-                    MessageBox.alert(`操作失败`, "失败", { type: "error" })
-                }
-            } else {
-                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-            }
+        const formData = new FormData()
+        formData.append("file", this.dfile.raw) // 传参改为formData格式
+        axios({
+            method: "post",
+            url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=1`, // 请求后端的url
+            headers: {
+                "Content-Type": "multipart/form-data", // 设置headers
+                Authorization: `Bearer ${this.userToken}`
+            },
+            data: formData
         })
+            .then((res: any) => {
+                if (res) {
+                    if (res.data.code < 200) {
+                        // 上传成功
+                        this.dataForm.content = res.data.data.filePath
+                        MessageBox.alert("上传成功", "成功", { type: "success" })
+                        postSpecialFocus(this.dataForm).then((res) => {
+                            if (res) {
+                                if (res.code === 0) {
+                                    MessageBox.alert(res.message, "成功", { type: "success" })
+                                    this.dataForm.endTime = ""
+                                    this.dataForm.startTime = ""
+                                    this.dataForm.content = ""
+                                } else {
+                                    MessageBox.alert(`操作失败`, "失败", { type: "error" })
+                                }
+                            } else {
+                                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                            }
+                        })
+                    }
+                } else {
+                    // 上传失败
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            })
+            .catch(() => {
+                // 请求失败
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            })
     }
 
     // 结束-下线
@@ -174,36 +200,6 @@ export default class SpecialFocus extends Vue {
             this.iconformData.img = file.raw // 图片的url
             this.iconformData.name = file.name // 图片的名字
         }
-    }
-
-    private saveFile() {
-        const formData = new FormData()
-        formData.append("file", this.dfile.raw) // 传参改为formData格式
-        axios({
-            method: "post",
-            url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=1`, // 请求后端的url
-            headers: {
-                "Content-Type": "multipart/form-data", // 设置headers
-                Authorization: `Bearer ${this.userToken}`
-            },
-            data: formData
-        })
-            .then((res: any) => {
-                if (res) {
-                    if (res.data.code < 200) {
-                        // 上传成功
-                        this.dataForm.content = res.data.data.filePath
-                        MessageBox.alert("上传成功", "成功", { type: "success" })
-                    }
-                } else {
-                    // 上传失败
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                }
-            })
-            .catch(() => {
-                // 请求失败
-                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-            })
     }
 }
 </script>
