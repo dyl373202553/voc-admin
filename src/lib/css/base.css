@@ -242,4 +242,10 @@ table {
 }
 .downloadClick span:hover {
   color: #4484F6 !important;
-  }
+}
+.dmessage .el-button {
+  padding:10px 30px;
+}
+.dbackBtn .el-button {
+  padding: 5px 10px 5px 0px;
+}

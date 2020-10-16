@@ -11,7 +11,7 @@
                             placeholder="说点什么吧"
                         />
                     </template>
-                    <div class="text-right margin-top10">
+                    <div class="text-right margin-top10 dmessage">
                         <el-button type="primary" round @click="onSubmit" :disabled="this.message === '' ">评论</el-button>
                     </div>
                 </div>
@@ -31,9 +31,16 @@
                                 <p>{{item.content}}</p>
                                 <div class="text-right margin-top10 info">
                                     <span class="fl wonderful" v-show="item.wonderfulFlag === '0'">精彩留言</span>
-                                    <span><img src="@/assets/images/icon_repeat.png"/></span>
-                                    <span @click="getLike(item.id)"><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{item.praiseNum}}</span>
-                                    <span>删除</span>
+                                    <span class="optionBtn"><img src="@/assets/images/icon_repeat.png"/></span>
+                                    <span class="optionBtn" v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)">
+                                        <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
+                                        <span>{{item.praiseNum}}</span>
+                                    </span>
+                                    <span class="optionBtn" v-if="item.ownerPraiseStatus ==='0'" >
+                                        <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
+                                        <span>{{item.praiseNum}}</span>
+                                    </span>
+                                    <span class="optionBtn"><img src="@/assets/images/icon_del.png"/></span>
                                 </div>
                             </div>
                         </div>
@@ -58,12 +65,18 @@
                                 <p>{{item.content}}</p>
                                 <div class="text-right margin-top10 info">
                                     <span class="fl wonderful" v-show="item.wonderfulFlag === '0'">精彩留言</span>
-                                    <span><img src="@/assets/images/icon_repeat.png"/></span>
-                                    <span v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)"><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{item.praiseNum}}</span>
-                                    <span v-if="item.ownerPraiseStatus ==='0'" ><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{item.praiseNum}}</span>
-                                    <span>删除</span>
+                                    <span class="optionBtn" @click="getIndexBack(key)"><img src="@/assets/images/icon_repeat.png"/></span>
+                                    <span class="optionBtn" v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)">
+                                        <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
+                                        <span>{{item.praiseNum}}</span>
+                                    </span>
+                                    <span class="optionBtn" v-if="item.ownerPraiseStatus ==='0'" >
+                                        <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
+                                        <span>{{item.praiseNum}}</span>
+                                    </span>
+                                    <span class="optionBtn"><img src="@/assets/images/icon_del.png"/></span>
                                 </div>
-                                <div class="text-right margin-top10 info">
+                                <div class="text-right margin-top10 info" v-if="indexKey=== key">
                                     <template>
                                         <el-input
                                             v-model="backMessage"
@@ -72,10 +85,10 @@
                                             placeholder="说点什么吧"
                                         />
                                     </template>
-                                    <div class="text-right margin-top10">
-                                        <el-button type="primary" round @click="onBackSubmit(item.id)">回复</el-button>
+                                    <div class="text-right margin-top10 dbackBtn">
+                                        <el-button type="text" round @click="onCancelSubmit()">取消</el-button>
+                                        <el-button type="primary" @click="onBackSubmit(item.id)">回复</el-button>
                                     </div>
-                                    <span><img src="@/assets/images/icon_like.png"/></span>
                                 </div>
                             </div>
                         </div>
@@ -102,9 +115,10 @@ export default class MessageBoard extends Vue {
     }
 
     private allTotal = 0
-
     private messageList = []
     private messageAllList = []
+    private indexKey = -1
+
     protected mounted() {
         this.load()
     }
@@ -133,6 +147,8 @@ export default class MessageBoard extends Vue {
             if (res) {
                 if (res.code < 200) {
                     this.load()
+                    this.backMessage = ""
+                    this.message = ""
                     MessageBox.alert(`提交成功`, "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
@@ -151,6 +167,7 @@ export default class MessageBoard extends Vue {
         this.postMessage(dataMessagePage)
     }
 
+    // 回复
     private onBackSubmit(id: string) {
         const dataMessagePage = {
             content: "回复",
@@ -161,9 +178,14 @@ export default class MessageBoard extends Vue {
         this.postMessage(dataMessagePage)
     }
 
+    // 取消
+    private onCancelSubmit() {
+        this.indexKey = -1
+        this.backMessage = ""
+    }
+
     // 点赞
     private getLike(id: string) {
-        console.log(id)
         const params = {
             programId: this.$route.params.promId,
             targetId: id
@@ -171,7 +193,8 @@ export default class MessageBoard extends Vue {
         postLikeAdd(params).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    MessageBox.alert("操作成功", "成功", { type: "success" })
+                    this.load()
+                    MessageBox.alert("点赞成功", "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`操作失败`, "失败", { type: "error" })
                 }
@@ -179,6 +202,11 @@ export default class MessageBoard extends Vue {
                 MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
             }
         })
+    }
+
+    // 留言回复
+    private getIndexBack(key: number) {
+        this.indexKey = key
     }
 }
 </script>
