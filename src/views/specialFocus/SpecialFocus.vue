@@ -50,7 +50,9 @@
                         <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于150M的文件，支持格式png/jpg/mp4/wma</span>
                     </el-upload>
                     <el-col :span="24" v-show="$route.params.id && $route.params.viewStatus === '3'">
-                        <img :src="dataForm.content"/>
+                        <div class="dimg-div">
+                            <el-image :src="`/resources/`+ dataForm.content" fit="cover" class="image" />
+                        </div>
                     </el-col>
                 </el-form-item>
                 <el-form-item v-show="$route.params.viewStatus !== '3'" class="dbtn text-center">
@@ -205,7 +207,9 @@ export default class SpecialFocus extends Vue {
 </script>
 
 <style scoped>
-.line{
-  text-align: center;
+.dimg-div{
+    width:100%;
+    height:400px;
+    overflow: hidden;
 }
 </style>
