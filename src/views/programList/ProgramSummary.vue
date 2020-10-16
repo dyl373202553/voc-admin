@@ -47,7 +47,6 @@
           <el-button round>返回</el-button>
           <el-button type="primary" round :disabled="!summaryContent" @click="onSubmit">提交</el-button>
           <el-button v-show="$route.params.summaryName !=='发布小结'" type="danger" plain round @click="summaryDelete">删除</el-button>
-          <el-button plain round @click="saveFile">上传文件</el-button>
         </div>
       </div>
     </el-card>
@@ -113,22 +112,51 @@ export default class ProgramSummary extends Vue {
     }
 
     private onSubmit() {
-        const params = {
-            programId: this.$route.params.id, // 节目ID
-            content: this.summaryContent, // 小结内容
-            deptnames: this.deptnamesData, // 参与部门，多个以‘;’想个，只做显示
-            fileIds: this.fileIds, // 附件id
-            id: this.summaryId // 修改时传递ID，新增不传
-        }
-        postProgramSummary(params).then((res) => {
-            if (res) {
-                if (res.code < 200) {
-                    MessageBox.alert(res.message, "成功", { type: "success" })
+        const formData = new FormData()
+        formData.append("file", this.dfile.raw) // 传参改为formData格式
+        axios({
+            method: "post",
+            url: `/vue-potal/portal-file/api/file/provider/uploadfile?busSource=moa-customervoice`, // 请求后端的url
+            headers: {
+                "Content-Type": "multipart/form-data", // 设置headers
+                Authorization: `Bearer ${this.userToken}`
+            },
+            data: formData
+        })
+            .then((res: any) => {
+                if (res) {
+                    if (res.data.code < 200) {
+                        // 上传成功
+                        this.fileIds = res.data.data.fileId
+                        MessageBox.alert("上传成功", "成功", { type: "success" })
+
+                        const params = {
+                            programId: this.$route.params.id, // 节目ID
+                            content: this.summaryContent, // 小结内容
+                            deptnames: this.deptnamesData, // 参与部门，多个以‘;’想个，只做显示
+                            fileIds: this.fileIds, // 附件id
+                            id: this.summaryId // 修改时传递ID，新增不传
+                        }
+
+                        postProgramSummary(params).then((res) => {
+                            if (res) {
+                                if (res.code < 200) {
+                                    MessageBox.alert(res.message, "成功", { type: "success" })
+                                } else {
+                                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                                }
+                            }
+                        })
+                    }
                 } else {
+                    // 上传失败
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
-            }
-        })
+            })
+            .catch(() => {
+                // 请求失败
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            })
     }
 
     // 删除小结
@@ -169,36 +197,6 @@ export default class ProgramSummary extends Vue {
             this.iconformData.img = file.raw // 图片的url
             this.iconformData.name = file.name // 图片的名字
         }
-    }
-
-    private saveFile() {
-        const formData = new FormData()
-        formData.append("file", this.dfile.raw) // 传参改为formData格式
-        axios({
-            method: "post",
-            url: `/vue-potal/portal-file/api/file/provider/uploadfile?busSource=moa-customervoice`, // 请求后端的url
-            headers: {
-                "Content-Type": "multipart/form-data", // 设置headers
-                Authorization: `Bearer ${this.userToken}`
-            },
-            data: formData
-        })
-            .then((res: any) => {
-                if (res) {
-                    if (res.data.code < 200) {
-                        // 上传成功
-                        this.fileIds = res.data.data.fileId
-                        MessageBox.alert("上传成功", "成功", { type: "success" })
-                    }
-                } else {
-                    // 上传失败
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                }
-            })
-            .catch(() => {
-                // 请求失败
-                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-            })
     }
 
     // 获取通讯录传回的数据 -责任部门返回数据
