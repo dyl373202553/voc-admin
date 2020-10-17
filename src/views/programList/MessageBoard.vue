@@ -64,7 +64,8 @@
                                 </div>
                                 <p>{{item.content}}</p>
                                 <div class="text-right margin-top10 info">
-                                    <span class="fl wonderful" v-show="item.wonderfulFlag === '0'">精彩留言</span>
+                                    <span class="fl wonderful" v-show="item.wonderfulFlag === '1'" @click="setWonderful(item.id, '0')">设置精彩留言</span>
+                                    <span class="fl wonderful" v-show="item.wonderfulFlag === '0'" @click="setWonderful(item.id, '1')">取消精彩留言</span>
                                     <span class="optionBtn" @click="getIndexBack(key)"><img src="@/assets/images/icon_repeat.png"/></span>
                                     <span class="optionBtn" v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)">
                                         <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
@@ -102,7 +103,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { postMessageAll, postMessageAdd, postLikeAdd } from "@/api/programList/message"
+import { postMessageAll, postMessageAdd, postLikeAdd, postMessageSetWonderful } from "@/api/programList/message"
 import { MessageBox } from "element-ui"
 @Component
 export default class MessageBoard extends Vue {
@@ -207,6 +208,26 @@ export default class MessageBoard extends Vue {
     // 留言回复
     private getIndexBack(key: number) {
         this.indexKey = key
+    }
+
+    // 设置精彩留言
+    private setWonderful(id: string, type: string) {
+        const params = {
+            id: id,
+            wonderfulFlag: type
+        }
+        postMessageSetWonderful(params).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    this.load()
+                    MessageBox.alert("设置成功", "成功", { type: "success" })
+                } else {
+                    MessageBox.alert(`操作失败`, "失败", { type: "error" })
+                }
+            } else {
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            }
+        })
     }
 }
 </script>
