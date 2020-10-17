@@ -1,93 +1,95 @@
 <template>
-  <div class="app-container">
-    <el-card class="box-card dpadding0">
-      <div slot="header" class="clearfix">
-        <span class="header-title">节目查看 {{this.$route.params.promId}}</span>
-      </div>
-      <div class="dcontent">
-        <div class="top">
-          <h2 class="top-title">
-            {{this.programForm.title}}
-          </h2>
-          <div class="top-info">
-            <span>{{this.programForm.time}}</span>
-            <span>{{this.programForm.speakers}}</span>
-            <span><img src="@/assets/images/icon_look.png"/>{{this.programForm.browerNum}}</span>
-            <!-- 点赞数 -->
-            <span><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{this.programForm.praiseNum}}</span>
-          </div>
+    <div class="app-container">
+        <el-card class="box-card dpadding0">
+        <div slot="header" class="clearfix">
+            <span class="header-title">节目查看 {{this.$route.params.promId}}</span>
         </div>
-        <div class="main">
-          <div>
-            <div class="main-title">本期嘉宾</div>
-            <p>{{this.programForm.guests}}</p>
-          </div>
-          <div>
-            <div class="main-title">本期简介</div>
-            <p>{{this.programForm.summary}}</p>
-          </div>
-          <div>
-            <div class="main-title">节目内容</div>
-            <pre v-html="this.programForm.content"></pre>
-          </div>
-          <div class="main-btn">
-            <!-- ownerPraiseStatus个人点赞状态（0：是，1：否） , -->
-            <el-button v-if="this.programForm.likeShow === '1'" type="primary" round @click="getLikeShow">点赞支持一下</el-button>
-            <el-button v-if="this.programForm.likeShow === '0'" type="info" round>您已点过赞啦</el-button>
-          </div>
+        <div class="dcontent">
+            <div class="top">
+            <h2 class="top-title">
+                {{this.programForm.title}}
+            </h2>
+            <div class="top-info">
+                <span>{{this.programForm.time}}</span>
+                <span>{{this.programForm.speakers}}</span>
+                <span><img src="@/assets/images/icon_look.png"/>{{this.programForm.browerNum}}</span>
+                <!-- 点赞数 -->
+                <span><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{this.programForm.praiseNum}}</span>
+            </div>
+            </div>
+            <div class="main">
+            <div>
+                <div class="main-title">本期嘉宾</div>
+                <p>{{this.programForm.guests}}</p>
+            </div>
+            <div>
+                <div class="main-title">本期简介</div>
+                <p>{{this.programForm.summary}}</p>
+            </div>
+            <div>
+                <div class="main-title">节目内容</div>
+                <pre v-html="this.programForm.content"></pre>
+            </div>
+            <div class="main-btn">
+                <!-- ownerPraiseStatus个人点赞状态（0：是，1：否） , -->
+                <el-button v-if="this.programForm.likeShow === '1'" type="primary" round @click="getLikeShow">点赞支持一下</el-button>
+                <el-button v-if="this.programForm.likeShow === '0'" type="info" round>您已点过赞啦</el-button>
+            </div>
+            </div>
+            <div class="bottom">
+                <template v-if="this.supervise.status !=='4' && this.supervise.status !=='1'">
+                    <div class="bottom-main" v-if="this.allList.superviseItemEntity">
+                        <div class="main-title">督办事项</div>
+                        <div class="main-info">
+                        <div class="info-left">
+                            <el-avatar :src="`/resources/bluepage/a/`+this.allList.superviseItemEntity.userCode+`_A.jpg`"/>
+                        </div>
+                        <div class="info-right">
+                            <div>
+                            <span class="info-title">{{this.supervise.userCode}}</span>
+                            <span>部门没有字段</span>
+                            </div>
+                            <p>{{this.supervise.content}}</p>
+                            <div>
+                            <span class="info-title">责任部门：</span>
+                            <span>{{this.supervise.deptnames}}</span>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                    <div class="bottom-main">
+                        <div class="main-title">督办举措</div>
+                        <div class="main-info" v-for="(item, key) in superviseMeasuresList" :key="key">
+                        <div class="info-left">
+                            <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
+                        </div>
+                        <div class="info-right">
+                            <div>
+                            <span class="info-title">{{item.userName}}</span>
+                            <span>{{item.deptName}}</span>
+                            </div>
+                            <p>{{item.content}}</p>
+                            <div class="downloadClick" @click="haveDownload(item.fileIds)">
+                            <i class="el-icon-paperclip" />
+                            <span class="info-title">{{item.fileIds}}</span>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </template>
+                <div class="bottom-main" v-if="this.allList.summaryEntity">
+                    <div class="main-title">直播小结</div>
+                    <p>{{this.summary.content}}</p>
+                    <div class="downloadClick" @click="haveDownload('zhibo')">
+                        <i class="el-icon-paperclip" />
+                        <span class="info-title">{{this.summary.fileIds}}</span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="bottom">
-          <div class="bottom-main" v-if="this.allList.superviseItemEntity">
-            <div class="main-title">督办事项</div>
-            <div class="main-info">
-              <div class="info-left">
-                <el-avatar :src="`/resources/bluepage/a/`+this.allList.superviseItemEntity.userCode+`_A.jpg`"/>
-              </div>
-              <div class="info-right">
-                <div>
-                  <span class="info-title">{{this.supervise.userCode}}</span>
-                  <span>部门没有字段</span>
-                </div>
-                <p>{{this.supervise.content}}</p>
-                <div>
-                  <span class="info-title">责任部门：</span>
-                  <span>{{this.supervise.deptnames}}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="bottom-main">
-            <div class="main-title">督办举措</div>
-            <div class="main-info" v-for="(item, key) in superviseMeasuresList" :key="key">
-              <div class="info-left">
-                <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
-              </div>
-              <div class="info-right">
-                <div>
-                  <span class="info-title">{{item.userName}}</span>
-                  <span>{{item.deptName}}</span>
-                </div>
-                <p>{{item.content}}</p>
-                <div class="downloadClick" @click="haveDownload(item.fileIds)">
-                  <i class="el-icon-paperclip" />
-                  <span class="info-title">{{item.fileIds}}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="bottom-main" v-if="this.allList.summaryEntity">
-            <div class="main-title">直播小结</div>
-            <p>{{this.summary.content}}</p>
-            <div class="downloadClick" @click="haveDownload('zhibo')">
-                <i class="el-icon-paperclip" />
-                <span class="info-title">{{this.summary.fileIds}}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </el-card>
-    <MessageBoard />
-  </div>
+        </el-card>
+        <MessageBoard />
+    </div>
 </template>
 
 <script lang="ts">
@@ -118,7 +120,8 @@ export default class ProgramDetail extends Vue {
     private supervise = { // 督办事项
         content: "",
         deptnames: "",
-        userCode: ""
+        userCode: "",
+        status: ""
     }
 
     private summary = { // 直播小结
@@ -152,7 +155,8 @@ export default class ProgramDetail extends Vue {
                         this.supervise = {
                             content: res.data.superviseItemEntity.content,
                             deptnames: res.data.superviseItemEntity.deptnames,
-                            userCode: res.data.superviseItemEntity.userCode
+                            userCode: res.data.superviseItemEntity.userCode,
+                            status: res.data.superviseItemEntity.status
                         }
                     }
                     if (res.data.summaryEntity) {
