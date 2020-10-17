@@ -64,8 +64,10 @@
                                 </div>
                                 <p>{{item.content}}</p>
                                 <div class="text-right margin-top10 info">
-                                    <span class="fl wonderful" v-show="item.wonderfulFlag === '1'" @click="setWonderful(item.id, '0')">设置精彩留言</span>
-                                    <span class="fl wonderful" v-show="item.wonderfulFlag === '0'" @click="setWonderful(item.id, '1')">取消精彩留言</span>
+                                    <span class="fl wonderful" v-show="item.wonderfulFlag === '1' && userrole===0"
+                                        @click="setWonderful(item.id, '0')">设置精彩留言</span>
+                                    <span class="fl wonderful" v-show="item.wonderfulFlag === '0' && userrole===0"
+                                        @click="setWonderful(item.id, '1')">取消精彩留言</span>
                                     <span class="optionBtn" @click="getIndexBack(key)"><img src="@/assets/images/icon_repeat.png"/></span>
                                     <span class="optionBtn" v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)">
                                         <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
@@ -105,8 +107,14 @@
 import { Component, Vue } from "vue-property-decorator"
 import { postMessageAll, postMessageAdd, postLikeAdd, postMessageSetWonderful } from "@/api/programList/message"
 import { MessageBox } from "element-ui"
+import { UserModule } from "@/store/module/user"
 @Component
 export default class MessageBoard extends Vue {
+    get userrole() {
+        // @ts-ignore
+        return UserModule.userrole
+    }
+
     private activeName = "first"
     private likeShow = 0
     private backMessage = ""
