@@ -195,7 +195,6 @@ export default class ProgramDetail extends Vue {
 
     // 文件下载
     private haveDownload(fileId: any) {
-        console.log(fileId)
         if (fileId === "zhibo") {
             handleDownload(this.summary.fileIds)
         } else {

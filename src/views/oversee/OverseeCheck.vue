@@ -163,7 +163,6 @@ export default class OverseeCheck extends Vue {
     // 获取通讯录传回的数据 -责任部门返回数据
     private getMsgFormSon(data: string|any[]) {
         this.dialogTableVisible = false
-        console.log(data)
         this.dataList = data
         const arr = []
         const brr = []
