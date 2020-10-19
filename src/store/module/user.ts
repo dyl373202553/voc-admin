@@ -120,6 +120,7 @@ class User extends VuexModule implements UserState {
         // @ts-ignore
         if (process.env.NODE_ENV !== "development") {
             this.getUser()
+            this.getRoleInfo()
         } else {
             this.Login({ userName, passWord })
         }
