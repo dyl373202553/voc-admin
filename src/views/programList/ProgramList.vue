@@ -101,7 +101,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getProgramList, getEffectiveness } from "@/api/programList/programList"
+import { getRecentProgram, getEffectiveness } from "@/api/programList/programList"
 import { getViewStatus } from "@/api/dict"
 import { MessageBox } from "element-ui"
 @Component
@@ -188,7 +188,7 @@ export default class ProgramList extends Vue {
             type: "khzs_supervise_item_status"
         }
         const status = getViewStatus(params)
-        const tableData = getProgramList(this.dataPage)
+        const tableData = getRecentProgram(this.dataPage)
         Promise.all([status, tableData]).then((res) => {
             this.status = res[0]
             this.tableData = res[1].data
@@ -199,7 +199,7 @@ export default class ProgramList extends Vue {
     }
 
     private load() {
-        getProgramList(this.dataPage).then((res) => {
+        getRecentProgram(this.dataPage).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.tableData = res.data

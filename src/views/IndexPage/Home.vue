@@ -61,7 +61,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { getFocusList } from "@/api/IndexPage/home"
-import { getProgramList } from "@/api/programList/programList"
+import { getRecentProgram } from "@/api/programList/programList"
 import { getViewStatus } from "@/api/dict"
 import { MessageBox } from "element-ui"
 import Rank from "./Rank.vue"
@@ -97,7 +97,7 @@ export default class Home extends Vue {
         const status = getViewStatus(params)
         const programStatus = getViewStatus(programParams)
         const slideshowList = getFocusList() // 特别关注数据获取
-        const recentList = getProgramList(this.dataPage) // 节目数据获取
+        const recentList = getRecentProgram(this.dataPage) // 节目数据获取
         Promise.all([status, programStatus, slideshowList, recentList]).then((res) => {
             this.status = res[0]
             this.programStatus = res[1]
