@@ -229,7 +229,8 @@ export default class ProgramList extends Vue {
                     if (res.data !== "1") {
                         this.$router.push({
                             name: "ProgramDetail",
-                            params: { promId: promId, liveId: liveId }
+                            params: { promId: promId, liveId: liveId },
+                            query: { id: promId }
                         })
                     } else {
                         this.centerDialogVisible = true

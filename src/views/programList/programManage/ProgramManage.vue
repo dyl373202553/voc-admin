@@ -12,14 +12,14 @@
                 <el-table-column label="操作" align="center">
                     <div slot-scope="scope">
                     <router-link v-if="scope.row.liveEntity.summaryFlag === '0' && !scope.row.summaryEntity && userrole===0"
-                        :to="{name:'ProgramSummary', params: { summaryName:'发布小结', id:scope.row.id } }">
+                        :to="{name:'ProgramSummary', params: { summaryName:'发布小结', id:scope.row.id },query: { id: scope.row.id } }">
                         <el-button type="text" size="small">发布小结</el-button>
                     </router-link>
                     <router-link v-if="scope.row.liveEntity.summaryFlag === '0' && scope.row.summaryEntity && userrole===0"
-                        :to="{name:'ProgramSummary', params: { summaryName:'管理小结', id:scope.row.id } }">
+                        :to="{name:'ProgramSummary', params: { summaryName:'管理小结', id:scope.row.id },query: { id: scope.row.id } }">
                         <el-button type="text" size="small">管理小结</el-button>
                     </router-link>
-                    <router-link :to="{name:'ProgramRelease', params: { summaryName:'detail', id:scope.row.id} }">
+                    <router-link :to="{name:'ProgramRelease', params: { summaryName:'detail', id:scope.row.id},query: { id: scope.row.id } }">
                         <el-button type="text" size="small">编辑</el-button>
                     </router-link>
                     <el-button icon="el-icon-delete" class="dbtn-del" @click="programDelete(scope.row.id)"/>
