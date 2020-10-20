@@ -18,7 +18,7 @@ menu {
 */
 html,
 body {
-    font-family: PingFang SC, Helvetica Neue, Helvetica, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
+    font-family: PingFang SC, Helvetica Neue, Helvetica, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif !important;
     color: #666666;
     background-color: #F9FAFC;
     font-size: 12px;
@@ -248,4 +248,7 @@ table {
 }
 .dbackBtn .el-button {
   padding: 5px 10px 5px 0px;
+}
+textarea {
+  font-family: PingFang SC, Helvetica Neue, Helvetica, Hiragino Sans GB, Microsoft YaHei, Arial;
 }

@@ -115,7 +115,6 @@ import { MessageBox } from "element-ui"
 import { day, handleDownloadFile } from "@/lib/js/unitls"
 import axios from "axios"
 import { UserModule } from "@/store/module/user"
-// import { postExportLikeDetail, postExportAllData } from "@/lib/js/request"
 
 @Component
 export default class OverseeCheck extends Vue {
@@ -183,7 +182,6 @@ export default class OverseeCheck extends Vue {
 
     //  导出详情或点赞
     private likeDetail(type: string, id: string, name: string) {
-        // postExportLikeDetail(id, type, name)
         axios({
             method: "get",
             url: `/vue-potal/moa-customervoice/api/modules/khzsProgram/exportProgramData?id=${id}&type=${type}`,
@@ -214,7 +212,6 @@ export default class OverseeCheck extends Vue {
     }
 
     private exportAll() {
-        // postExportAllData(this.selectList)
         axios({
             method: "get",
             url: `/vue-potal/moa-customervoice/api/modules/khzsProgram/exportAll?ids=${this.selectList}`,

@@ -204,6 +204,9 @@ export default class ProgramRelease extends Vue {
                             if (res) {
                                 if (res.code < 200) {
                                     MessageBox.alert(`发布成功`, "成功", { type: "success" })
+                                    this.$router.push({
+                                        name: "home"
+                                    })
                                 } else {
                                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                                 }

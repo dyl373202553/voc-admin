@@ -140,7 +140,10 @@ export default class CreateStudio extends Vue {
                         superviseFlag: "1",
                         summaryFlag: "1"
                     }
-                    MessageBox.alert(res.message, "成功", { type: "success" })
+                    MessageBox.alert("发布成功", "成功", { type: "success" })
+                    this.$router.push({
+                        name: "home"
+                    })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
@@ -192,7 +195,7 @@ export default class CreateStudio extends Vue {
             obj.userName = this.dataList[i].userName.toString()
             obj.deptName = this.dataList[i].orgName.toString()
             arr.push(JSON.stringify(obj))
-            brr.push(JSON.stringify(obj.userName))
+            brr.push(obj.userName)
         }
         this.dataForm.speakersData = "[" + arr.toString() + "]"
         this.speakersData = brr.toString()
@@ -206,13 +209,14 @@ export default class CreateStudio extends Vue {
     }
 
     private hideUploadIcon: any
-
     private handleAvatarChangeIcon(file: any, fileList: any) {
         const isJPG = file.raw.type === "image/jpeg"
         const isPNG = file.raw.type === "image/png"
         this.dfile = file
         const isLt2M = file.raw.size / 1024 / 1024 < 0.5
+
         this.hideUploadIcon = fileList.length >= 1
+
         if (!isPNG && !isJPG) {
             this.$message.error("上传图片只能是 JPG/PNG 格式!")
             return false

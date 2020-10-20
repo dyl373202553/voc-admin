@@ -140,6 +140,9 @@ export default class OverseeCheck extends Vue {
             if (res) {
                 if (res.code < 200) {
                     MessageBox.alert(res.message, "成功", { type: "success" })
+                    this.$router.push({
+                        name: "home"
+                    })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
@@ -152,7 +155,7 @@ export default class OverseeCheck extends Vue {
         postOverseeCancel({ id: this.$route.params.id }).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    MessageBox.alert(res.message, "成功", { type: "success" })
+                    MessageBox.alert("发布成功", "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
