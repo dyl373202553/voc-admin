@@ -51,37 +51,6 @@
                 </el-pagination>
             </div>
         </div>
-        <!-- <div class="dtable">
-            <el-table v-loading="listLoading" :data="tabledData" element-loading-text="Loading" stripe height="500">
-            <el-table-column prop="title" label="节目名称" align="center" width="200" />
-            <el-table-column prop="time" label="节目时间" align="center" />
-            <el-table-column prop="name" label="主讲人" align="center" />
-            <el-table-column prop="statusName" label="督办状态" align="center">
-                <div slot-scope="scope">
-                <span v-show="scope.row.statusName!=='督办已完成' && scope.row.statusName!=='本期无督办'" class="dred"> {{ scope.row.statusName }} </span>
-                <span v-show="scope.row.statusName==='督办已完成'" class="dblue"> {{ scope.row.statusName }} </span>
-                <span v-show="scope.row.statusName==='本期无督办'"> {{ scope.row.statusName }} </span>
-                </div>
-            </el-table-column>
-            <el-table-column label="操作" align="center">
-                <div slot-scope="scope">
-                <router-link :to="{name:'ProgramDetail', params: {statusName:scope.row.statusName} }">
-                    <el-button type="text" size="small">进入</el-button>
-                </router-link>
-                <el-button type="text" size="small" @click="centerDialogVisible = true">进入-弹框</el-button>
-                </div>
-            </el-table-column>
-            </el-table>
-            <div class="dpagination">
-                <el-pagination
-                background
-                @current-change="handleCurrentChange"
-                :current-page="dataPage.pageNum"
-                :total="dataTotal"
-                layout="prev, pager, next, jumper">
-                </el-pagination>
-            </div>
-        </div> -->
         </el-card>
         <!-- :modal="false" -->
         <el-dialog
@@ -107,70 +76,7 @@ import { MessageBox } from "element-ui"
 @Component
 export default class ProgramList extends Vue {
     private centerDialogVisible=false
-    private tabledData= [{
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "党委办公室（职能管理部党委）-张三",
-        status: "1",
-        statusName: "督办未回复"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "党委办公室（党群工作部、职能管理部党委）-张三",
-        status: "5",
-        statusName: "本期无督办"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "党委办公室（党群工作部）-张三",
-        status: "3",
-        statusName: "督办已完成"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        status: "1",
-        statusName: "督办未回复"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        status: "3",
-        statusName: "督办已完成"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        status: "1",
-        statusName: "督办未回复"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        status: "2",
-        statusName: "督办未确认"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        status: "1",
-        statusName: "督办未回复"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        status: "5",
-        statusName: "本期无督办"
-    }, {
-        title: "客户之声第100期",
-        time: "2019年2月4日 14:12",
-        name: "综合部 信息系统部--小李",
-        status: "2",
-        statusName: "督办未确认"
-    }]
-
     private listLoading = false
-
     private programTime = ""
     private tableData = []
     private dataTotal = 0

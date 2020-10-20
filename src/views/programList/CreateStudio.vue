@@ -4,7 +4,7 @@
       <div slot="header" class="clearfix">
         <span class="header-title">创建直播间</span>
       </div>
-      <el-form ref="dataForm" :model="dataForm" label-width="150px">
+      <el-form ref="dataForm" :model="dataForm" label-width="150px"  v-loading="loading" element-loading-background="rgba(255, 255, 255, 0.5)">
         <el-form-item label="节目时间"
             prop="startTime"
             :rules="[
@@ -104,6 +104,7 @@ export default class CreateStudio extends Vue {
     }
 
     private dialogTableVisible = false
+    private loading = false
     private dataList: any = [] // 保存通讯录传过来的数据
     private dataForm = {
         startTime: "",
@@ -126,6 +127,7 @@ export default class CreateStudio extends Vue {
     private departmentArr= []
 
     private onSubmit() {
+        this.loading = true
         this.dataForm.startTime = day(this.dataForm.startTime, "YYYY-MM-DD HH:mm:ss")
         this.dataForm.endTime = day(this.dataForm.endTime, "YYYY-MM-DD HH:mm:ss")
         postCreateStudio(this.dataForm).then((res) => {
