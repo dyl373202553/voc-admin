@@ -74,6 +74,7 @@
           <el-button type="primary" round @click="onSubmit"
             :disabled="!(dataForm.speakersData && dataForm.guests && dataForm.startTime && dataForm.endTime)"
           >提交</el-button>
+           <el-button type="primary" round @click="upbtn">上传</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -87,11 +88,11 @@
 import { Component, Vue } from "vue-property-decorator"
 import { postCreateStudio } from "@/api/programList/programList"
 import TreePerson from "@/components/addressBook/TreePerson.vue"
-// import { day } from "@/lib/js/unitls"
 import { MessageBox } from "element-ui"
 import { day } from "@/lib/js/unitls"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
+// import Cookies from "js-cookie"
 
 @Component({
     components: { TreePerson }
@@ -127,10 +128,31 @@ export default class CreateStudio extends Vue {
     private onSubmit() {
         this.dataForm.startTime = day(this.dataForm.startTime, "YYYY-MM-DD HH:mm:ss")
         this.dataForm.endTime = day(this.dataForm.endTime, "YYYY-MM-DD HH:mm:ss")
+        postCreateStudio(this.dataForm).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    this.dataForm = {
+                        startTime: "",
+                        endTime: "",
+                        logoUrl: "",
+                        speakersData: "",
+                        guests: "",
+                        superviseFlag: "1",
+                        summaryFlag: "1"
+                    }
+                    MessageBox.alert(res.message, "成功", { type: "success" })
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
 
+    private upbtn() {
         // 上传图片
         const formData = new FormData()
         formData.append("file", this.dfile.raw) // 传参改为formData格式
+        // console.log(Cookies.get("kmportaltoken"))
         axios({
             method: "post",
             url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsLive&isystemName=1`, // 请求后端的url
@@ -146,28 +168,10 @@ export default class CreateStudio extends Vue {
                         // 上传成功
                         this.dataForm.logoUrl = res.data.data.filePath
                         MessageBox.alert("上传成功", "成功", { type: "success" })
-                        postCreateStudio(this.dataForm).then((res) => {
-                            if (res) {
-                                if (res.code < 200) {
-                                    this.dataForm = {
-                                        startTime: "",
-                                        endTime: "",
-                                        logoUrl: "",
-                                        speakersData: "",
-                                        guests: "",
-                                        superviseFlag: "1",
-                                        summaryFlag: "1"
-                                    }
-                                    MessageBox.alert(res.message, "成功", { type: "success" })
-                                } else {
-                                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                                }
-                            }
-                        })
                     }
                 } else {
                     // 上传失败
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                    MessageBox.alert(`请联系管d理员`, "失败", { type: "error" })
                 }
             })
             .catch(() => {

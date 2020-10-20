@@ -2,6 +2,7 @@ import axios from "axios"
 import { UserModule } from "@/store/module/user"
 import { ConfigModule } from "@/store/module/config"
 import { MessageBox } from "element-ui"
+// import { day, handleDownloadFile } from "@/lib/js/unitls"
 
 let needLoadingRequestCount = 0
 const startLoading = () => {
@@ -133,3 +134,48 @@ export function postData(url: string, json?: any, isformData = true) {
         .then(res => res.data)
         .catch(error => error.response)
 }
+
+// 导出数据
+// export async function postExportLikeDetail(id: string, type: string, name: string) {
+//     const access_token = await UserModule.token
+//     axios({
+//         method: "get",
+//         url: `/vue-potal/moa-customervoice/api/modules/khzsProgram/exportProgramData?id=${id}&type=${type}`,
+//         responseType: "blob", // arraybuffer
+//         headers: {
+//             // "Content-Type": "application/json;charset=UTF-8",
+//             Authorization: `Bearer ${access_token}`
+//         }
+//     })
+//         .then((res: any) => {
+//             const dateName = day(new Date(), "YYYY-MM-DD")
+//             const fileName = name + dateName + ".xls"
+//             const blob = new Blob([res.data], { type: "application/vnd.ms-excel" })
+//             handleDownloadFile(blob, fileName)
+//         })
+//         .catch(function (error) { // 请求失败处理
+//             MessageBox.alert(error, "失败", { type: "error" })
+//         })
+// }
+
+// export async function postExportAllData(ids: string) {
+//     const access_token = await UserModule.token
+//     axios({
+//         method: "get",
+//         url: `/vue-potal/moa-customervoice/api/modules/khzsProgram/exportAll?ids=${ids}`,
+//         responseType: "blob", // arraybuffer
+//         headers: {
+//             // "Content-Type": "application/json;charset=UTF-8",
+//             Authorization: `Bearer ${access_token}`
+//         }
+//     })
+//         .then((res: any) => {
+//             const dateName = day(new Date(), "YYYY-MM-DD")
+//             const fileName = name + dateName + ".xls"
+//             const blob = new Blob([res.data], { type: "application/vnd.ms-excel" })
+//             handleDownloadFile(blob, fileName)
+//         })
+//         .catch(function (error) { // 请求失败处理
+//             MessageBox.alert(error, "失败", { type: "error" })
+//         })
+// }

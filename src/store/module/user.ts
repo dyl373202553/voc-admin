@@ -121,6 +121,7 @@ class User extends VuexModule implements UserState {
         if (process.env.NODE_ENV !== "development") {
             this.getUser()
             this.getRoleInfo()
+            this.SET_TOKEN(Cookies.get("kmportaltoken"))
         } else {
             this.Login({ userName, passWord })
         }
