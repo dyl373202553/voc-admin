@@ -2,7 +2,7 @@
     <div class="app-container">
         <el-card class="box-card">
             <div slot="header" class="clearfix">
-                <span class="header-title">特别关注{{ $route.params.viewStatus }}_{{ $route.params.id }}</span>
+                <span class="header-title">特别关注</span>
             </div>
             <el-form ref="dataForm" :model="dataForm">
                 <el-form-item label="开始时间"
@@ -35,20 +35,29 @@
                         />
                     </el-col>
                 </el-form-item>
-                <el-form-item label="内容上传">
+                <el-form-item label="内容上传"  prop="logoUrl"
+                    :rules="[
+                    { required: true, message: '内容上传不能为空'}
+                    ]">
                     <el-upload
                         v-show="$route.params.viewStatus !== '3'"
                         class="upload-image"
                         :action="' '"
                         list-type="picture"
+                        accept=".jpg,.png,.jpeg,.mp4,.wma"
                         :auto-upload="false"
+                        :on-exceed="handleExceed"
+                        :on-remove="handleRemove"
                         :limit="1"
+                        :file-list="fileDataList"
                         :on-change="handleAvatarChangeIcon"
                         ref="uploadicon"
                         >
-                        <el-button size="small" type="primary" plain>上传封面</el-button>
+                        <el-button size="small" type="primary" plain v-if="!showFile">选择文件</el-button>
+                        <el-button size="small" slot="tip" type="primary" plain @click="upbtn" v-if="showFile">上传封面</el-button>
                         <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于150M的文件，支持格式png/jpg/mp4/wma</span>
                     </el-upload>
+
                     <el-col :span="24" v-show="$route.params.id && $route.params.viewStatus === '3'">
                         <div class="dimg-div">
                             <el-image :src="`/resources/`+ dataForm.content" fit="cover" class="image" />
@@ -57,7 +66,7 @@
                 </el-form-item>
                 <el-form-item v-show="$route.params.viewStatus !== '3'" class="dbtn text-center">
                     <el-button type="primary" round @click="onSubmit"
-                     :disabled="!(dataForm.startTime && dataForm.endTime)"
+                     :disabled="!(dataForm.startTime && dataForm.endTime && this.dataForm.content)"
                      >发布</el-button>
                     <!-- <el-button v-show="$route.params.statusName" type="primary" round>编辑</el-button> -->
                     <el-button v-show="$route.params.viewStatus && !this.over" type="danger" plain round @click="onOffLine($route.params.id)">结束</el-button>
@@ -87,13 +96,15 @@ export default class SpecialFocus extends Vue {
     private dataForm = {
         startTime: "",
         endTime: "",
-        content: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600835578753&di=c6374cd3314e12b884534d0b43aa4ed2&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Fback_pic%2F05%2F82%2F99%2F355c4aaa264ccc7.jpg",
+        content: "",
         status: "0", // 上线状态（0：上线，1：下线）
         id: ""
     }
-    // 上传图片
 
-    private fileList = [{ name: "food2.jpeg", url: this.dataForm.content }]
+    // 图片
+    private dfile: any
+    private showFile = false
+    private fileDataList = []
 
     protected mounted() {
         if (this.$route.params.id) {
@@ -119,47 +130,20 @@ export default class SpecialFocus extends Vue {
         if (this.$route.params.id) {
             this.dataForm.id = this.$route.params.id
         }
-        const formData = new FormData()
-        formData.append("file", this.dfile.raw) // 传参改为formData格式
-        axios({
-            method: "post",
-            url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=1`, // 请求后端的url
-            headers: {
-                "Content-Type": "multipart/form-data", // 设置headers
-                Authorization: `Bearer ${this.userToken}`
-            },
-            data: formData
-        })
-            .then((res: any) => {
-                if (res) {
-                    if (res.data.code < 200) {
-                        // 上传成功
-                        this.dataForm.content = res.data.data.filePath
-                        MessageBox.alert("上传成功", "成功", { type: "success" })
-                        postSpecialFocus(this.dataForm).then((res) => {
-                            if (res) {
-                                if (res.code === 0) {
-                                    MessageBox.alert(res.message, "成功", { type: "success" })
-                                    this.dataForm.endTime = ""
-                                    this.dataForm.startTime = ""
-                                    this.dataForm.content = ""
-                                } else {
-                                    MessageBox.alert(`操作失败`, "失败", { type: "error" })
-                                }
-                            } else {
-                                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                            }
-                        })
-                    }
+        postSpecialFocus(this.dataForm).then((res) => {
+            if (res) {
+                if (res.code === 0) {
+                    MessageBox.alert(res.message, "成功", { type: "success" })
+                    this.$router.push({
+                        name: "home"
+                    })
                 } else {
-                    // 上传失败
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                    MessageBox.alert(`操作失败`, "失败", { type: "error" })
                 }
-            })
-            .catch(() => {
-                // 请求失败
+            } else {
                 MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-            })
+            }
+        })
     }
 
     // 结束-下线
@@ -178,30 +162,75 @@ export default class SpecialFocus extends Vue {
     }
 
     // 上传图片
-    private dfile: any
-    private iconformData = {
-        img: "",
-        name: ""
-    }
-
-    private hideUploadIcon: any
-
     private handleAvatarChangeIcon(file: any, fileList: any) {
+        console.log(file)
         const isJPG = file.raw.type === "image/jpeg"
         const isPNG = file.raw.type === "image/png"
-        this.dfile = file
-        const isLt2M = file.raw.size / 1024 / 1024 < 0.5
-        this.hideUploadIcon = fileList.length >= 1
-        if (!isPNG && !isJPG) {
-            this.$message.error("上传图片只能是 JPG/PNG 格式!")
+        const isMP4 = file.raw.type === "video/mp4"
+        const isWMA = file.raw.type === "video/wma"
+        const isLt150M = file.raw.size / 1024 / 1024 <= 150
+        if (!isPNG && !isJPG && !isMP4 && !isWMA) {
+            this.fileDataList = []
+            this.$message.error("上传图片只能是 JPG/PNG 格式! 请重新选择")
             return false
-        } else if (!isLt2M) {
-            this.$message.error("上传图片大小不能超过 200kb!")
+        } else if (!isLt150M) {
+            this.fileDataList = []
+            this.$message.error("上传图片大小不能超过 150M! 请重新选择")
             return false
-        } else if (isLt2M && (isPNG || isJPG)) {
-            this.iconformData.img = file.raw // 图片的url
-            this.iconformData.name = file.name // 图片的名字
+        } else if (isLt150M && (isPNG || isJPG || isMP4 || isWMA)) {
+            this.dfile = file
+            if (fileList.length > 0) {
+                this.showFile = !this.showFile
+            }
         }
+    }
+
+    // 文件超出限制控制
+    private handleExceed() {
+        this.$message.warning("只能上传一个文件")
+    }
+
+    private handleRemove(file: any, fileList: any) {
+        const isJPG = file.raw.type === "image/jpeg"
+        const isPNG = file.raw.type === "image/png"
+        const isMP4 = file.raw.type === "video/mp4"
+        const isWMA = file.raw.type === "video/wma"
+        const isLt150M = file.raw.size / 1024 / 1024 <= 150
+        if (isLt150M && (isPNG || isJPG || isMP4 || isWMA)) {
+            if (fileList.length === 0) {
+                this.showFile = !this.showFile
+            }
+        }
+    }
+
+    private upbtn() {
+        const formData = new FormData()
+        formData.append("file", this.dfile.raw) // 传参改为formData格式
+        axios({
+            method: "post",
+            url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=1`, // 请求后端的url
+            headers: {
+                "Content-Type": "multipart/form-data", // 设置headers
+                Authorization: `Bearer ${this.userToken}`
+            },
+            data: formData
+        })
+            .then((res: any) => {
+                if (res) {
+                    if (res.data.code < 200) {
+                        // 上传成功
+                        this.dataForm.content = res.data.data.filePath
+                        MessageBox.alert("上传成功", "成功", { type: "success" })
+                    }
+                } else {
+                    // 上传失败
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            })
+            .catch(() => {
+                // 请求失败
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            })
     }
 }
 </script>

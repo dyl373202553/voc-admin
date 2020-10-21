@@ -252,3 +252,6 @@ table {
 textarea {
   font-family: PingFang SC, Helvetica Neue, Helvetica, Hiragino Sans GB, Microsoft YaHei, Arial;
 }
+.upload-image {
+  display: inline-block;
+}

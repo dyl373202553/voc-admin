@@ -27,13 +27,18 @@
                 class="upload-image"
                 :action="' '"
                 list-type="picture"
+                accept=".jpg,.png,.jpeg"
                 :auto-upload="false"
+                :on-exceed="handleExceed"
+                :on-remove="handleRemove"
                 :limit="1"
+                :file-list="fileDataList"
                 :on-change="handleAvatarChangeIcon"
                 ref="uploadicon"
                 >
-                <el-button size="small" type="primary" plain>上传封面</el-button>
-                <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于2M的文件，支持格式jpg/png/jpeg;</span>
+                <el-button size="small" type="primary" plain v-if="!showFile">选择文件</el-button>
+                <el-button size="small" slot="tip" type="primary" plain @click="upbtn" v-if="showFile">上传封面</el-button>
+                <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于2M的文件，支持格式jpg/png/jpeg;</span>
             </el-upload>
         </el-form-item>
         <el-form-item label="节目主讲人"
@@ -72,9 +77,8 @@
         </el-form-item>
         <el-form-item class="text-center dbtn">
           <el-button type="primary" round @click="onSubmit"
-            :disabled="!(dataForm.speakersData && dataForm.guests && dataForm.startTime && dataForm.endTime)"
+            :disabled="!(dataForm.speakersData && dataForm.guests && dataForm.startTime && dataForm.endTime && this.dataForm.logoUrl)"
           >提交</el-button>
-           <el-button type="primary" round @click="upbtn">上传</el-button>
         </el-form-item>
       </el-form>
     </el-card>
@@ -126,6 +130,11 @@ export default class CreateStudio extends Vue {
 
     private departmentArr= []
 
+    // 图片
+    private dfile: any
+    private showFile = false
+    private fileDataList = []
+
     private onSubmit() {
         this.loading = true
         this.dataForm.startTime = day(this.dataForm.startTime, "YYYY-MM-DD HH:mm:ss")
@@ -151,6 +160,61 @@ export default class CreateStudio extends Vue {
                 }
             }
         })
+    }
+
+    // 获取通讯录传回的数据
+    private getMsgFormSon(data: string|any[]) {
+        this.dialogTableVisible = false
+        this.dataList = data
+        const arr = []
+        const brr = []
+        for (let i = 0; i < this.dataList.length; i++) {
+            const obj: any = {}
+            obj.userCode = this.dataList[i].userCode.toString()
+            obj.userName = this.dataList[i].userName.toString()
+            obj.deptName = this.dataList[i].orgName.toString()
+            arr.push(JSON.stringify(obj))
+            brr.push(obj.userName)
+        }
+        this.dataForm.speakersData = "[" + arr.toString() + "]"
+        this.speakersData = brr.toString()
+    }
+
+    // 上传图片
+    private handleAvatarChangeIcon(file: any, fileList: any) {
+        const isJPG = file.raw.type === "image/jpeg"
+        const isPNG = file.raw.type === "image/png"
+        const isLt2M = file.raw.size / 1024 / 1024 <= 2
+        if (!isPNG && !isJPG) {
+            this.fileDataList = []
+            this.$message.error("上传图片只能是 JPG/PNG 格式! 请重新选择")
+            return false
+        } else if (!isLt2M) {
+            this.fileDataList = []
+            this.$message.error("上传图片大小不能超过 2M! 请重新选择")
+            return false
+        } else if (isLt2M && (isPNG || isJPG)) {
+            this.dfile = file
+            if (fileList.length > 0) {
+                this.showFile = !this.showFile
+            }
+        }
+    }
+
+    // 文件超出限制控制
+    private handleExceed() {
+        this.$message.warning("只能上传一个文件")
+    }
+
+    private handleRemove(file: any, fileList: any) {
+        const isJPG = file.raw.type === "image/jpeg"
+        const isPNG = file.raw.type === "image/png"
+        const isLt2M = file.raw.size / 1024 / 1024 <= 2
+        if (isLt2M && (isPNG || isJPG)) {
+            if (fileList.length === 0) {
+                this.showFile = !this.showFile
+            }
+        }
     }
 
     private upbtn() {
@@ -184,57 +248,11 @@ export default class CreateStudio extends Vue {
                 MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
             })
     }
-
-    // 获取通讯录传回的数据
-    private getMsgFormSon(data: string|any[]) {
-        this.dialogTableVisible = false
-        this.dataList = data
-        const arr = []
-        const brr = []
-        for (let i = 0; i < this.dataList.length; i++) {
-            const obj: any = {}
-            obj.userCode = this.dataList[i].userCode.toString()
-            obj.userName = this.dataList[i].userName.toString()
-            obj.deptName = this.dataList[i].orgName.toString()
-            arr.push(JSON.stringify(obj))
-            brr.push(obj.userName)
-        }
-        this.dataForm.speakersData = "[" + arr.toString() + "]"
-        this.speakersData = brr.toString()
-    }
-
-    // 上传图片
-    private dfile: any
-    private iconformData = {
-        img: "",
-        name: ""
-    }
-
-    private hideUploadIcon: any
-    private handleAvatarChangeIcon(file: any, fileList: any) {
-        const isJPG = file.raw.type === "image/jpeg"
-        const isPNG = file.raw.type === "image/png"
-        this.dfile = file
-        const isLt2M = file.raw.size / 1024 / 1024 < 0.5
-
-        this.hideUploadIcon = fileList.length >= 1
-
-        if (!isPNG && !isJPG) {
-            this.$message.error("上传图片只能是 JPG/PNG 格式!")
-            return false
-        } else if (!isLt2M) {
-            this.$message.error("上传图片大小不能超过 200kb!")
-            return false
-        } else if (isLt2M && (isPNG || isJPG)) {
-            this.iconformData.img = file.raw // 图片的url
-            this.iconformData.name = file.name // 图片的名字
-        }
-    }
 }
 </script>
 
 <style scoped>
-.line{
-  text-align: center;
-}
+    .line {
+        text-align: center;
+    }
 </style>

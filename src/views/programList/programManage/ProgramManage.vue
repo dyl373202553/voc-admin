@@ -19,10 +19,11 @@
                         :to="{name:'ProgramSummary', params: { summaryName:'管理小结', id:scope.row.id },query: { id: scope.row.id } }">
                         <el-button type="text" size="small">管理小结</el-button>
                     </router-link>
-                    <router-link :to="{name:'ProgramRelease', params: { summaryName:'detail', id:scope.row.id},query: { id: scope.row.id } }">
+                    <router-link
+                        :to="{name:'ProgramRelease', params: { summaryName:'detail', id:scope.row.id},query: { id: scope.row.id } }">
                         <el-button type="text" size="small">编辑</el-button>
                     </router-link>
-                    <el-button icon="el-icon-delete" class="dbtn-del" @click="programDelete(scope.row.id)"/>
+                    <el-button  v-if="userrole===0" icon="el-icon-delete" class="dbtn-del" @click="programDelete(scope.row.id)"/>
                     </div>
                 </el-table-column>
                 </el-table>
