@@ -54,16 +54,16 @@
         </el-card>
         <!-- :modal="false" -->
         <el-dialog
-        custom-class="info-dialog"
-        title="提示"
-        :visible.sync="centerDialogVisible"
-        width="25%"
-        center
-        >
-        <span>本期节目暂无开始。开始时间：{{this.programTime}}，请稍后再试</span>
-        <span slot="footer" class="dialog-footer dbtn">
-            <el-button type="primary" round @click="centerDialogVisible = false">确 定</el-button>
-        </span>
+            custom-class="info-dialog"
+            title="提示"
+            :visible.sync="centerDialogVisible"
+            width="25%"
+            center
+            >
+            <span>本期节目暂无开始。开始时间：{{this.programTime}}，请稍后再试</span>
+            <span slot="footer" class="dialog-footer dbtn">
+                <el-button type="primary" round @click="centerDialogVisible = false">确 定</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>

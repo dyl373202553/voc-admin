@@ -24,44 +24,58 @@
             </div>
             <el-row>
                 <el-col v-for="(value, key) in recentList" :key="key" :span="8">
-                <el-card class="card-img">
-                    <div class="box-card-img">
-                    <!-- <img :src="value.img" class="image"> -->
-                    <el-image :src="`/resources/`+ value.liveEntity.logoUrl" fit="cover" class="image" />
+                    <div @click="checkValid(value.id, value.liveEntity.startTime, value.liveId)">
+                        <el-card class="card-img">
+                            <div class="box-card-img">
+                                <!-- <img :src="value.img" class="image"> -->
+                                <el-image :src="`/resources/`+ value.liveEntity.logoUrl" fit="cover" class="image" />
+                            </div>
+                            <div class="box-card-info">
+                                <div class="title">{{ value.title }}</div>
+                                <div class="time">{{ value.liveEntity.startTime }}</div>
+                                <div class="bottom clearfix">
+                                    <div><span class="title-left">本期主播：</span><span>{{ value.liveEntity.speakers }}</span></div>
+                                    <div>
+                                        <span class="title-left">督办状态：</span>
+                                        <span
+                                        :class="value.superviseItemEntity.status !== '0'? 'dred':'dblue'">
+                                            {{getStatusName(value.superviseItemEntity.status)}}
+                                        </span>
+                                    </div>
+                                    <div>
+                                        <!-- 节目状态（1：未开始，2：进行中，3：已结束） -->
+                                        <span class="title-left">节目状态：</span>
+                                        <el-button type="primary" size="small "
+                                            :class="'border-none dbtn statusBtn'+value.status" round
+                                        >{{getStatusProName(value.status)}}</el-button>
+                                    </div>
+                                </div>
+                            </div>
+                        </el-card>
                     </div>
-                    <div class="box-card-info">
-                    <div class="title">{{ value.title }}</div>
-                    <div class="time">{{ value.liveEntity.startTime }}</div>
-                    <div class="bottom clearfix">
-                        <div><span class="title-left">本期主播：</span><span>{{ value.liveEntity.speakers }}</span></div>
-                        <div>
-                            <span class="title-left">督办状态：</span>
-                            <span
-                            :class="value.superviseItemEntity.status !== '0'? 'dred':'dblue'">
-                                {{getStatusName(value.superviseItemEntity.status)}}
-                            </span>
-                        </div>
-                        <div>
-                            <!-- 节目状态（1：未开始，2：进行中，3：已结束） -->
-                            <span class="title-left">节目状态：</span>
-                            <el-button type="primary" size="small "
-                                :class="'border-none dbtn statusBtn'+value.status" round
-                            >{{getStatusProName(value.status)}}</el-button>
-                        </div>
-                    </div>
-                    </div>
-                </el-card>
                 </el-col>
             </el-row>
         </el-card>
         <Rank />
+        <el-dialog
+            custom-class="info-dialog"
+            title="提示"
+            :visible.sync="centerDialogVisible"
+            width="25%"
+            center
+            >
+            <span>本期节目暂无开始。开始时间：{{this.programTime}}，请稍后再试</span>
+            <span slot="footer" class="dialog-footer dbtn">
+                <el-button type="primary" round @click="centerDialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { getFocusList } from "@/api/IndexPage/home"
-import { getRecentProgram } from "@/api/programList/programList"
+import { getRecentProgram, getEffectiveness } from "@/api/programList/programList"
 import { getViewStatus } from "@/api/dict"
 import { MessageBox } from "element-ui"
 import Rank from "./Rank.vue"
@@ -81,7 +95,8 @@ export default class Home extends Vue {
 
     private recentList = []
     private slideshowList= []
-
+    private centerDialogVisible=false
+    private programTime = ""
     protected mounted() {
         this.load()
     }
@@ -147,6 +162,28 @@ export default class Home extends Vue {
         }
         return "--"
     }
+
+    // 检查节目有效性 1：未开始，2：进行中，3：已结束
+    private checkValid(promId: string, time: string, liveId: string) {
+        getEffectiveness({ id: promId }).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    if (res.data !== "1") {
+                        this.$router.push({
+                            name: "ProgramDetail",
+                            params: { promId: promId, liveId: liveId },
+                            query: { id: promId }
+                        })
+                    } else {
+                        this.centerDialogVisible = true
+                        this.programTime = time
+                    }
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
 }
 </script>
 
@@ -159,5 +196,8 @@ export default class Home extends Vue {
     }
     .statusBtn3{
         background-image: linear-gradient(169deg, #FF8B8B 8%, #F37575 100%) !important;
+    }
+    .card-img {
+        cursor: pointer;
     }
 </style>
