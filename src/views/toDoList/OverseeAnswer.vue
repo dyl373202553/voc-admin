@@ -2,8 +2,8 @@
   <div class="app-container">
         <el-card class="box-card dpadding0">
         <div slot="header" class="clearfix">
-            <span class="header-title" v-if="this.status === '3'">举措确认</span>
-            <span class="header-title" v-if="this.status === '2'">督办回答</span>
+            <span class="header-title" v-if="this.$route.params.status === '3'">举措确认</span>
+            <span class="header-title" v-if="this.$route.params.status === '2' || this.$route.params.status === '5'">督办回答</span>
         </div>
         <div class="dsummary">
             <div class="dsummary-mian">
@@ -21,7 +21,7 @@
                 <p><span>责任部门：</span><span>{{this.deptnamesData}}</span></p>
                 </div>
             </div>
-            <div v-show="this.status === '2'" class="dsummary-mian">
+            <div v-show="this.$route.params.status === '2'|| this.$route.params.status === '5' " class="dsummary-mian">
                 <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>督办举措</div>
                 <el-input
                     v-model="dsummaryContent"
@@ -30,7 +30,8 @@
                     placeholder="请输入举措内容"
                 />
             </div>
-            <div v-show="this.status === '3'" class="dsummary-mian">
+            <div v-show="this.$route.params.status === '3'" class="dsummary-mian">
+                <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>督办举措</div>
                 <div class="main-info" v-for="(item, key) in superviseMeasuresList" :key="key">
                     <div class="info-left">
                         <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
@@ -39,6 +40,9 @@
                         <div>
                             <span class="info-title">{{item.userName}}</span>
                             <span>{{item.deptName}}</span>
+                            <span class="backStatus backStatus-sure " v-if="item.status === '0'">已确认</span>
+                            <span class="backStatus" v-if="item.status === '1'">未确认</span>
+                            <span class="backStatus backStatus-back" v-if="item.status === '2'">已退回</span>
                         </div>
                         <p>{{item.content}}</p>
                         <div>
@@ -52,27 +56,30 @@
                     </div>
                 </div>
             </div>
-            <div v-show="this.status === '2'" class="dsummary-mian">
+            <div v-show="this.$route.params.status === '2' || this.$route.params.status === '5'" class="dsummary-mian">
                 <div class="dsummary-title">上传附件</div>
                 <div>
                     <el-upload
                         class="upload-image"
+                        accept=".jpg,.png,.jpeg,.doc,.docx,.ppt,.pptx,.pdf,.xls,.txt,.zip,.rar"
                         :action="' '"
                         :auto-upload="false"
-                        :limit="3"
+                        :file-list="fileDataList"
+                        :on-remove="handleRemove"
                         :on-change="handleAvatarChangeIcon"
                         ref="uploadicon"
                         >
-                        <el-button size="small" type="primary" plain>附件上传</el-button>
+                        <el-button size="small" type="primary" plain>选择文件</el-button>
+                        <el-button size="small" slot="tip" type="primary" plain @click="upbtn" v-if="showFile">附件上传</el-button>
                         <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
-                </el-upload>
+                    </el-upload>
                 </div>
             </div>
-            <div v-show="this.status === '2'" class="bottom dbtn">
+            <div v-show="this.$route.params.status === '2' || this.$route.params.status === '5'" class="bottom dbtn">
                 <el-button round>取消</el-button>
-                <el-button type="primary" round :disabled="!dsummaryContent" @click="superviseMeasuresSubmit">提交</el-button>
+                <el-button type="primary" round :disabled="!dsummaryContent" @click="onSubmit">提交</el-button>
             </div>
-            <div v-show="this.status === '3'" class="bottom dbtn">
+            <div v-show="this.$route.params.status === '3'" class="bottom dbtn">
                 <el-button type="danger" round plain @click="allBack">一键退回</el-button>
                 <el-button type="primary" round @click="allMakesureComfire">一键确认</el-button>
                 <el-button type="danger" round @click="overseeCancel">撤销督办</el-button>
@@ -124,12 +131,20 @@ export default class OverseeAnswer extends Vue {
         time: ""
     }
 
+    private fileIds = ""
+
     private returnOpinion ="" // 退回意见
     private returnOpinionId =""
     private superviseMeasuresList: any= [] // 督办举措
 
     private programOversee =""
     private deptnamesData = ""
+
+    // 上传附件
+    private dfile: any
+    private showFile = false
+    private fileDataList: any = []
+
     protected mounted() {
         this.load()
     }
@@ -160,49 +175,25 @@ export default class OverseeAnswer extends Vue {
         })
     }
 
-    private superviseMeasuresSubmit() {
-        const formData = new FormData()
-        formData.append("file", this.dfile.raw) // 传参改为formData格式
-        axios({
-            method: "post",
-            url: `/vue-potal/portal-file/api/file/provider/uploadfile?busSource=moa-customervoice`, // 请求后端的url
-            headers: {
-                "Content-Type": "multipart/form-data", // 设置headers
-                Authorization: `Bearer ${this.userToken}`
-            },
-            data: formData
-        })
-            .then((res: any) => {
-                if (res) {
-                    if (res.data.code < 200) {
-                        // 上传成功
-                        MessageBox.alert("上传成功", "成功", { type: "success" })
-
-                        const params = {
-                            todoId: this.$route.params.id, // 待办ID
-                            content: this.dsummaryContent, // 督办举措内容
-                            fileIds: res.data.data.fileId, // 附件
-                            id: "" // ID
-                        }
-                        postOverseeMeasure(params).then((res) => {
-                            if (res) {
-                                if (res.code < 200) {
-                                    MessageBox.alert(`提交成功`, "成功", { type: "success" })
-                                } else {
-                                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                                }
-                            }
-                        })
-                    }
+    private onSubmit() {
+        const params = {
+            todoId: this.$route.params.id, // 待办ID
+            content: this.dsummaryContent, // 督办举措内容
+            fileIds: this.fileIds, // 附件
+            id: "" // ID
+        }
+        postOverseeMeasure(params).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    MessageBox.alert(`提交成功`, "成功", { type: "success" })
+                    this.$router.push({
+                        name: "home"
+                    })
                 } else {
-                    // 上传失败
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
-            })
-            .catch(() => {
-                // 请求失败
-                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-            })
+            }
+        })
     }
 
     // 撤销
@@ -256,6 +247,7 @@ export default class OverseeAnswer extends Vue {
         postOverseeBack(params).then((res) => {
             if (res) {
                 if (res.code < 200) {
+                    this.load()
                     MessageBox.alert(res.message, "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
@@ -275,24 +267,65 @@ export default class OverseeAnswer extends Vue {
     }
 
     // 上传附件
-    private dfile: any
-    private iconformData = {
-        img: "",
-        name: ""
+    private handleAvatarChangeIcon(file: any, fileList: any) {
+        let isLt10M = 0
+        if (fileList.length > 0) {
+            this.showFile = !this.showFile
+        }
+        for (let i = 0; i < fileList.length; i++) {
+            isLt10M += fileList[i].size
+        }
+        const isLt = isLt10M / 1024 / 1024 <= 10
+        if (!isLt) {
+            if (fileList.length > 1) {
+                this.fileDataList = []
+                for (let i = 0; i < fileList.length - 1; i++) {
+                    this.fileDataList.push(fileList[i])
+                }
+            }
+            this.$message.error("上传附件大小不能超过 10M! 请重新选择")
+            return false
+        } else if (isLt) {
+            this.fileDataList.push(file)
+            this.dfile = file
+        }
     }
 
-    private hideUploadIcon: any
-    private handleAvatarChangeIcon(file: any, fileList: any) {
-        this.dfile = file
-        const isLt2M = file.raw.size / 1024 / 1024 < 0.5
-        this.hideUploadIcon = fileList.length >= 1
-        if (!isLt2M) {
-            this.$message.error("上传图片大小不能超过 200kb!")
-            return false
-        } else {
-            this.iconformData.img = file.raw // 图片的url
-            this.iconformData.name = file.name // 图片的名字
+    private handleRemove(file: any, fileList: any) {
+        this.fileDataList.splice(this.fileDataList.findIndex((item: any) => item.uid === file.uid), 1)
+        if (fileList.length === 0) {
+            this.showFile = !this.showFile
         }
+    }
+
+    private upbtn() {
+        const formData = new FormData()
+        formData.append("file", this.dfile.raw) // 传参改为formData格式
+        axios({
+            method: "post",
+            url: `/vue-potal/portal-file/api/file/provider/uploadfile?busSource=moa-customervoice`, // 请求后端的url
+            headers: {
+                "Content-Type": "multipart/form-data", // 设置headers
+                Authorization: `Bearer ${this.userToken}`
+            },
+            data: formData
+        })
+            .then((res: any) => {
+                if (res) {
+                    if (res.data.code < 200) {
+                        // 上传成功
+                        this.fileIds = res.data.data.fileId
+                        MessageBox.alert("上传成功", "成功", { type: "success" })
+                    }
+                } else {
+                    // 上传失败
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            })
+            .catch(() => {
+                // 请求失败
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            })
     }
 }
 </script>

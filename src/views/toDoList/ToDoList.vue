@@ -42,7 +42,7 @@
                 <el-table-column prop="content" label="内容" align="center" />
                 <el-table-column label="操作" align="center">
                   <template slot-scope="scope">
-                    <router-link :to="{name:'OverseeAnswer', params: {status:scope.row.link, id:scope.row.id , businessId:scope.row.businessId} }">
+                    <router-link :to="{name:'OverseeAnswer', params: {status:scope.row.link, id:scope.row.id , businessId:scope.row.businessId}, query: { id: scope.row.id } }">
                       <el-button type="text" size="small">处理</el-button>
                     </router-link>
                     <!-- <router-link :to="{name:'OverseeAnswer', params: {statusName:'举措确认'} }">
@@ -115,23 +115,7 @@ export default class ToDoList extends Vue {
             this.overseeToDo = res[1].data
             this.dataOverseeTotal = res[1].total
         })
-
-        // getToDoList(this.dataPage).then((res) => {
-        //     if (res) {
-        //         this.programToDo = res.data
-        //         this.dataTotal = res.total
-        //     }
-        // })
     }
-
-    // private load2() {
-    //     getToDoList(this.dataOverseePage).then((res) => {
-    //         if (res) {
-    //             this.overseeToDo = res.data
-    //             this.dataOverseeTotal = res.total
-    //         }
-    //     })
-    // }
 
     private handleCurrentChange(val: number) {
         this.dataPage.pageNum = val

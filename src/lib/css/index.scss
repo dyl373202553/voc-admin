@@ -251,11 +251,30 @@
       .info-left {
         width: 60px;
         padding: 0 10px;
+        text-align: center;
       }
       .info-right {
         flex: 1;
         .info-title {
           color: #333;
+        }
+        .backStatus {
+          text-align: center;
+          border: 1px solid #9E9E9E;
+          padding: 2px 16px;
+          border-radius: 4px;
+          color: #9E9E9E;
+        }
+        .backStatus-sure{
+          border-color: #409EFF;
+          color: #409EFF;
+        }
+        .backStatus-back{
+          border-color: #F56C6C;
+          color: #F56C6C;
+        }
+        span {
+          margin-right: 15px;
         }
         .time {
           font-size: 12px;
