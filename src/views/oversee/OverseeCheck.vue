@@ -64,7 +64,7 @@
         </div>
 
         <div class="bottom dbtn">
-          <el-button v-show="$route.params.status !== '3'" round>返回</el-button>
+          <el-button v-show="$route.params.status !== '3'" round @click="back">返回</el-button>
           <el-button v-show="$route.params.status === '1' || $route.params.status === '2'" type="primary" round
           :disabled="!(this.deptnamesDataList && this.programOversee)" @click="submit">提交</el-button>
           <el-button v-show="$route.params.status === '3'" type="danger" round>退回</el-button>
@@ -185,6 +185,10 @@ export default class OverseeCheck extends Vue {
     // 文件下载
     private haveDownload(fileIds: any) {
         handleDownload(fileIds)
+    }
+
+    private back() {
+        this.$router.back()
     }
 }
 </script>

@@ -48,7 +48,7 @@
             </div>
         </div>
         <div class="bottom dbtn">
-          <el-button round>返回</el-button>
+          <el-button round @click="back">返回</el-button>
           <el-button type="primary" round :disabled="!summaryContent" @click="onSubmit">提交</el-button>
           <el-button v-show="$route.params.summaryName !=='发布小结'" type="danger" plain round @click="summaryDelete">删除</el-button>
         </div>
@@ -226,6 +226,10 @@ export default class ProgramSummary extends Vue {
     // 文件下载
     private haveDownload() {
         handleDownload(this.fileIds)
+    }
+
+    private back() {
+        this.$router.back()
     }
 }
 </script>
