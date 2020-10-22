@@ -200,13 +200,11 @@ export default class OverseeCheck extends Vue {
         const arr = []
         const brr = []
         for (let i = 0; i < this.dataList.length; i++) {
-            if (this.dataList[i].extendProperty) {
-                const obj: any = {}
-                obj.deptCode = this.dataList[i].id.toString()
-                obj.deptName = this.dataList[i].label.toString()
-                arr.push(JSON.stringify(obj))
-                brr.push(obj.deptName)
-            }
+            const obj: any = {}
+            obj.deptCode = this.dataList[i].id.toString()
+            obj.deptName = this.dataList[i].label.toString()
+            arr.push(JSON.stringify(obj))
+            brr.push(obj.deptName)
         }
         this.deptnamesData = "[" + arr.toString() + "]"
         this.deptnamesDataList = brr.toString()

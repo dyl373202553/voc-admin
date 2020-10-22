@@ -7,6 +7,8 @@
 
 <script>
 import E from "wangeditor"
+import Cookies from "js-cookie"
+import axios from "axios"
 export default {
     name: "Editoritem",
     model: {
@@ -54,13 +56,50 @@ export default {
         // http://192.168.2.125:8080/admin/storage/create
             this.editor = new E(this.$refs.toolbar, this.$refs.editor)
             this.editor.customConfig.uploadImgShowBase64 = false // base 64 存储图片
-            this.editor.customConfig.uploadImgServer = "http://otp.cdinfotech.top/file/upload_images"// 配置服务器端地址
-            this.editor.customConfig.uploadImgHeaders = { }// 自定义 header
+            // this.editor.customConfig.uploadImgServer = `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsProgram&isystemName=1` // 配置服务器端地址
+            // this.editor.customConfig.uploadImgHeaders = {
+            //     "Content-Type": "multipart/form-data", // 设置headers
+            //     Authorization: `Bearer ${Cookies.get("kmportaltoken")}`
+            // }// 自定义 header
             this.editor.customConfig.uploadFileName = "file" // 后端接受上传文件的参数名
             this.editor.customConfig.uploadImgMaxSize = 2 * 1024 * 1024 // 将图片大小限制为 2M
             this.editor.customConfig.uploadImgMaxLength = 6 // 限制一次最多上传 3 张图片
             this.editor.customConfig.uploadImgTimeout = 3 * 60 * 1000 // 设置超时时间
 
+            this.editor.customConfig.customUploadImg = function (resultFiles, insertImgFn) {
+                // resultFiles 是 input 中选中的文件列表
+                // insertImgFn 是获取图片 url 后，插入到编辑器的方法
+
+                // 上传图片，返回结果，将图片插入到编辑器中
+                // insertImgFn(imgUrl)
+
+                // 上传图片
+                const formData = new FormData()
+                formData.append("file", resultFiles[0]) // 传参改为formData格式
+                axios({
+                    method: "post",
+                    url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsProgram&isystemName=1`, // 请求后端的url
+                    headers: {
+                        // "Content-Type": "multipart/form-data", // 设置headers
+                        Authorization: `Bearer ${Cookies.get("kmportaltoken")}`
+                    },
+                    data: formData
+                })
+                    .then((res) => {
+                        if (res) {
+                            if (res.data.code < 200) {
+                                // 上传成功
+                                const imgUrl = res.data.data.filePath
+                                insertImgFn(`/resources/` + imgUrl)
+                            }
+                        } else {
+                            // 上传失败
+                        }
+                    })
+                    .catch(() => {
+                        // 请求失败
+                    })
+            }
             // 配置菜单
             this.editor.customConfig.menus = [
                 "head", // 标题
@@ -118,8 +157,8 @@ export default {
                     // for (let i = 0; i < 1; i++) {
                     // console.log(result)
                     console.log(editor)
-                    const url = "http://otp.cdinfotech.top" + result.url
-                    insertImg(url)
+                    // const url = "/resources/" + result.url
+                    // insertImg(url)
                 // }
                 }
             }

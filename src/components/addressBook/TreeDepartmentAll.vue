@@ -32,7 +32,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getOrgFirst } from "@/api/addressBook"
+import { getOrgFirst, getOrgTree } from "@/api/addressBook"
 @Component
 export default class SpecialFocus extends Vue {
     private defaultProps={
@@ -48,25 +48,81 @@ export default class SpecialFocus extends Vue {
 
     // 部门获取
     private loadAll(node: any, resolve: (arg0: {}[]) => any) {
-        const params = {
-            moaFlag: "1"
-        }
-        getOrgFirst(params).then(res => {
-            if (res.code === 0) {
-                const leaderList = res.data.childOrgList
-                const brr = [] // 组装部门数据
-                for (let i = 0; i < leaderList.length; i++) {
-                    const obj: any = {}
-                    obj.isLeaf = true // 是否有下级
-                    obj.disabled = false // 是否可以选择
-                    obj.id = leaderList[i].orgCode
-                    obj.label = leaderList[i].orgName
-                    obj.level = leaderList[i].level
-                    brr.push(obj)
-                }
-                return resolve(brr)
+        if (node.level === 0) {
+            const params = {
+                moaFlag: "1"
             }
-        })
+            getOrgFirst(params).then(res => {
+                if (res.code === 0) {
+                    const leaderList = res.data.childOrgList
+                    const brr = [] // 组装部门数据
+                    for (let i = 0; i < leaderList.length; i++) {
+                        const obj: any = {}
+                        obj.isLeaf = false // 是否有下级
+                        obj.disabled = false // 是否可以选择
+                        obj.id = leaderList[i].orgCode
+                        obj.label = leaderList[i].orgName
+                        obj.level = leaderList[i].level
+                        brr.push(obj)
+                    }
+                    return resolve(brr)
+                }
+            })
+        } else if (node.level === 1) {
+            if (node.data.level === 1) {
+                node.data.disabled = false
+                node.loading = false
+                node.isLeaf = true
+            } else {
+                const params = {
+                    orgCode: node.data.id
+                }
+                getOrgTree(params).then(res => {
+                    const childList = res.data.childList
+                    const arr = []
+                    for (let i = 0; i < childList.length; i++) {
+                        const obj: any = {}
+                        obj.isLeaf = false
+                        obj.disabled = false
+                        obj.id = childList[i].orgCode
+                        obj.label = childList[i].orgName
+                        obj.extendProperty = childList[i].extendProperty
+                        obj.level = childList[i].level
+                        arr.push(obj)
+                    }
+                    return resolve(arr)
+                })
+            }
+        } else if (node.level === 2) {
+            if (node.data.extendProperty.hasChildOrg === 1) {
+                const params = {
+                    orgCode: node.data.id
+                }
+                getOrgTree(params).then(res => {
+                    const childList = res.data.childList
+                    const arr = []
+                    for (let i = 0; i < childList.length; i++) {
+                        const obj: any = {}
+                        obj.isLeaf = false
+                        obj.disabled = false
+                        obj.id = childList[i].orgCode
+                        obj.label = childList[i].orgName
+                        obj.extendProperty = childList[i].extendProperty
+                        obj.level = childList[i].level
+                        arr.push(obj)
+                    }
+                    return resolve(arr)
+                })
+            } else {
+                node.data.disabled = false
+                node.loading = false
+                node.isLeaf = true
+            }
+        } else if (node.level === 3) {
+            node.data.disabled = false
+            node.loading = false
+            node.isLeaf = true
+        }
     }
 
     private handleNodeClick(data: { isLeaf: any; isCheck: boolean; disabled: boolean }) {
@@ -95,13 +151,15 @@ export default class SpecialFocus extends Vue {
     }
 
     private handleChangeClick(data: any, isCheck: any) {
-        if (data.isLeaf === false) {} else {
+        if (data.isLeaf === true) {} else {
             if (isCheck) {
                 // @ts-ignore
                 this.$refs.tree1.setChecked(data.id, true)
                 if ((this.selIdArr.indexOf(data.id) === -1)) {
-                    this.selInfoArr.push(data)
-                    this.selIdArr.push(data.id)
+                    if (data.extendProperty) {
+                        this.selInfoArr.push(data)
+                        this.selIdArr.push(data.id)
+                    }
                 }
             } else {
                 // @ts-ignore
