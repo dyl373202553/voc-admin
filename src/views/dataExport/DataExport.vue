@@ -19,12 +19,12 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="二级部门选择">
-                <el-input v-model="dataForm.dept2Code" suffix-icon="el-icon-s-home" />
+                <el-input v-model="dataForm.dept2Code" suffix-icon="el-icon-s-home" @focus="dialogTableVisible = true"/>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="三级部门选择">
-                <el-input v-model="dataForm.dept3Code" suffix-icon="el-icon-s-home" />
+                <el-input v-model="dataForm.dept3Code" suffix-icon="el-icon-s-home" @focus="dialogTreeVisible = true"/>
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -105,6 +105,12 @@
         </div>
       </div>
     </el-card>
+    <el-dialog title="二级部门" :visible.sync="dialogTableVisible">
+       <TreeDepartment @funcs="getMsgFormSon" />
+    </el-dialog>
+    <el-dialog title="三级部门" :visible.sync="dialogTreeVisible">
+       <TreeDepartmentAll @funcs="getMsgFormSonThird" />
+    </el-dialog>
   </div>
 </template>
 
@@ -115,8 +121,12 @@ import { MessageBox } from "element-ui"
 import { day, handleDownloadFile } from "@/lib/js/unitls"
 import axios from "axios"
 import { UserModule } from "@/store/module/user"
+import TreeDepartment from "@/components/addressBook/TreeDepartment.vue"
+import TreeDepartmentAll from "@/components/addressBook/TreeDepartmentAll.vue"
 
-@Component
+@Component({
+    components: { TreeDepartment, TreeDepartmentAll }
+})
 export default class OverseeCheck extends Vue {
     private dataForm = {
         pageNum: 1,
@@ -130,6 +140,9 @@ export default class OverseeCheck extends Vue {
     private tableData = []
     private dataTotal = 0
     private selectList = ""
+
+    private dialogTableVisible = false
+    private dialogTreeVisible = false
 
     get userToken() {
         // @ts-ignore
@@ -230,6 +243,26 @@ export default class OverseeCheck extends Vue {
             .catch(function (error) { // 请求失败处理
                 MessageBox.alert(error, "失败", { type: "error" })
             })
+    }
+
+    // 获取通讯录传回的数据 -责任部门返回数据
+    private getMsgFormSon(data: string|any[]) {
+        this.dialogTableVisible = false
+        if (data.length !== 0) {
+            this.dataForm.dept2Code = data[0].id
+        } else {
+            this.dataForm.dept2Code = ""
+        }
+    }
+
+    // 获取通讯录传回的数据 -责任部门返回数据
+    private getMsgFormSonThird(data: string|any[]) {
+        this.dialogTreeVisible = false
+        if (data.length !== 0) {
+            this.dataForm.dept3Code = data[0].id
+        } else {
+            this.dataForm.dept3Code = ""
+        }
     }
 }
 </script>

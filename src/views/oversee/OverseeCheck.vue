@@ -150,7 +150,7 @@ export default class OverseeCheck extends Vue {
         const programOversee = getOverseeDetail({ id: this.$route.params.id }) // 督办详情
         Promise.all([programList, programOversee]).then((res) => {
             this.programList.title = res[0].data.title
-            this.programList.time = res[0].data.liveEntity.startTime
+            this.programList.time = res[0].data.liveEntity.startTime + "--" + res[0].data.liveEntity.endTime
             this.superviseMeasuresList = res[1].data.superviseMeasuresList
             this.programOversee = res[1].data.content
             this.person = res[1].data.deptnames
@@ -168,11 +168,13 @@ export default class OverseeCheck extends Vue {
         }
         postOverseeAdd(params).then((res) => {
             if (res) {
-                if (res.code < 200) {
+                if (res.code === 0) {
                     MessageBox.alert(res.message, "成功", { type: "success" })
                     this.$router.push({
                         name: "home"
                     })
+                } else if (res.code === 1) {
+                    MessageBox.alert(res.message, "失败", { type: "error" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }

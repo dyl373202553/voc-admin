@@ -48,11 +48,7 @@
             ]">
           <el-input v-model="speakersData" placeholder="请选择主讲人"  @focus="dialogTableVisible = true" suffix-icon="el-icon-s-home" />
         </el-form-item>
-        <el-form-item label="本期嘉宾"
-            prop="guests"
-            :rules="[
-            { required: true, message: '本期嘉宾不能为空'}
-            ]">
+        <el-form-item label="本期嘉宾">
           <el-input v-model="dataForm.guests"  placeholder="请填写内容" />
         </el-form-item>
         <el-form-item label="是否发布督办举措"
@@ -77,7 +73,7 @@
         </el-form-item>
         <el-form-item class="text-center dbtn">
           <el-button type="primary" round @click="onSubmit"
-            :disabled="!(dataForm.speakersData && dataForm.guests && dataForm.startTime && dataForm.endTime && this.dataForm.logoUrl)"
+            :disabled="!(dataForm.speakersData && dataForm.startTime && dataForm.endTime && this.dataForm.logoUrl)"
           >提交</el-button>
         </el-form-item>
       </el-form>
