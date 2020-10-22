@@ -31,17 +31,20 @@
         </div>
         <div class="dsummary-mian">
             <div class="dsummary-title">上传附件</div>
-            <el-upload
+                <el-upload
                     class="upload-image"
+                    accept=".jpg,.png,.jpeg,.doc,.docx,.ppt,.pptx,.pdf,.xls,.txt,.zip,.rar"
                     :action="' '"
                     :auto-upload="false"
-                    :limit="3"
+                    :file-list="fileDataList"
+                    :on-remove="handleRemove"
                     :on-change="handleAvatarChangeIcon"
                     ref="uploadicon"
                     >
-                    <el-button size="small" type="primary" plain>附件上传</el-button>
+                    <el-button size="small" type="primary" plain>选择文件</el-button>
+                    <el-button size="small" slot="tip" type="primary" plain @click="upbtn" v-if="showFile">附件上传</el-button>
                     <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
-            </el-upload>
+                </el-upload>
             <div class="downloadClick" @click="haveDownload">
                 <i class="el-icon-paperclip" />
                 <span class="info-title">{{this.fileIds}}</span>
@@ -86,6 +89,11 @@ export default class ProgramSummary extends Vue {
     private fileIds = "";
     private dialogTableVisible = false
 
+    // 上传附件
+    private dfile: any
+    private showFile = false
+    private fileDataList: any = []
+
     private defaultProps={
         children: "children",
         label: "label",
@@ -118,6 +126,100 @@ export default class ProgramSummary extends Vue {
     }
 
     private onSubmit() {
+        const params = {
+            programId: this.$route.params.id, // 节目ID
+            content: this.summaryContent, // 小结内容
+            deptnames: this.deptnamesData, // 参与部门，多个以‘;’想个，只做显示
+            fileIds: this.fileIds, // 附件id
+            id: this.summaryId // 修改时传递ID，新增不传
+        }
+
+        postProgramSummary(params).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    MessageBox.alert(res.message, "成功", { type: "success" })
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
+
+    // 删除小结
+    private summaryDelete() {
+        const params = {
+            id: this.summaryId
+        }
+        postProgramSummaryDelete(params).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    MessageBox.alert(res.message, "成功", { type: "success" })
+                    this.$router.push({
+                        name: "ProgramManage"
+                    })
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
+
+    // 获取通讯录传回的数据 -责任部门返回数据
+    private getMsgFormSon(data: string|any[]) {
+        this.dialogTableVisible = false
+        this.dataList = data
+        // const arr = []
+        const brr = []
+        for (let i = 0; i < this.dataList.length; i++) {
+            if (this.dataList[i].extendProperty) {
+                const obj: any = {}
+                // obj.deptCode = this.dataList[i].id.toString()
+                obj.deptName = this.dataList[i].label.toString()
+                // arr.push(JSON.stringify(obj))
+                brr.push(obj.deptName)
+            }
+        }
+        this.deptnamesData = brr.toString()
+    }
+
+    // 文件下载
+    private haveDownload() {
+        handleDownload(this.fileIds)
+    }
+
+    // 上传附件
+    private handleAvatarChangeIcon(file: any, fileList: any) {
+        let isLt10M = 0
+        if (fileList.length > 0) {
+            this.showFile = !this.showFile
+        }
+        for (let i = 0; i < fileList.length; i++) {
+            isLt10M += fileList[i].size
+        }
+        const isLt = isLt10M / 1024 / 1024 <= 10
+        if (!isLt) {
+            if (fileList.length > 1) {
+                this.fileDataList = []
+                for (let i = 0; i < fileList.length - 1; i++) {
+                    this.fileDataList.push(fileList[i])
+                }
+            }
+            this.$message.error("上传附件大小不能超过 10M! 请重新选择")
+            return false
+        } else if (isLt) {
+            this.fileDataList.push(file)
+            this.dfile = file
+        }
+    }
+
+    private handleRemove(file: any, fileList: any) {
+        this.fileDataList.splice(this.fileDataList.findIndex((item: any) => item.uid === file.uid), 1)
+        if (fileList.length === 0) {
+            this.showFile = !this.showFile
+        }
+    }
+
+    private upbtn() {
         const formData = new FormData()
         formData.append("file", this.dfile.raw) // 传参改为formData格式
         axios({
@@ -163,69 +265,6 @@ export default class ProgramSummary extends Vue {
                 // 请求失败
                 MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
             })
-    }
-
-    // 删除小结
-    private summaryDelete() {
-        const params = {
-            id: this.summaryId
-        }
-        postProgramSummaryDelete(params).then((res) => {
-            if (res) {
-                if (res.code < 200) {
-                    MessageBox.alert(res.message, "成功", { type: "success" })
-                    this.$router.push({
-                        name: "ProgramManage"
-                    })
-                } else {
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                }
-            }
-        })
-    }
-
-    // 上传附件
-    private dfile: any
-    private iconformData = {
-        img: "",
-        name: ""
-    }
-
-    private hideUploadIcon: any
-    private handleAvatarChangeIcon(file: any, fileList: any) {
-        this.dfile = file
-        const isLt2M = file.raw.size / 1024 / 1024 < 0.5
-        this.hideUploadIcon = fileList.length >= 1
-        if (!isLt2M) {
-            this.$message.error("上传图片大小不能超过 200kb!")
-            return false
-        } else {
-            this.iconformData.img = file.raw // 图片的url
-            this.iconformData.name = file.name // 图片的名字
-        }
-    }
-
-    // 获取通讯录传回的数据 -责任部门返回数据
-    private getMsgFormSon(data: string|any[]) {
-        this.dialogTableVisible = false
-        this.dataList = data
-        // const arr = []
-        const brr = []
-        for (let i = 0; i < this.dataList.length; i++) {
-            if (this.dataList[i].extendProperty) {
-                const obj: any = {}
-                // obj.deptCode = this.dataList[i].id.toString()
-                obj.deptName = this.dataList[i].label.toString()
-                // arr.push(JSON.stringify(obj))
-                brr.push(obj.deptName)
-            }
-        }
-        this.deptnamesData = brr.toString()
-    }
-
-    // 文件下载
-    private haveDownload() {
-        handleDownload(this.fileIds)
     }
 
     private back() {

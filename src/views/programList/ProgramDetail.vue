@@ -6,35 +6,42 @@
         </div>
         <div class="dcontent">
             <div class="top">
-            <h2 class="top-title">
-                {{this.programForm.title}}
-            </h2>
-            <div class="top-info">
-                <span>{{this.programForm.time}}</span>
-                <span>{{this.programForm.speakers}}</span>
-                <span><img src="@/assets/images/icon_look.png"/>{{this.programForm.browerNum}}</span>
-                <!-- 点赞数 -->
-                <span><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{this.programForm.praiseNum}}</span>
-            </div>
+                <h2 class="top-title">
+                    {{this.programForm.title}}
+                </h2>
+                <div class="top-info">
+                    <span>{{this.programForm.time}}</span>
+                    <span>{{this.programForm.speakers}}</span>
+                    <span><img src="@/assets/images/icon_look.png"/>{{this.programForm.browerNum}}</span>
+                    <!-- 点赞数 -->
+                    <span><img src="@/assets/images/icon_like.png" style="vertical-align: bottom;"/>{{this.programForm.praiseNum}}</span>
+                </div>
             </div>
             <div class="main">
-            <div>
-                <div class="main-title">本期嘉宾</div>
-                <p>{{this.programForm.guests}}</p>
-            </div>
-            <div>
-                <div class="main-title">本期简介</div>
-                <p>{{this.programForm.summary}}</p>
-            </div>
-            <div>
-                <div class="main-title">节目内容</div>
-                <pre v-html="this.programForm.content"></pre>
-            </div>
-            <div class="main-btn">
-                <!-- ownerPraiseStatus个人点赞状态（0：是，1：否） , -->
-                <el-button v-if="this.programForm.likeShow === '1'" type="primary" round @click="getLikeShow">点赞支持一下</el-button>
-                <el-button v-if="this.programForm.likeShow === '0'" type="info" round>您已点过赞啦</el-button>
-            </div>
+                <div>
+                    <div class="main-title">本期嘉宾</div>
+                    <p>{{this.programForm.guests}}</p>
+                </div>
+                <div>
+                    <div class="main-title">本期简介</div>
+                    <p>{{this.programForm.summary}}</p>
+                </div>
+                <div>
+                    <div class="main-title">节目内容</div>
+                    <pre v-html="this.programForm.content"></pre>
+                </div>
+                <div v-if="this.programForm.fileIds">
+                    <div class="main-title">附件</div>
+                    <div class="downloadClick" @click="haveDownload(this.programForm.fileIds)">
+                        <i class="el-icon-paperclip" />
+                        <span class="info-title">{{this.programForm.fileIds}}</span>
+                    </div>
+                </div>
+                <div class="main-btn">
+                    <!-- ownerPraiseStatus个人点赞状态（0：是，1：否） , -->
+                    <el-button v-if="this.programForm.likeShow === '1'" type="primary" round @click="getLikeShow">点赞支持一下</el-button>
+                    <el-button v-if="this.programForm.likeShow === '0'" type="info" round>您已点过赞啦</el-button>
+                </div>
             </div>
             <div class="bottom">
                 <template v-if="this.supervise.status !=='4' && this.supervise.status !=='1'">
@@ -70,8 +77,8 @@
                             </div>
                             <p>{{item.content}}</p>
                             <div class="downloadClick" @click="haveDownload(item.fileIds)">
-                            <i class="el-icon-paperclip" />
-                            <span class="info-title">{{item.fileIds}}</span>
+                                <i class="el-icon-paperclip" />
+                                <span class="info-title">{{item.fileIds}}</span>
                             </div>
                         </div>
                         </div>
@@ -114,7 +121,8 @@ export default class ProgramDetail extends Vue {
         guests: "", // 本期嘉宾
         summary: "", // 本期简介
         content: "", // 节目内容
-        likeShow: "1" // 个人点赞
+        likeShow: "1", // 个人点赞
+        fileIds: ""
     }
 
     private supervise = { // 督办事项
@@ -149,7 +157,8 @@ export default class ProgramDetail extends Vue {
                         guests: res.data.liveEntity.guests, // 本期嘉宾
                         summary: res.data.summary, // 本期简介
                         content: res.data.content, // 节目内容
-                        likeShow: res.data.ownerPraiseStatus
+                        likeShow: res.data.ownerPraiseStatus,
+                        fileIds: res.data.fileIds
                     }
                     if (res.data.superviseItemEntity) {
                         this.supervise = {
