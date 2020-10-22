@@ -17,7 +17,7 @@
                 </div>
             <el-tab-pane label="精彩留言" name="first">
                 <div class="bottom dliuyan">
-                    <div class="bottom-main" v-for="(item, key) in messageList" :key="key">
+                    <div v-for="(item, key) in messageList" :key="key">
                         <div class="main-info" v-if="item.wonderfulFlag === '0'">
                             <div class="info-left">
                                 <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
@@ -49,7 +49,7 @@
                 </div>
             </el-tab-pane>
             <el-tab-pane label="全部留言" name="fourth">
-                <span slot="label">全部留言（{{this.allTotal}}）</span>
+                <span slot="label">全部留言（{{this.dataTotal}}）</span>
                 <div class="bottom dliuyan">
                     <div class="bottom-main" v-for="(item, key) in messageList" :key="key">
                         <div class="main-info">
@@ -64,11 +64,12 @@
                                 </div>
                                 <p>{{item.content}}</p>
                                 <div class="text-right margin-top10 info">
+                                    <span class="fl checkBack" @click="checkBack(item.id, key)">查看回复</span>
                                     <span class="fl wonderful" v-show="item.wonderfulFlag === '1' && userrole===0"
                                         @click="setWonderful(item.id, '0')">设置精彩留言</span>
                                     <span class="fl wonderful" v-show="item.wonderfulFlag === '0' && userrole===0"
                                         @click="setWonderful(item.id, '1')">取消精彩留言</span>
-                                    <span class="optionBtn" @click="getIndexBack(key)"><img src="@/assets/images/icon_repeat.png"/></span>
+                                    <span class="optionBtn" @click="indexKey=item.id"><img src="@/assets/images/icon_repeat.png"/></span>
                                     <span class="optionBtn" v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)">
                                         <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
                                         <span>{{item.praiseNum}}</span>
@@ -77,9 +78,9 @@
                                         <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
                                         <span>{{item.praiseNum}}</span>
                                     </span>
-                                    <span class="optionBtn"><img src="@/assets/images/icon_del.png"/></span>
+                                    <span class="optionBtn" v-if="userrole===0"><img src="@/assets/images/icon_del.png"/></span>
                                 </div>
-                                <div class="text-right margin-top10 info" v-if="indexKey=== key">
+                                <div class="text-right margin-top10 info" v-if="indexKey=== item.id">
                                     <template>
                                         <el-input
                                             v-model="backMessage"
@@ -93,8 +94,56 @@
                                         <el-button type="primary" @click="onBackSubmit(item.id)">回复</el-button>
                                     </div>
                                 </div>
+                                <!-- 子级留言 -->
+                                <template v-if="indexKey === item.id+key">
+                                    <div class="liuyan-children" v-if="messageChild.length !==0">
+                                        <div class="main-info" v-for="(itemChild, indexChild) in messageChild" :key="indexChild" >
+                                            <div class="info-left">
+                                                <el-avatar :src="`/resources/bluepage/a/`+itemChild.userCode+`_A.jpg`"/>
+                                            </div>
+                                            <div class="info-right">
+                                                <div>
+                                                    <span class="info-title">{{itemChild.userName}}</span>
+                                                    <span>{{itemChild.dept2Name}}</span>
+                                                    <span class="fr time">{{itemChild.updateTime}}</span>
+                                                </div>
+                                                <p>{{itemChild.content}}</p>
+                                                <div class="text-right margin-top10 info">
+                                                    <span class="optionBtn" v-if="itemChild.ownerPraiseStatus !=='0'" @click="getLike(itemChild.id)">
+                                                        <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
+                                                        <span>{{itemChild.praiseNum}}</span>
+                                                    </span>
+                                                    <span class="optionBtn" v-if="itemChild.ownerPraiseStatus ==='0'" >
+                                                        <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
+                                                        <span>{{itemChild.praiseNum}}</span>
+                                                    </span>
+                                                    <span class="optionBtn"><img src="@/assets/images/icon_del.png"/></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <span class="fl checkBack" @click="checkBackDown()">收起</span>
+                                    </div>
+                                    <div class="liuyan-children" v-if="messageChild.length ===0">
+                                        <div class="main-info">
+                                            没有数据
+                                        </div>
+                                        <span class="fl checkBack" @click="checkBackDown()">收起</span>
+                                    </div>
+                                </template>
+
                             </div>
                         </div>
+                    </div>
+
+                    <div class="dpagination">
+                        <el-pagination
+                        background
+                        @current-change="handleCurrentChange"
+                        :current-page="dataPage.pageNum"
+                        :total="dataTotal"
+                        :page-size="dataPage.pageSize"
+                        layout="prev, pager, next, jumper">
+                        </el-pagination>
                     </div>
                 </div>
             </el-tab-pane>
@@ -105,7 +154,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { postMessageAll, postMessageAdd, postLikeAdd, postMessageSetWonderful } from "@/api/programList/message"
+import { postMessageAll, postMessageAdd, postLikeAdd, postMessageSetWonderful, postMessageBack } from "@/api/programList/message"
 import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
 @Component
@@ -123,27 +172,32 @@ export default class MessageBoard extends Vue {
         this.likeShow = this.likeShow + 1
     }
 
-    private allTotal = 0
+    private dataTotal = 0
     private messageList = []
-    private messageAllList = []
-    private indexKey = -1
+    private messageChildrenList: any = []
+    private messageChild: any = []
+    private indexKey = ""
+    private showIndex = false
+    private dataPage = {
+        pageNum: 1,
+        pageSize: 10,
+        programId: this.$route.params.promId,
+        wonderfulFlag: "" // 是否为精彩留言（0：是，1：否）
+    }
 
     protected mounted() {
         this.load()
     }
 
     private load() {
-        const dataPage = {
-            pageNum: 1,
-            pageSize: 10,
-            programId: this.$route.params.promId,
-            wonderfulFlag: "" // 是否为精彩留言（0：是，1：否）
-        }
-        postMessageAll(dataPage).then((res) => {
+        postMessageAll(this.dataPage).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.messageList = res.data
-                    this.allTotal = res.total
+                    this.dataTotal = res.total
+                    for (let i = 0; i < this.messageList.length; i++) {
+                        this.messageChildrenList.push(null)
+                    }
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
@@ -164,6 +218,11 @@ export default class MessageBoard extends Vue {
                 }
             }
         })
+    }
+
+    private handleCurrentChange(val: number) {
+        this.dataPage.pageNum = val
+        this.load()
     }
 
     private onSubmit() {
@@ -189,7 +248,7 @@ export default class MessageBoard extends Vue {
 
     // 取消
     private onCancelSubmit() {
-        this.indexKey = -1
+        this.indexKey = ""
         this.backMessage = ""
     }
 
@@ -213,10 +272,10 @@ export default class MessageBoard extends Vue {
         })
     }
 
-    // 留言回复
-    private getIndexBack(key: number) {
-        this.indexKey = key
-    }
+    // // 留言回复
+    // private getIndexBack(key: number) {
+    //     this.indexKey = key
+    // }
 
     // 设置精彩留言
     private setWonderful(id: string, type: string) {
@@ -236,6 +295,31 @@ export default class MessageBoard extends Vue {
                 MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
             }
         })
+    }
+
+    // 查看回复
+    private checkBack(id: string, index: number) {
+        this.showIndex = !this.showIndex
+        this.indexKey = id + index
+        const dataPage = {
+            pageNum: -1,
+            targetId: id
+        }
+        postMessageBack(dataPage).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    this.messageChildrenList[index] = res.data
+                    this.messageChild = res.data
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
+
+    // 收起
+    private checkBackDown() {
+        this.indexKey = ""
     }
 }
 </script>

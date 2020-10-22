@@ -202,7 +202,19 @@
               margin-left: 30px;
             }
           }
+          .checkBack {
+            margin-left: 0px !important;
+            text-decoration: underline;
+            color: #66b1ff;
+            cursor: pointer;
+          }
         }
+    }
+    .liuyan-children {
+      .main-info {
+        background: #F4F4F4;
+        padding: 20px;
+      }
     }
   }
 

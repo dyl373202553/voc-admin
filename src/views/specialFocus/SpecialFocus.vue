@@ -163,7 +163,6 @@ export default class SpecialFocus extends Vue {
 
     // 上传图片
     private handleAvatarChangeIcon(file: any, fileList: any) {
-        console.log(file)
         const isJPG = file.raw.type === "image/jpeg"
         const isPNG = file.raw.type === "image/png"
         const isMP4 = file.raw.type === "video/mp4"

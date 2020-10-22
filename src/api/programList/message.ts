@@ -32,6 +32,14 @@ export const postMessageAll = (
     }
 ) => { return getData(`${voc}/khzsComment/data`, { programId, pageNum, pageSize, wonderfulFlag }) }
 
+// 获取下级留言
+export const postMessageBack = (
+    { pageNum, targetId }: {
+        pageNum: number;
+        targetId: string;
+    }
+) => { return getData(`${voc}/khzsComment/data`, { pageNum, targetId }) }
+
 // 点赞管理
 // 点赞新增、修改
 export const postLikeAdd = (
