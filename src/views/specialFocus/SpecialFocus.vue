@@ -61,6 +61,9 @@
                     <el-col :span="24" v-show="$route.params.id && $route.params.viewStatus === '3'">
                         <div class="dimg-div">
                             <el-image :src="`/resources/`+ dataForm.content" fit="cover" class="image" />
+                            <!-- <video :src="`/resources/`+ dataForm.content" :controls="true">
+                                您的浏览器不支持视频播放
+                            </video> -->
                         </div>
                     </el-col>
                 </el-form-item>
@@ -99,13 +102,14 @@ export default class SpecialFocus extends Vue {
         endTime: "",
         content: "",
         status: "0", // 上线状态（0：上线，1：下线）
-        id: ""
+        id: "",
+        type: "video"
     }
 
     // 图片
     private dfile: any
     private showFile = false
-    private fileDataList = []
+    private fileDataList: any = []
 
     protected mounted() {
         if (this.$route.params.id) {
@@ -120,6 +124,7 @@ export default class SpecialFocus extends Vue {
         getSpecialFocusDetail(params).then((res) => {
             if (res) {
                 this.dataForm = res.data
+                this.fileDataList = [{ name: this.dataForm.content, url: `/resources/` + this.dataForm.content }]
             }
         })
     }
