@@ -95,6 +95,7 @@ import { getProgramName, getProgramKind } from "@/api/dict"
 import { MessageBox } from "element-ui"
 import EditorBar from "@/components/wangEnditor/Editoritem.vue"
 import { UserModule } from "@/store/module/user"
+import { showLoading, hideLoading } from "@/lib/js/loading"
 import axios from "axios"
 @Component({
     components: { EditorBar }
@@ -238,6 +239,7 @@ export default class ProgramRelease extends Vue {
     }
 
     private upbtn() {
+        showLoading()
         const formData = new FormData()
         formData.append("file", this.dfile.raw) // 传参改为formData格式
         axios({
@@ -253,6 +255,7 @@ export default class ProgramRelease extends Vue {
                 if (res) {
                     if (res.data.code < 200) {
                         // 上传成功
+                        hideLoading()
                         this.dataForm.fileIds = res.data.data.fileId
                         MessageBox.alert("上传成功", "成功", { type: "success" })
                     }

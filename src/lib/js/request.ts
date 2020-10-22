@@ -2,20 +2,18 @@ import axios from "axios"
 import { UserModule } from "@/store/module/user"
 import { ConfigModule } from "@/store/module/config"
 import { MessageBox } from "element-ui"
+import { showLoading, hideLoading } from "@/lib/js/loading"
 // import { day, handleDownloadFile } from "@/lib/js/unitls"
 
 let needLoadingRequestCount = 0
-const startLoading = () => {
-    // (Spin as any).show()
-}
 
-const endLoading = () => {
-    // (Spin as any).hide()
-}
+// const endLoading = () => {
+//     // (Spin as any).hide()
+// }
 
 const showFullScreenLoading = () => {
     if (needLoadingRequestCount === 0) {
-        startLoading()
+        showLoading()
     }
     needLoadingRequestCount++
 }
@@ -24,7 +22,7 @@ const tryHideFullScreenLoading = () => {
     if (needLoadingRequestCount <= 0) return
     needLoadingRequestCount--
     if (needLoadingRequestCount === 0) {
-        endLoading()
+        hideLoading()
     }
 }
 

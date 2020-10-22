@@ -116,6 +116,7 @@ import { postOverseeMeasure, getOverseeDetail, postOverseeCancel, postOverseeMak
 import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
+import { showLoading, hideLoading } from "@/lib/js/loading"
 @Component
 export default class OverseeAnswer extends Vue {
     get userToken() {
@@ -299,6 +300,7 @@ export default class OverseeAnswer extends Vue {
     }
 
     private upbtn() {
+        showLoading()
         const formData = new FormData()
         formData.append("file", this.dfile.raw) // 传参改为formData格式
         axios({
@@ -314,6 +316,7 @@ export default class OverseeAnswer extends Vue {
                 if (res) {
                     if (res.data.code < 200) {
                         // 上传成功
+                        hideLoading()
                         this.fileIds = res.data.data.fileId
                         MessageBox.alert("上传成功", "成功", { type: "success" })
                     }

@@ -1,12 +1,18 @@
-import { UserModule } from "@/store/module/user"
-console.log(UserModule.userrole)
 export default [
     {
         path: "/",
         name: "home",
         role: "all",
         meta: { title: "首页" },
-        component: () => import("@/views/IndexPage/Home.vue")
+        component: (resolve: any) => require(["@/views/IndexPage/Home.vue"], resolve)
+    },
+    {
+        path: "/img",
+        name: "img",
+        role: "all",
+        hidden: true,
+        meta: { title: "img" },
+        component: () => import("@/views/specialFocus/Image.vue")
     },
     {
         path: "/toDolist",

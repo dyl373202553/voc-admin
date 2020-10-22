@@ -96,6 +96,7 @@ import { MessageBox } from "element-ui"
 import { day } from "@/lib/js/unitls"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
+import { showLoading, hideLoading } from "@/lib/js/loading"
 // import Cookies from "js-cookie"
 
 @Component({
@@ -218,6 +219,7 @@ export default class CreateStudio extends Vue {
     }
 
     private upbtn() {
+        showLoading()
         // 上传图片
         const formData = new FormData()
         formData.append("file", this.dfile.raw) // 传参改为formData格式
@@ -235,6 +237,7 @@ export default class CreateStudio extends Vue {
                 if (res) {
                     if (res.data.code < 200) {
                         // 上传成功
+                        hideLoading()
                         this.dataForm.logoUrl = res.data.data.filePath
                         MessageBox.alert("上传成功", "成功", { type: "success" })
                     }

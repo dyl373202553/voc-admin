@@ -71,6 +71,7 @@ import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
 import { handleDownload } from "@/lib/js/unitls"
+import { showLoading, hideLoading } from "@/lib/js/loading"
 @Component({
     components: { TreeDepartment }
 })
@@ -220,6 +221,7 @@ export default class ProgramSummary extends Vue {
     }
 
     private upbtn() {
+        showLoading()
         const formData = new FormData()
         formData.append("file", this.dfile.raw) // 传参改为formData格式
         axios({
@@ -235,6 +237,7 @@ export default class ProgramSummary extends Vue {
                 if (res) {
                     if (res.data.code < 200) {
                         // 上传成功
+                        hideLoading()
                         this.fileIds = res.data.data.fileId
                         MessageBox.alert("上传成功", "成功", { type: "success" })
 
