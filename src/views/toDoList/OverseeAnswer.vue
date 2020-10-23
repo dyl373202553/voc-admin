@@ -112,7 +112,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { getProgramDetail } from "@/api/programList/programList"
-import { postOverseeMeasure, getOverseeDetail, postOverseeCancel, postOverseeMakesure, postOverseeBack } from "@/api/oversee/oversee"
+import { postOverseeMeasure, getOverseeDetail, postOverseeCancel, postOverseeBack, postOverseeMakesure } from "@/api/oversee/oversee"
 import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
@@ -186,6 +186,7 @@ export default class OverseeAnswer extends Vue {
         postOverseeMeasure(params).then((res) => {
             if (res) {
                 if (res.code < 200) {
+                    UserModule.getTodo(UserModule.todo - 1)
                     MessageBox.alert(`提交成功`, "成功", { type: "success" })
                     this.$router.push({
                         name: "home"
@@ -202,7 +203,10 @@ export default class OverseeAnswer extends Vue {
         postOverseeCancel({ id: this.$route.params.id }).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    MessageBox.alert(res.message, "成功", { type: "success" })
+                    this.$router.push({
+                        name: "OverseeList"
+                    })
+                    MessageBox.alert("撤销成功", "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
@@ -215,6 +219,14 @@ export default class OverseeAnswer extends Vue {
         postOverseeMakesure({ ids: id }).then((res) => {
             if (res) {
                 if (res.code < 200) {
+                    this.load()
+                    const arr = []
+                    for (let i = 0; i < this.superviseMeasuresList.length; i++) {
+                        arr.push(this.superviseMeasuresList[i].status)
+                    }
+                    if (!(/[^0]/gi.test(arr.toString()))) {
+                        UserModule.getTodo(UserModule.todo - 1)
+                    }
                     MessageBox.alert(res.message, "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })

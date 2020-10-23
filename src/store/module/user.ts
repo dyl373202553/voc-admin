@@ -24,6 +24,7 @@ export interface UserState {
     buildTime: any;
     user: any;
     userrole: any;
+    todo: number;
 }
 
 @Module({ dynamic: true, store, name: "user" })
@@ -34,6 +35,7 @@ class User extends VuexModule implements UserState {
     public token = this.getTokenValue()
     public user = this.getUserValue()
     public userrole = this.getUserRole()
+    public todo = 0
 
     @Mutation
     private SET_TOKEN(token: any): void {
@@ -241,6 +243,11 @@ class User extends VuexModule implements UserState {
         }
 
         return Number(Cookies.get(BUILDTIME))
+    }
+
+    @Mutation
+    public getTodo(val: number) {
+        this.todo = val
     }
 }
 

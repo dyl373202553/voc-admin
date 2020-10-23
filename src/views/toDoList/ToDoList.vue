@@ -7,10 +7,10 @@
             <span slot="label">节目待办<el-badge :value="dataTotal" /></span>
             <div class="dtodo-dtable">
               <el-table v-loading="listLoading" :data="programToDo" element-loading-text="Loading">
-                <el-table-column prop="title" label="待办名称" align="center" width="200" />
+                <el-table-column prop="title" label="待办名称" align="center" />
                 <el-table-column prop="createTime" label="时间" align="center" />
                 <el-table-column prop="content" label="内容" align="center" />
-                <el-table-column label="操作" align="center">
+                <el-table-column label="操作" align="center" width="200">
                   <div>
                     <router-link :to="{name:'ProgramRelease', params: {statusName:'处理'} }">
                       <el-button type="text" size="small">处理</el-button>
@@ -37,10 +37,10 @@
             <span slot="label">督办待办<el-badge :value="dataOverseeTotal" /></span>
             <div class="dtodo-dtable">
               <el-table v-loading="listLoading" :data="overseeToDo" element-loading-text="Loading">
-                <el-table-column prop="title" label="待办名称" align="center" width="200" />
+                <el-table-column prop="title" label="待办名称" align="center" />
                 <el-table-column prop="updateTime" label="时间" align="center" />
                 <el-table-column prop="content" label="内容" align="center" />
-                <el-table-column label="操作" align="center">
+                <el-table-column label="操作" align="center" width="200">
                   <template slot-scope="scope">
                     <router-link :to="{name:'OverseeAnswer', params: {status:scope.row.link, id:scope.row.id , businessId:scope.row.businessId}, query: { id: scope.row.id } }">
                       <el-button type="text" size="small">处理</el-button>

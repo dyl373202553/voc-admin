@@ -5,14 +5,14 @@
                 :default-active="this.activedMenu()"
                 class="el-menu-vertical-demo"
                 >
-                <template v-for="item in indexPage">
+                <template v-for="(item, index) in indexPage">
                     <el-menu-item
                         v-if="(!item.children || item.children.length==0) && !item.hidden && (item.role=== userrole || item.role === 'all')"
                         :key="item.path"
                         :index="item.path"
                         @click="toPage(item.path)"
                         class="my-menu-item">
-                        <span slot="title">&nbsp;&nbsp;&nbsp;&nbsp;{{item.meta.title}}</span>
+                        <span slot="title">&nbsp;&nbsp;&nbsp;&nbsp;{{item.meta.title}}<span v-if="index===2">（ {{getTodo}} ）</span></span>
                     </el-menu-item>
                     <el-submenu
                         v-if="item.children && item.children.length>0 && (item.role=== userrole || item.role === 'all')"
@@ -45,6 +45,7 @@ import { Component, Vue } from "vue-property-decorator"
 // @ts-ignore
 import indexPage from "@/router/IndexPage"
 import { UserModule } from "@/store/module/user"
+import { getToDoList } from "@/api/toDoList/toDoList"
 
 @Component
 export default class AppNav extends Vue {
@@ -55,6 +56,11 @@ export default class AppNav extends Vue {
     get userrole() {
         // @ts-ignore
         return UserModule.userrole
+    }
+
+    get getTodo() {
+        // @ts-ignore
+        return UserModule.todo
     }
 
     get routerName() {
@@ -74,6 +80,32 @@ export default class AppNav extends Vue {
         if (this.$route.path === path) return
         setTimeout(() => {
             this.$router.push(path)
+        })
+    }
+
+    private dataPage ={
+        type: "1", // 1：节目待办，2：督办待办
+        pageNum: 1,
+        pageSize: 10
+    }
+
+    private dataOverseePage ={
+        type: "2", // 1：节目待办，2：督办待办
+        pageNum: 1,
+        pageSize: 10
+    }
+
+    private totalAll = 0
+    protected mounted() {
+        this.load()
+    }
+
+    private load() {
+        const programToDo = getToDoList(this.dataPage)
+        const overseeToDo = getToDoList(this.dataOverseePage)
+        Promise.all([programToDo, overseeToDo]).then((res) => {
+            this.totalAll = res[0].total + res[1].total
+            UserModule.getTodo(this.totalAll)
         })
     }
 }

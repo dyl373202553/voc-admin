@@ -110,6 +110,7 @@ import { Component, Vue } from "vue-property-decorator"
 import { getProgramDetail } from "@/api/programList/programList"
 import TreeDepartment from "@/components/addressBook/TreeDepartment.vue"
 import { postOverseeAdd, getOverseeDetail, postOverseeCancel, postOverseeMakesure, postOverseeBack } from "@/api/oversee/oversee"
+import { UserModule } from "@/store/module/user"
 import { MessageBox } from "element-ui"
 import { handleDownload } from "@/lib/js/unitls"
 @Component({
@@ -169,6 +170,7 @@ export default class OverseeCheck extends Vue {
         postOverseeAdd(params).then((res) => {
             if (res) {
                 if (res.code === 0) {
+                    UserModule.getTodo(UserModule.todo - 1)
                     MessageBox.alert(res.message, "成功", { type: "success" })
                     this.$router.push({
                         name: "home"
@@ -187,7 +189,10 @@ export default class OverseeCheck extends Vue {
         postOverseeCancel({ id: this.$route.params.id }).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    MessageBox.alert("发布成功", "成功", { type: "success" })
+                    this.$router.push({
+                        name: "OverseeList"
+                    })
+                    MessageBox.alert("撤销成功", "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
@@ -226,6 +231,13 @@ export default class OverseeCheck extends Vue {
             if (res) {
                 if (res.code < 200) {
                     this.load()
+                    const arr = []
+                    for (let i = 0; i < this.superviseMeasuresList.length; i++) {
+                        arr.push(this.superviseMeasuresList[i].status)
+                    }
+                    if (!(/[^0]/gi.test(arr.toString()))) {
+                        UserModule.getTodo(UserModule.todo - 1)
+                    }
                     MessageBox.alert(res.message, "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })

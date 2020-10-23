@@ -192,9 +192,13 @@ export default class ProgramRelease extends Vue {
     // 提交
     private onSubmit() {
         this.dataForm.type = this.programType
+        // this.dataForm.content = encodeURIComponent(this.dataForm.content)
+        this.dataForm.content = this.dataForm.content.replace(/%/g, encodeURIComponent("%"))
+        console.log(this.dataForm.content)
         postProgramRelease(this.dataForm).then((res) => {
             if (res) {
                 if (res.code < 200) {
+                    UserModule.getTodo(UserModule.todo - 1)
                     MessageBox.alert(`发布成功`, "成功", { type: "success" })
                     this.$router.push({
                         name: "home"
