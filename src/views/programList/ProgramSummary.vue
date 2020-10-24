@@ -42,9 +42,11 @@
                     ref="uploadicon"
                     >
                     <el-button size="small" type="primary" plain>选择文件</el-button>
-                    <el-button size="small" slot="tip" type="primary" plain @click="upbtn" v-if="showFile">附件上传</el-button>
+                    <el-button size="small" slot="tip" type="primary" plain @click="upbtn" v-if="showFile" style="margin-left:15px;">附件上传</el-button>
                     <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
                 </el-upload>
+                <el-progress v-show="progressFlag" class="dprogress" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
+
             <div class="downloadClick" @click="haveDownload">
                 <i class="el-icon-paperclip" />
                 <span class="info-title">{{this.fileIds}}</span>
@@ -71,7 +73,6 @@ import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
 import { handleDownload } from "@/lib/js/unitls"
-import { showLoading, hideLoading } from "@/lib/js/loading"
 @Component({
     components: { TreeDepartment }
 })
@@ -94,6 +95,16 @@ export default class ProgramSummary extends Vue {
     private dfile: any
     private showFile = false
     private fileDataList: any = []
+    private progressPercent = 0
+    private progressFlag = false
+    private progressStatus: any = null
+    private customColors = [
+        { color: "#f56c6c", percentage: 20 },
+        { color: "#e6a23c", percentage: 40 },
+        { color: "#5cb87a", percentage: 60 },
+        { color: "#1989fa", percentage: 80 },
+        { color: "#6f7ad3", percentage: 100 }
+    ]
 
     private defaultProps={
         children: "children",
@@ -208,18 +219,19 @@ export default class ProgramSummary extends Vue {
         } else if (isLt) {
             this.fileDataList.push(file)
             this.dfile = file
+            this.progressFlag = true
         }
     }
 
     private handleRemove(file: any, fileList: any) {
         this.fileDataList.splice(this.fileDataList.findIndex((item: any) => item.uid === file.uid), 1)
         if (fileList.length === 0) {
-            this.showFile = !this.showFile
+            this.showFile = false
+            this.progressFlag = false
         }
     }
 
     private upbtn() {
-        showLoading()
         const formData = new FormData()
         formData.append("file", this.dfile.raw) // 传参改为formData格式
         axios({
@@ -229,42 +241,33 @@ export default class ProgramSummary extends Vue {
                 "Content-Type": "multipart/form-data", // 设置headers
                 Authorization: `Bearer ${this.userToken}`
             },
-            data: formData
+            data: formData,
+            onUploadProgress: progressEvent => {
+                // progressEvent.loaded:已上传文件大小
+                // progressEvent.total:被上传文件的总大小
+                this.progressPercent = (progressEvent.loaded / progressEvent.total * 100)
+            }
         })
             .then((res: any) => {
                 if (res) {
                     if (res.data.code < 200) {
                         // 上传成功
-                        hideLoading()
                         this.fileIds = res.data.data.fileId
-                        MessageBox.alert("上传成功", "成功", { type: "success" })
-
-                        const params = {
-                            programId: this.$route.params.id, // 节目ID
-                            content: this.summaryContent, // 小结内容
-                            deptnames: this.deptnamesData, // 参与部门，多个以‘;’想个，只做显示
-                            fileIds: this.fileIds, // 附件id
-                            id: this.summaryId // 修改时传递ID，新增不传
+                        if (this.progressPercent === 100) {
+                            // this.progressFlag = false
+                            // this.progressPercent = 0
+                            this.progressStatus = "success"
+                            this.showFile = true
                         }
-
-                        postProgramSummary(params).then((res) => {
-                            if (res) {
-                                if (res.code < 200) {
-                                    MessageBox.alert(res.message, "成功", { type: "success" })
-                                } else {
-                                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                                }
-                            }
-                        })
                     }
                 } else {
                     // 上传失败
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                    this.progressStatus = "exception"
                 }
             })
             .catch(() => {
                 // 请求失败
-                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                this.progressStatus = "warning"
             })
     }
 
@@ -275,6 +278,9 @@ export default class ProgramSummary extends Vue {
 </script>
 <style lang="scss" scoped>
     .downloadClick .info-title:hover {
-    color: #4484F6;
+     color: #4484F6;
+    }
+    .dprogress {
+        width: 50%;
     }
 </style>

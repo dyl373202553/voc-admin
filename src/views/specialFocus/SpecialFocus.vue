@@ -216,6 +216,7 @@ export default class SpecialFocus extends Vue {
         if (isLt150M && (isPNG || isJPG || isMP4 || isWMA)) {
             if (fileList.length === 0) {
                 this.progressFlag = false
+                this.progressPercent = 0
                 this.showFile = 0
             }
         }
@@ -245,20 +246,17 @@ export default class SpecialFocus extends Vue {
                         this.dataForm.content = res.data.data.filePath
                         if (this.progressPercent === 100) {
                             this.progressFlag = false
-                            this.progressPercent = 0
                             this.showFile = 3
                         }
                     }
                 } else {
                     // 上传失败
                     this.progressStatus = "exception"
-                    this.progressPercent = 0
                 }
             })
             .catch(() => {
                 // 请求失败
                 this.progressStatus = "warning"
-                this.progressPercent = 0
             })
     }
 }

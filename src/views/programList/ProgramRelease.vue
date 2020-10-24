@@ -1,3 +1,4 @@
+
 <template>
   <div class="app-container">
     <el-card class="box-card">
@@ -73,9 +74,10 @@
                 ref="uploadicon"
                 >
                 <el-button size="small" type="primary" plain>选择文件</el-button>
-                <el-button size="small" slot="tip" type="primary" plain @click="upbtn" v-if="showFile">附件上传</el-button>
+                <el-button size="small" slot="tip" type="danger" plain @click="upbtn" v-if="showFile" style="margin-left:15px;">附件上传</el-button>
                 <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
             </el-upload>
+            <el-progress v-show="progressFlag" class="dprogress" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
         </el-form-item>
         <el-form-item class="text-center dbtn">
           <el-button v-show="$route.params.summaryName" plain round @click="back">返回</el-button>
@@ -93,9 +95,8 @@ import { Component, Vue } from "vue-property-decorator"
 import { getStudioList, getProgramDetail, postProgramRelease } from "@/api/programList/programList"
 import { getProgramName, getProgramKind } from "@/api/dict"
 import { MessageBox } from "element-ui"
-import EditorBar from "@/components/wangEnditor/Editoritem.vue"
+import EditorBar from "@/components/wangEnditor/ddd.vue"
 import { UserModule } from "@/store/module/user"
-import { showLoading, hideLoading } from "@/lib/js/loading"
 import axios from "axios"
 @Component({
     components: { EditorBar }
@@ -126,6 +127,16 @@ export default class ProgramRelease extends Vue {
     private dfile: any
     private showFile = false
     private fileDataList: any = []
+    private progressPercent = 0
+    private progressFlag = false
+    private progressStatus: any = null
+    private customColors = [
+        { color: "#f56c6c", percentage: 20 },
+        { color: "#e6a23c", percentage: 40 },
+        { color: "#5cb87a", percentage: 60 },
+        { color: "#1989fa", percentage: 80 },
+        { color: "#6f7ad3", percentage: 100 }
+    ]
 
     protected mounted() {
         this.load()
@@ -214,7 +225,7 @@ export default class ProgramRelease extends Vue {
     private handleAvatarChangeIcon(file: any, fileList: any) {
         let isLt10M = 0
         if (fileList.length > 0) {
-            this.showFile = !this.showFile
+            this.showFile = true
         }
         for (let i = 0; i < fileList.length; i++) {
             isLt10M += fileList[i].size
@@ -232,18 +243,20 @@ export default class ProgramRelease extends Vue {
         } else if (isLt) {
             this.fileDataList.push(file)
             this.dfile = file
+            this.progressFlag = true
         }
     }
 
     private handleRemove(file: any, fileList: any) {
+        this.progressPercent = 0
         this.fileDataList.splice(this.fileDataList.findIndex((item: any) => item.uid === file.uid), 1)
         if (fileList.length === 0) {
-            this.showFile = !this.showFile
+            this.showFile = false
+            this.progressFlag = false
         }
     }
 
     private upbtn() {
-        showLoading()
         const formData = new FormData()
         formData.append("file", this.dfile.raw) // 传参改为formData格式
         axios({
@@ -253,24 +266,33 @@ export default class ProgramRelease extends Vue {
                 "Content-Type": "multipart/form-data", // 设置headers
                 Authorization: `Bearer ${this.userToken}`
             },
-            data: formData
+            data: formData,
+            onUploadProgress: progressEvent => {
+                // progressEvent.loaded:已上传文件大小
+                // progressEvent.total:被上传文件的总大小
+                this.progressPercent = (progressEvent.loaded / progressEvent.total * 100)
+            }
         })
             .then((res: any) => {
                 if (res) {
                     if (res.data.code < 200) {
                         // 上传成功
-                        hideLoading()
                         this.dataForm.fileIds = res.data.data.fileId
-                        MessageBox.alert("上传成功", "成功", { type: "success" })
+                        if (this.progressPercent === 100) {
+                            // this.progressFlag = false
+                            // this.progressPercent = 0
+                            this.progressStatus = "success"
+                            this.showFile = true
+                        }
                     }
                 } else {
                     // 上传失败
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                    this.progressStatus = "exception"
                 }
             })
             .catch(() => {
                 // 请求失败
-                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                this.progressStatus = "warning"
             })
     }
 
@@ -281,7 +303,10 @@ export default class ProgramRelease extends Vue {
 </script>
 
 <style scoped>
-.line{
-  text-align: center;
-}
+    .line{
+    text-align: center;
+    }
+    .dprogress {
+        width: 50%;
+    }
 </style>

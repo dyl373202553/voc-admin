@@ -223,6 +223,7 @@ export default class CreateStudio extends Vue {
             if (fileList.length === 0) {
                 this.progressFlag = false
                 this.showFile = 0
+                this.progressPercent = 0
             }
         }
     }
@@ -253,20 +254,17 @@ export default class CreateStudio extends Vue {
                         this.dataForm.logoUrl = res.data.data.filePath
                         if (this.progressPercent === 100) {
                             this.progressFlag = false
-                            this.progressPercent = 0
                             this.showFile = 3
                         }
                     }
                 } else {
                     // 上传失败
                     this.progressStatus = "exception"
-                    this.progressPercent = 0
                 }
             })
             .catch(() => {
                 // 请求失败
                 this.progressStatus = "warning"
-                this.progressPercent = 0
             })
     }
 }
