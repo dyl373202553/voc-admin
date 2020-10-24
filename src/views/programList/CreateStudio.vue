@@ -22,7 +22,8 @@
             prop="logoUrl"
             :rules="[
             { required: true, message: '节目封面不能为空'}
-            ]">
+            ]" style="positon:relative;"
+            :class="progressFlag? 'imgList': ''">
            <el-upload
                 class="upload-image"
                 :action="' '"
@@ -36,10 +37,11 @@
                 :on-change="handleAvatarChangeIcon"
                 ref="uploadicon"
                 >
-                <el-button size="small" type="primary" plain v-if="!showFile">选择文件</el-button>
-                <el-button size="small" slot="tip" type="primary" plain @click="upbtn" v-if="showFile">上传封面</el-button>
+                <el-button size="small" type="primary" plain v-show="showFile === 0">选择文件</el-button>
+                <el-button size="small" slot="tip" type="danger" plain @click="upbtn" v-show="showFile === 1">上传封面</el-button>
                 <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于2M的文件，支持格式jpg/png/jpeg;</span>
             </el-upload>
+            <el-progress v-show="progressFlag" :stroke-width="9" class="dprogress" type="circle" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
         </el-form-item>
         <el-form-item label="节目主讲人"
             prop="speakersData"
@@ -92,7 +94,6 @@ import { MessageBox } from "element-ui"
 import { day } from "@/lib/js/unitls"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
-import { showLoading, hideLoading } from "@/lib/js/loading"
 // import Cookies from "js-cookie"
 
 @Component({
@@ -129,8 +130,18 @@ export default class CreateStudio extends Vue {
 
     // 图片
     private dfile: any
-    private showFile = false
+    private showFile = 0
     private fileDataList = []
+    private progressPercent = 0
+    private progressFlag = false
+    private progressStatus: any = null
+    private customColors = [
+        { color: "#f56c6c", percentage: 20 },
+        { color: "#e6a23c", percentage: 40 },
+        { color: "#5cb87a", percentage: 60 },
+        { color: "#1989fa", percentage: 80 },
+        { color: "#6f7ad3", percentage: 100 }
+    ]
 
     private onSubmit() {
         this.loading = true
@@ -192,8 +203,9 @@ export default class CreateStudio extends Vue {
             return false
         } else if (isLt2M && (isPNG || isJPG)) {
             this.dfile = file
+            this.progressFlag = true
             if (fileList.length > 0) {
-                this.showFile = !this.showFile
+                this.showFile = 1
             }
         }
     }
@@ -209,42 +221,52 @@ export default class CreateStudio extends Vue {
         const isLt2M = file.raw.size / 1024 / 1024 <= 2
         if (isLt2M && (isPNG || isJPG)) {
             if (fileList.length === 0) {
-                this.showFile = !this.showFile
+                this.progressFlag = false
+                this.showFile = 0
             }
         }
     }
 
     private upbtn() {
-        showLoading()
         // 上传图片
         const formData = new FormData()
         formData.append("file", this.dfile.raw) // 传参改为formData格式
         // console.log(Cookies.get("kmportaltoken"))
         axios({
             method: "post",
-            url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsLive&isystemName=1`, // 请求后端的url
+            url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=1`, // 请求后端的url
             headers: {
                 "Content-Type": "multipart/form-data", // 设置headers
                 Authorization: `Bearer ${this.userToken}`
             },
-            data: formData
+            data: formData,
+            onUploadProgress: progressEvent => {
+                // progressEvent.loaded:已上传文件大小
+                // progressEvent.total:被上传文件的总大小
+                this.progressPercent = (progressEvent.loaded / progressEvent.total * 100)
+            }
         })
             .then((res: any) => {
                 if (res) {
                     if (res.data.code < 200) {
                         // 上传成功
-                        hideLoading()
                         this.dataForm.logoUrl = res.data.data.filePath
-                        MessageBox.alert("上传成功", "成功", { type: "success" })
+                        if (this.progressPercent === 100) {
+                            this.progressFlag = false
+                            this.progressPercent = 0
+                            this.showFile = 3
+                        }
                     }
                 } else {
                     // 上传失败
-                    MessageBox.alert(`请联系管d理员`, "失败", { type: "error" })
+                    this.progressStatus = "exception"
+                    this.progressPercent = 0
                 }
             })
             .catch(() => {
                 // 请求失败
-                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                this.progressStatus = "warning"
+                this.progressPercent = 0
             })
     }
 }
@@ -253,5 +275,11 @@ export default class CreateStudio extends Vue {
 <style scoped>
     .line {
         text-align: center;
+    }
+    .dprogress {
+      position: absolute;
+      top: 134px;
+      z-index: 1000;
+      left: 45%;
     }
 </style>
