@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import E from "wangeditor"
+import E from "./wangEditor.js"
 import Cookies from "js-cookie"
 import axios from "axios"
 export default {
@@ -53,20 +53,50 @@ export default {
     },
     methods: {
         seteditor() {
-        // http://192.168.2.125:8080/admin/storage/create
             this.editor = new E(this.$refs.toolbar, this.$refs.editor)
-            this.editor.customConfig.uploadImgShowBase64 = false // base 64 存储图片
-            // this.editor.customConfig.uploadImgServer = `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsProgram&isystemName=1` // 配置服务器端地址
-            // this.editor.customConfig.uploadImgHeaders = {
-            //     "Content-Type": "multipart/form-data", // 设置headers
-            //     Authorization: `Bearer ${Cookies.get("kmportaltoken")}`
-            // }// 自定义 header
-            this.editor.customConfig.uploadFileName = "file" // 后端接受上传文件的参数名
-            this.editor.customConfig.uploadImgMaxSize = 2 * 1024 * 1024 // 将图片大小限制为 2M
-            this.editor.customConfig.uploadImgMaxLength = 6 // 限制一次最多上传 3 张图片
-            this.editor.customConfig.uploadImgTimeout = 3 * 60 * 1000 // 设置超时时间
-
+            // 上传图片-配置
+            // this.editor.customConfig.uploadImgShowBase64 = false // base 64 存储图片
+            // this.editor.customConfig.uploadFileName = "file" // 后端接受上传文件的参数名
+            // this.editor.customConfig.uploadImgMaxSize = 2 * 1024 * 1024 // 将图片大小限制为 2M
+            // this.editor.customConfig.uploadImgMaxLength = 6 // 限制一次最多上传 3 张图片
+            // this.editor.customConfig.uploadImgTimeout = 3 * 60 * 1000 // 设置超时时间
             this.editor.customConfig.customUploadImg = function (resultFiles, insertImgFn) {
+                // resultFiles 是 input 中选中的文件列表
+                // insertImgFn 是获取图片 url 后，插入到编辑器的方法
+
+                // 上传图片，返回结果，将图片插入到编辑器中
+                // insertImgFn(imgUrl)
+
+                // 上传图片
+                const formData = new FormData()
+                formData.append("file", resultFiles[0]) // 传参改为formData格式
+                axios({
+                    method: "post",
+                    url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsProgram&isystemName=1`, // 请求后端的url
+                    headers: {
+                        // "Content-Type": "multipart/form-data", // 设置headers
+                        Authorization: `Bearer ${Cookies.get("kmportaltoken")}`
+                    },
+                    data: formData
+                })
+                    .then((res) => {
+                        if (res) {
+                            if (res.data.code < 200) {
+                                // 上传成功
+                                const imgUrl = res.data.data.filePath
+                                insertImgFn(`/resources/` + imgUrl)
+                            }
+                        } else {
+                            // 上传失败
+                        }
+                    })
+                    .catch(() => {
+                        // 请求失败
+                    })
+            }
+
+            // 上传视频-配置
+            this.editor.customConfig.customUploadVideo = function (resultFiles, insertImgFn) {
                 // resultFiles 是 input 中选中的文件列表
                 // insertImgFn 是获取图片 url 后，插入到编辑器的方法
 
@@ -124,44 +154,6 @@ export default {
                 "redo", // 重复
                 "fullscreen" // 全屏
             ]
-
-            this.editor.customConfig.uploadImgHooks = {
-                fail: (xhr, editor, result) => {
-                    // 插入图片失败回调
-                    console.log(xhr)
-                    console.log(editor)
-                    console.log(result)
-                },
-                success: (xhr, editor, result) => {
-                    // 图片上传成功回调
-                    console.log(xhr)
-                    console.log(editor)
-                    console.log(result)
-                },
-                timeout: (xhr, editor) => {
-                    // 网络超时的回调
-                    console.log(xhr)
-                    console.log(editor)
-                },
-                error: (xhr, editor) => {
-                    // 图片上传错误的回调
-                    console.log(xhr)
-                    console.log(editor)
-                },
-                customInsert: (insertImg, result, editor) => {
-                    // 图片上传成功，插入图片的回调
-                    // result为上传图片成功的时候返回的数据，这里我打印了一下发现后台返回的是data：[{url:"路径的形式"},...]
-                    // console.log(result.data[0].url)
-                    // insertImg()为插入图片的函数
-                    // 循环插入图片
-                    // for (let i = 0; i < 1; i++) {
-                    // console.log(result)
-                    console.log(editor)
-                    // const url = "/resources/" + result.url
-                    // insertImg(url)
-                // }
-                }
-            }
             this.editor.customConfig.onchange = (html) => {
                 this.info_ = html // 绑定当前逐渐地值
                 this.$emit("change", this.info_) // 将内容同步到父组件中

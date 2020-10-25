@@ -95,7 +95,7 @@ import { Component, Vue } from "vue-property-decorator"
 import { getStudioList, getProgramDetail, postProgramRelease } from "@/api/programList/programList"
 import { getProgramName, getProgramKind } from "@/api/dict"
 import { MessageBox } from "element-ui"
-import EditorBar from "@/components/wangEnditor/ddd.vue"
+import EditorBar from "@/components/wangEnditor/wangEditor.vue"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
 @Component({
