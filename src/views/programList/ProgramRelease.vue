@@ -60,7 +60,7 @@
             :rules="[
             { required: true, message: '节目内容不能为空'}
         ]">
-            <EditorBar v-model="dataForm.content" :is-clear="isClear" />
+            <EditorBar v-model="dataContent" :is-clear="isClear" />
         </el-form-item>
         <el-form-item label="上传附件">
            <el-upload
@@ -122,6 +122,7 @@ export default class ProgramRelease extends Vue {
     }
 
     private selectBoolean = false
+    private dataContent = ""
 
     // 上传附件
     private dfile: any
@@ -192,6 +193,7 @@ export default class ProgramRelease extends Vue {
                     this.programType = res.data.type
                     this.dataForm.summary = res.data.summary
                     this.dataForm.content = res.data.content
+                    this.dataContent = decodeURIComponent(res.data.content)
                     this.dataForm.id = this.$route.params.id
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
@@ -203,6 +205,7 @@ export default class ProgramRelease extends Vue {
     // 提交
     private onSubmit() {
         this.dataForm.type = this.programType
+        this.dataForm.content = this.dataContent
         this.dataForm.content = encodeURIComponent(this.dataForm.content)
         // this.dataForm.content = this.dataForm.content.replace(/%/g, encodeURIComponent("%"))
         // console.log(this.dataForm.content)
