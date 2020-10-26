@@ -31,9 +31,9 @@
                 <el-radio :label="2">回顾类</el-radio>
                 <el-radio :label="3">其他</el-radio>
             </el-radio-group> -->
-        <el-radio-group v-model="programType" @change="typeChange">
-            <el-radio v-for="item in this.kindList" :key="item.orderId" :label="item.value" :disabled="selectBoolean">{{item.label}}</el-radio>
-        </el-radio-group>
+            <el-radio-group v-model="programType" @change="typeChange">
+                <el-radio v-for="item in this.kindList" :key="item.orderId" :label="item.value" :disabled="selectBoolean">{{item.label}}</el-radio>
+            </el-radio-group>
 
         </el-form-item>
         <el-form-item label="节目名称"
@@ -140,10 +140,12 @@ export default class ProgramRelease extends Vue {
     ]
 
     protected mounted() {
-        this.load()
         if (this.$route.params.id) {
             this.selectBoolean = true
             this.getDetail()
+            this.getKind()
+        } else {
+            this.load()
         }
     }
 
@@ -152,13 +154,23 @@ export default class ProgramRelease extends Vue {
         const dataForm = getProgramName({ type: this.programType })
         const kindList = getProgramKind({ type: "khzs_program_type" })
         Promise.all([dataOptions, dataForm, kindList]).then((res) => {
-            this.dataOptions = res[0].data
-            this.dataForm.liveId = res[0].data[0].id
-            this.dataForm.title = res[1].data
-            this.kindList = res[2]
-            this.programType = "1"
+            if (res) {
+                this.dataOptions = res[0].data
+                this.dataForm.liveId = res[0].data[0].id
+                this.dataForm.title = res[1].data
+                this.kindList = res[2]
+                this.programType = "1" // 默认展示1
+            }
         }).catch(() => {
             // MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+        })
+    }
+
+    private getKind() {
+        getProgramKind({ type: "khzs_program_type" }).then((res) => {
+            if (res) {
+                this.kindList = res
+            }
         })
     }
 
@@ -213,7 +225,9 @@ export default class ProgramRelease extends Vue {
         postProgramRelease(this.dataForm).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    UserModule.getTodo(UserModule.todo - 1)
+                    if (!this.$route.params.id) {
+                        UserModule.getTodo(UserModule.todo - 1)
+                    }
                     MessageBox.alert(`发布成功`, "成功", { type: "success" })
                     this.$router.push({
                         name: "home"
