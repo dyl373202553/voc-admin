@@ -62,10 +62,10 @@
 
                     <el-col :span="24" v-show="$route.params.id && $route.params.viewStatus === '3'">
                         <div class="dimg-div">
-                            <el-image :src="`/resources/`+ dataForm.content" fit="cover" class="image" />
-                            <!-- <video :src="`/resources/`+ dataForm.content" :controls="true">
+                            <el-image :src="`/resources/`+ dataForm.content" fit="cover" class="image" v-if="this.dataForm.type === 'img'" />
+                            <video :src="`/resources/`+ dataForm.content" :controls="true" v-if="this.dataForm.type === 'video'">
                                 您的浏览器不支持视频播放
-                            </video> -->
+                            </video>
                         </div>
                     </el-col>
                 </el-form-item>
@@ -104,7 +104,7 @@ export default class SpecialFocus extends Vue {
         content: "",
         status: "0", // 上线状态（0：上线，1：下线）
         id: "",
-        type: "video"
+        type: ""
     }
 
     // 图片
@@ -185,6 +185,12 @@ export default class SpecialFocus extends Vue {
         const isMP4 = file.raw.type === "video/mp4"
         const isWMA = file.raw.type === "video/wma"
         const isLt150M = file.raw.size / 1024 / 1024 <= 150
+        if (file.raw.type.indexOf("image") !== -1) {
+            this.dataForm.type = "img"
+        } else if (file.raw.type.indexOf("video") !== -1) {
+            this.dataForm.type = "video"
+        }
+
         if (!isPNG && !isJPG && !isMP4 && !isWMA) {
             this.fileDataList = []
             this.$message.error("上传图片只能是 JPG/PNG 格式! 请重新选择")

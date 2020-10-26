@@ -156,7 +156,7 @@ export default class ProgramDetail extends Vue {
                         browerNum: res.data.browerNum, // 预览人数
                         guests: res.data.liveEntity.guests, // 本期嘉宾
                         summary: res.data.summary, // 本期简介
-                        content: res.data.content, // 节目内容
+                        content: decodeURIComponent(res.data.content), // 节目内容
                         likeShow: res.data.ownerPraiseStatus,
                         fileIds: res.data.fileIds
                     }
