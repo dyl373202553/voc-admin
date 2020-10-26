@@ -11,14 +11,15 @@
             :rules="[
             { required: true, message: '节目时间不能为空'}
             ]">
-          <el-select v-model="dataForm.liveId" placeholder="请选择节目时间" style="width: 65%;" :disabled="selectBoolean">
-            <el-option
-              v-for="item in dataOptions"
-              :key="item.id"
-              :label="item.startTime + '--' + item.endTime"
-              :value="item.id"
-            />
-          </el-select>
+            <el-select v-if="!this.$route.params.id" v-model="dataForm.liveId" placeholder="请选择节目时间" style="width: 65%;" :disabled="selectBoolean">
+                <el-option
+                v-for="item in dataOptions"
+                :key="item.id"
+                :label="item.startTime + '--' + item.endTime"
+                :value="item.id"
+                />
+            </el-select>
+            <el-input v-if="this.$route.params.id" v-model="showStart" :disabled="true" style="width: 65%;" />
           <span class="dgrey" style="margin-left:20px;">注：默认展示时间与发布直播最近时间，如有多个可进行选择</span>
         </el-form-item>
          <el-form-item label="节目类型"
@@ -109,6 +110,7 @@ export default class ProgramRelease extends Vue {
 
     private isClear = false
     private dataOptions = []
+    private showStart = ""
     private kindList = []
     private programType = "1"
     private dataForm = {
@@ -207,6 +209,7 @@ export default class ProgramRelease extends Vue {
                     this.dataForm.content = res.data.content
                     this.dataContent = decodeURIComponent(res.data.content)
                     this.dataForm.id = this.$route.params.id
+                    this.showStart = res.data.liveEntity.startTime + "--" + res.data.liveEntity.endTime
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }

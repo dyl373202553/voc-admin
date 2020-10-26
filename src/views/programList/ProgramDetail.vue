@@ -2,7 +2,7 @@
     <div class="app-container">
         <el-card class="box-card dpadding0">
         <div slot="header" class="clearfix">
-            <span class="header-title">节目查看 {{this.$route.params.promId}}</span>
+            <span class="header-title">节目查看</span>
         </div>
         <div class="dcontent">
             <div class="top">
