@@ -44,7 +44,7 @@
                 </div>
             </div>
             <div class="bottom">
-                <template v-if="this.supervise.status !=='4' && this.supervise.status !=='1'">
+                <template v-if="this.supervise.status === '0'">
                     <div class="bottom-main" v-if="this.allList.superviseItemEntity">
                         <div class="main-title">督办事项</div>
                         <div class="main-info">

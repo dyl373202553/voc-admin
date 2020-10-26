@@ -5,19 +5,27 @@
         <span class="header-title">创建直播间</span>
       </div>
       <el-form ref="dataForm" :model="dataForm" label-width="150px"  v-loading="loading" element-loading-background="rgba(255, 255, 255, 0.5)">
-        <el-form-item label="节目时间"
-            prop="startTime"
-            :rules="[
-            { required: true, message: '节目时间不能为空'}
-            ]">
-          <el-col :span="11">
-            <el-date-picker v-model="dataForm.startTime" type="datetime" placeholder="请选择开始时间" style="width: 100%;" />
-          </el-col>
-          <el-col :span="2" class="line">至</el-col>
-          <el-col :span="11">
-            <el-date-picker v-model="dataForm.endTime" type="datetime" placeholder="请选择结束时间" style="width: 100%;" />
-          </el-col>
+        <el-form-item label="节目时间" class="dimportant-before">
+            <el-col :span="11">
+                <el-form-item
+                    prop="startTime"
+                    :rules="[
+                    { required: true, message: '节目时间开始时间不能为空'}
+                    ]">
+                    <el-date-picker v-model="dataForm.startTime" type="datetime" placeholder="请选择开始时间" style="width: 100%;" />
+                </el-form-item>
+            </el-col>
+            <el-col :span="2" class="line">至</el-col>
+            <el-col :span="11">
+                <el-form-item prop="endTime"
+                    :rules="[
+                    { required: true, message: '节目时间结束时间不能为空'}
+                    ]">
+                    <el-date-picker v-model="dataForm.endTime" type="datetime" placeholder="请选择结束时间" style="width: 100%;" />
+                </el-form-item>
+            </el-col>
         </el-form-item>
+
         <el-form-item label="节目封面"
             prop="logoUrl"
             :rules="[
@@ -53,21 +61,13 @@
         <el-form-item label="本期嘉宾">
           <el-input v-model="dataForm.guests"  placeholder="请填写内容" />
         </el-form-item>
-        <el-form-item label="是否发布督办举措"
-            prop="superviseFlag"
-            :rules="[
-            { required: true, message: '请选择是否发布督办举措', trigger: 'change' }
-            ]">
+        <el-form-item label="是否发布督办举措">
           <el-radio-group v-model="dataForm.superviseFlag">
             <el-radio v-model="dataForm.superviseFlag" label="0">是</el-radio>
             <el-radio v-model="dataForm.superviseFlag" label="1">否</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="是否发布节目小结"
-             prop="summaryFlag"
-            :rules="[
-            { required: true, message: '请选择是否发布节目小结', trigger: 'change' }
-            ]">
+        <el-form-item label="是否发布节目小结">
           <el-radio-group v-model="dataForm.summaryFlag">
             <el-radio v-model="dataForm.summaryFlag" label="0">是</el-radio>
             <el-radio v-model="dataForm.summaryFlag" label="1">否</el-radio>
