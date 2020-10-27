@@ -107,6 +107,16 @@ const formData = {
     }
 }
 
+const formDataFilds = {
+    transformRequest: [(data: any) => {
+        const ret = JSON.stringify(data)
+        return ret
+    }],
+    headers: {
+        "Content-Type": "application/json;charset=UTF-8"
+    }
+}
+
 /**
  * GET请求方法
  * @param {String} url 请求地址
@@ -129,6 +139,13 @@ export function getData(url: string, json: object) {
 export function postData(url: string, json?: any, isformData = true) {
     return instance
         .post(url, json, isformData ? formData : {})
+        .then(res => res.data)
+        .catch(error => error.response)
+}
+
+export function postDataFile(url: string, json?: any, isformData = true) {
+    return instance
+        .post(url, json, isformData ? formDataFilds : {})
         .then(res => res.data)
         .catch(error => error.response)
 }

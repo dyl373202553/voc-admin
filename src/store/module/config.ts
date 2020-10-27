@@ -26,6 +26,7 @@ class Config extends VuexModule implements ConfigState {
     public dict = `configure-system/api/dict/sysDictType/data`
     public dictValue = `configure-system/api/server/dict/getDictValueList`
     public addressBook = `app-address/api/bluepage` // 通讯录
+    public file = `portal-file/api/file/provider/fileUpload` // 查询fileId详情
 }
 
 export const ConfigModule = getModule(Config)

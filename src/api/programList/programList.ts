@@ -1,6 +1,6 @@
-import { postData, getData, getDataUrl } from "@/lib/js/request"
+import { postData, getData, getDataUrl, postDataFile } from "@/lib/js/request"
 import { ConfigModule } from "@/store/module/config"
-const { voc } = ConfigModule
+const { voc, file } = ConfigModule
 
 /* 节目列表 */
 // 节目列表 - 近期节目数据获取（同首页）
@@ -91,3 +91,10 @@ export const postProgramSummaryDelete = (
         id: string;
     }
 ) => { return postData(`${voc}/khzsSummary/delete`, { id }) }
+
+// 根据fileId查询详情
+export const getFileId = (param: any) => {
+    return postDataFile(`${file}`, {
+        ...param
+    })
+}
