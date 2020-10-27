@@ -45,7 +45,7 @@
                             <span class="backStatus backStatus-back" v-if="item.status === '2'">已退回</span>
                         </div>
                         <p>{{item.content}}</p>
-                        <div>
+                        <div class="downloadClick" @click="haveDownload(item.fileIds)">
                             <i class="el-icon-paperclip" />
                             <span class="info-title">{{item.fileIds}}</span>
                         </div>
@@ -117,6 +117,7 @@ import { postOverseeMeasure, getOverseeDetail, postOverseeCancel, postOverseeBac
 import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
+import { handleDownload } from "@/lib/js/unitls"
 @Component
 export default class OverseeAnswer extends Vue {
     get userToken() {
@@ -361,6 +362,11 @@ export default class OverseeAnswer extends Vue {
                 // 请求失败
                 this.progressStatus = "warning"
             })
+    }
+
+    // 文件下载
+    private haveDownload(fileIds: any) {
+        handleDownload(fileIds)
     }
 }
 </script>
