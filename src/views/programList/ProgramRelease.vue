@@ -42,7 +42,7 @@
             :rules="[
             { required: true, message: '节目名称不能为空'}
             ]">
-          <el-input v-model="dataForm.title" :disabled="programType!=='3'" />
+          <el-input v-model="dataForm.title" :disabled="programType!=='3'" :maxlength="50"/>
         </el-form-item>
         <el-form-item label="节目简介"
             prop="summary"
@@ -53,7 +53,8 @@
             v-model="dataForm.summary"
             type="textarea"
             :rows="3"
-            placeholder="请输入节目简介"
+            :maxlength="200"
+            placeholder="请输入节目简介(不超过200字符)"
           />
         </el-form-item>
         <el-form-item label="节目内容"
