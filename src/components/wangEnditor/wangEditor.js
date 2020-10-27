@@ -4539,8 +4539,7 @@ UploadImg.prototype = {
               return;
           }
       }
-
-      editor.cmd.do('insertHTML', '<iframe src="' + link + '" style="width:650px;height: 366px" frameborder="0"></iframe>');
+      editor.cmd.do('insertHTML', '<video src="' + link + '" style="max-width: 50%;max-height:50%;" controls autobuffer />')
     },
 
     // 上传视频
@@ -4572,7 +4571,7 @@ UploadImg.prototype = {
       var customUploadVideo = config.customUploadVideo;
   
       if (!customUploadVideo) {
-          // 没有 customUploadVideo 的情况下，需要如下两个配置才能继续进行图片上传
+          // 没有 customUploadVideo 的情况下，需要如下两个配置才能继续进行视频上传
           if (!uploadVideoServer) {
               return;
           }
