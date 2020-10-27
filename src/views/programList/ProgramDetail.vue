@@ -32,7 +32,7 @@
                 </div>
                 <div v-if="this.programForm.fileIds">
                     <div class="main-title">附件</div>
-                    <div class="downloadClick" @click="haveDownload(this.programForm.fileIds)">
+                    <div class="downloadClick" @click="haveDownload('jiemu')">
                         <i class="el-icon-paperclip" />
                         <span class="info-title">{{this.programForm.fileIds}}</span>
                     </div>
@@ -206,6 +206,8 @@ export default class ProgramDetail extends Vue {
     private haveDownload(fileId: any) {
         if (fileId === "zhibo") {
             handleDownload(this.summary.fileIds)
+        } else if (fileId === "jiemu") {
+            handleDownload(this.programForm.fileIds)
         } else {
             handleDownload(fileId)
         }

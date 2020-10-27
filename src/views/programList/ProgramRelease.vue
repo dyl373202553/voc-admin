@@ -142,6 +142,8 @@ export default class ProgramRelease extends Vue {
         { color: "#6f7ad3", percentage: 100 }
     ]
 
+    private fileIdsArr: any = []
+
     protected mounted() {
         if (this.$route.params.id) {
             this.selectBoolean = true
@@ -232,9 +234,6 @@ export default class ProgramRelease extends Vue {
         this.dataForm.type = this.programType
         this.dataForm.content = this.dataContent
         this.dataForm.content = encodeURIComponent(this.dataForm.content)
-        // this.dataForm.content = this.dataForm.content.replace(/%/g, encodeURIComponent("%"))
-        // console.log(this.dataForm.content)
-        // console.log(decodeURIComponent(this.dataForm.content))
         postProgramRelease(this.dataForm).then((res) => {
             if (res) {
                 if (res.code < 200) {
@@ -288,8 +287,14 @@ export default class ProgramRelease extends Vue {
     }
 
     private upbtn() {
-        const formData = new FormData()
-        formData.append("file", this.dfile.raw) // 传参改为formData格式
+        for (let i = 0; i < this.fileDataList.length; i++) {
+            const formData = new FormData()
+            formData.append("file", this.fileDataList[i].raw) // 传参改为formData格式
+            this.postFile(formData)
+        }
+    }
+
+    private postFile(params: any) {
         axios({
             method: "post",
             url: `/vue-potal/portal-file/api/file/provider/uploadfile?busSource=moa-customervoice`, // 请求后端的url
@@ -297,7 +302,7 @@ export default class ProgramRelease extends Vue {
                 "Content-Type": "multipart/form-data", // 设置headers
                 Authorization: `Bearer ${this.userToken}`
             },
-            data: formData,
+            data: params,
             onUploadProgress: progressEvent => {
                 // progressEvent.loaded:已上传文件大小
                 // progressEvent.total:被上传文件的总大小
@@ -308,7 +313,9 @@ export default class ProgramRelease extends Vue {
                 if (res) {
                     if (res.data.code < 200) {
                         // 上传成功
-                        this.dataForm.fileIds = res.data.data.fileId
+                        // this.dataForm.fileIds = res.data.data.fileId
+                        this.fileIdsArr.push(res.data.data.fileId)
+                        this.dataForm.fileIds = this.fileIdsArr.toString()
                         if (this.progressPercent === 100) {
                             // this.progressFlag = false
                             // this.progressPercent = 0

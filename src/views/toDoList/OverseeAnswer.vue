@@ -56,6 +56,14 @@
                     </div>
                 </div>
             </div>
+             <div class="dsummary-mian">
+                <div class="dsummary-title">退回意见</div>
+                <template>
+                    <div class="main-info">
+                        退回退回退回
+                    </div>
+                </template>
+            </div>
             <div v-show="this.$route.params.status === '2' || this.$route.params.status === '5'" class="dsummary-mian">
                 <div class="dsummary-title">上传附件</div>
                 <div>
@@ -156,6 +164,8 @@ export default class OverseeAnswer extends Vue {
         { color: "#1989fa", percentage: 80 },
         { color: "#6f7ad3", percentage: 100 }
     ]
+
+    private fileIdsArr: any = []
 
     protected mounted() {
         this.load()
@@ -325,8 +335,14 @@ export default class OverseeAnswer extends Vue {
     }
 
     private upbtn() {
-        const formData = new FormData()
-        formData.append("file", this.dfile.raw) // 传参改为formData格式
+        for (let i = 0; i < this.fileDataList.length; i++) {
+            const formData = new FormData()
+            formData.append("file", this.fileDataList[i].raw) // 传参改为formData格式
+            this.postFile(formData)
+        }
+    }
+
+    private postFile(params: any) {
         axios({
             method: "post",
             url: `/vue-potal/portal-file/api/file/provider/uploadfile?busSource=moa-customervoice`, // 请求后端的url
@@ -334,7 +350,7 @@ export default class OverseeAnswer extends Vue {
                 "Content-Type": "multipart/form-data", // 设置headers
                 Authorization: `Bearer ${this.userToken}`
             },
-            data: formData,
+            data: params,
             onUploadProgress: progressEvent => {
                 // progressEvent.loaded:已上传文件大小
                 // progressEvent.total:被上传文件的总大小
@@ -345,7 +361,8 @@ export default class OverseeAnswer extends Vue {
                 if (res) {
                     if (res.data.code < 200) {
                         // 上传成功
-                        this.fileIds = res.data.data.fileId
+                        this.fileIdsArr.push(res.data.data.fileId)
+                        this.fileIds = this.fileIdsArr.toString()
                         if (this.progressPercent === 100) {
                             // this.progressFlag = false
                             // this.progressPercent = 0

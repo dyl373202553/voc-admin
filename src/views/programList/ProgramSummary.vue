@@ -42,7 +42,7 @@
                     ref="uploadicon"
                     >
                     <el-button size="small" type="primary" plain>选择文件</el-button>
-                    <el-button size="small" slot="tip" type="primary" plain @click="upbtn" v-if="showFile" style="margin-left:15px;">附件上传</el-button>
+                    <el-button size="small" slot="tip" type="danger" plain @click="upbtn" v-if="showFile" style="margin-left:15px;">附件上传</el-button>
                     <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
                 </el-upload>
                 <el-progress v-show="progressFlag" class="dprogress" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
@@ -106,6 +106,8 @@ export default class ProgramSummary extends Vue {
         { color: "#6f7ad3", percentage: 100 }
     ]
 
+    private fileIdsArr: any = []
+
     private defaultProps={
         children: "children",
         label: "label",
@@ -150,6 +152,9 @@ export default class ProgramSummary extends Vue {
             if (res) {
                 if (res.code < 200) {
                     MessageBox.alert(res.message, "成功", { type: "success" })
+                    this.$router.push({
+                        name: "ProgramManage"
+                    })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
@@ -201,7 +206,7 @@ export default class ProgramSummary extends Vue {
     private handleAvatarChangeIcon(file: any, fileList: any) {
         let isLt10M = 0
         if (fileList.length > 0) {
-            this.showFile = !this.showFile
+            this.showFile = true
         }
         for (let i = 0; i < fileList.length; i++) {
             isLt10M += fileList[i].size
@@ -232,8 +237,14 @@ export default class ProgramSummary extends Vue {
     }
 
     private upbtn() {
-        const formData = new FormData()
-        formData.append("file", this.dfile.raw) // 传参改为formData格式
+        for (let i = 0; i < this.fileDataList.length; i++) {
+            const formData = new FormData()
+            formData.append("file", this.fileDataList[i].raw) // 传参改为formData格式
+            this.postFile(formData)
+        }
+    }
+
+    private postFile(params: any) {
         axios({
             method: "post",
             url: `/vue-potal/portal-file/api/file/provider/uploadfile?busSource=moa-customervoice`, // 请求后端的url
@@ -241,7 +252,7 @@ export default class ProgramSummary extends Vue {
                 "Content-Type": "multipart/form-data", // 设置headers
                 Authorization: `Bearer ${this.userToken}`
             },
-            data: formData,
+            data: params,
             onUploadProgress: progressEvent => {
                 // progressEvent.loaded:已上传文件大小
                 // progressEvent.total:被上传文件的总大小
@@ -252,7 +263,8 @@ export default class ProgramSummary extends Vue {
                 if (res) {
                     if (res.data.code < 200) {
                         // 上传成功
-                        this.fileIds = res.data.data.fileId
+                        this.fileIdsArr.push(res.data.data.fileId)
+                        this.fileIds = this.fileIdsArr.toString()
                         if (this.progressPercent === 100) {
                             // this.progressFlag = false
                             // this.progressPercent = 0
