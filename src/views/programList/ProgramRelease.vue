@@ -83,7 +83,7 @@
         <el-form-item class="text-center dbtn">
           <el-button v-show="$route.params.summaryName" plain round @click="back">返回</el-button>
           <el-button type="primary" round @click="onSubmit"
-          :disabled="!(dataForm.liveId && dataForm.title && dataForm.summary && dataForm.content)"
+          :disabled="!(dataForm.liveId && dataForm.title && dataForm.summary && dataContent)"
           >提交</el-button>
         </el-form-item>
       </el-form>
@@ -96,9 +96,9 @@ import { Component, Vue } from "vue-property-decorator"
 import { getStudioList, getProgramDetail, postProgramRelease } from "@/api/programList/programList"
 import { getProgramName, getProgramKind } from "@/api/dict"
 import { MessageBox } from "element-ui"
-import EditorBar from "@/components/wangEnditor/wangEditor.vue"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
+import EditorBar from "@/components/wangEnditor/wangItems.vue"
 @Component({
     components: { EditorBar }
 })
