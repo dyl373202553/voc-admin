@@ -7,7 +7,11 @@
             <div class="dtable">
                 <el-table v-loading="listLoading" :data="tableData" element-loading-text="Loading" stripe>
                 <el-table-column prop="title" label="节目名称" align="center" width="200" />
-                <el-table-column prop="liveEntity.startTime" label="节目时间" align="center" />
+                <el-table-column prop="liveEntity.startTime" label="节目时间" align="center">
+                    <template slot-scope="scope">
+                        {{scope.row.liveEntity.startTime}} -- {{scope.row.liveEntity.endTime}}
+                    </template>
+                </el-table-column>
                 <el-table-column prop="liveEntity.speakers" label="主讲人" align="center" />
                 <el-table-column label="操作" align="center">
                     <div slot-scope="scope">

@@ -25,7 +25,11 @@
         <div class="dtable">
             <el-table v-loading="listLoading" :data="tableData" element-loading-text="Loading" stripe>
             <el-table-column prop="title" label="节目名称" align="center" width="200" />
-            <el-table-column prop="liveEntity.startTime" label="节目时间" align="center" />
+            <el-table-column prop="liveEntity.startTime" label="节目时间" align="center">
+                 <template slot-scope="scope">
+                    {{scope.row.liveEntity.startTime}} -- {{scope.row.liveEntity.endTime}}
+                </template>
+            </el-table-column>
             <el-table-column prop="liveEntity.speakers" label="主讲人" align="center" />
             <el-table-column prop="superviseItemEntity.status" label="督办状态" align="center">
                 <!-- 督办状态： 0:督办已完成， 1：督办未发布，2：督办未回复，3：督办未确认，4：本期无督办 -->
