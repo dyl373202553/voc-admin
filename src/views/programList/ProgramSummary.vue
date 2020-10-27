@@ -49,7 +49,7 @@
 
             <div class="downloadClick" @click="haveDownload">
                 <i class="el-icon-paperclip" />
-                <span class="info-title">{{this.fileIds}}</span>
+                <span class="info-title">{{this.fileIdsName}}</span>
             </div>
         </div>
         <div class="bottom dbtn">
@@ -67,7 +67,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { postProgramSummary, getProgramDetail, postProgramSummaryDelete } from "@/api/programList/programList"
+import { postProgramSummary, getProgramDetail, postProgramSummaryDelete, getFileId } from "@/api/programList/programList"
 import TreeDepartment from "@/components/addressBook/TreeDepartment.vue"
 import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
@@ -107,6 +107,7 @@ export default class ProgramSummary extends Vue {
     ]
 
     private fileIdsArr: any = []
+    private fileIdsName = ""
 
     private defaultProps={
         children: "children",
@@ -118,6 +119,28 @@ export default class ProgramSummary extends Vue {
 
     protected mounted() {
         this.getSummaryDetail()
+    }
+
+    private fileName() {
+        // 测试附件详情
+        const params = {
+            fileId: this.fileIds
+        }
+        getFileId(params).then((res) => {
+            if (res) {
+                if (res.code === 0) {
+                    const arr = []
+                    for (let i = 0; i < res.data.length; i++) {
+                        arr.push(res.data[i].fileName)
+                    }
+                    this.fileIdsName = arr.toString()
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            } else {
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            }
+        })
     }
 
     private getSummaryDetail() {
@@ -132,6 +155,7 @@ export default class ProgramSummary extends Vue {
                         this.deptnamesData = res.data.summaryEntity.deptnames
                         this.fileIds = res.data.summaryEntity.fileIds
                     }
+                    this.fileName()
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }

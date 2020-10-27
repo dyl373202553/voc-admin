@@ -152,15 +152,6 @@ export default class ProgramRelease extends Vue {
         } else {
             this.load()
         }
-        // 测试附件详情
-        // const params = {
-        //     fileId: "B43FE4A58DDE40D5BEC2EC012216F68F26102020"
-        // }
-        // getFileId(params).then((res) => {
-        //     if (res) {
-        //         console.log(res)
-        //     }
-        // })
     }
 
     private load() {

@@ -34,7 +34,7 @@
                     <div class="main-title">附件</div>
                     <div class="downloadClick" @click="haveDownload('jiemu')">
                         <i class="el-icon-paperclip" />
-                        <span class="info-title">{{this.programForm.fileIds}}</span>
+                        <span class="info-title">{{this.fileIdsName}}</span>
                     </div>
                 </div>
                 <div class="main-btn">
@@ -101,7 +101,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getProgramDetail } from "@/api/programList/programList"
+import { getProgramDetail, getFileId } from "@/api/programList/programList"
 import { postLikeAdd } from "@/api/programList/message"
 import { MessageBox } from "element-ui"
 import MessageBoard from "./MessageBoard.vue"
@@ -125,6 +125,8 @@ export default class ProgramDetail extends Vue {
         fileIds: ""
     }
 
+    private fileIdsName = ""
+
     private supervise = { // 督办事项
         content: "",
         deptnames: "",
@@ -141,6 +143,28 @@ export default class ProgramDetail extends Vue {
 
     protected mounted() {
         this.load()
+    }
+
+    private fileName() {
+        // 测试附件详情
+        const params = {
+            fileId: this.programForm.fileIds
+        }
+        getFileId(params).then((res) => {
+            if (res) {
+                if (res.code === 0) {
+                    const arr = []
+                    for (let i = 0; i < res.data.length; i++) {
+                        arr.push(res.data[i].fileName)
+                    }
+                    this.fileIdsName = arr.toString()
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            } else {
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            }
+        })
     }
 
     private load() {
@@ -177,6 +201,7 @@ export default class ProgramDetail extends Vue {
                     if (res.data.superviseItemEntity.superviseMeasuresList) {
                         this.superviseMeasuresList = res.data.superviseItemEntity.superviseMeasuresList
                     }
+                    this.fileName()
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
