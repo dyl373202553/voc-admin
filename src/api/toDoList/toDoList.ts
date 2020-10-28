@@ -1,4 +1,4 @@
-import { getData } from "@/lib/js/request"
+import { getData, getDataUrl } from "@/lib/js/request"
 import { ConfigModule } from "@/store/module/config"
 const { voc } = ConfigModule
 
@@ -10,3 +10,6 @@ export const getToDoList = (
         pageSize: number;
     }
 ) => { return getData(`${voc}/khzsTodo/data`, { type, pageNum, pageSize }) }
+
+// 获取待办总数
+export const getToDoAll = () => { return getDataUrl(`${voc}/khzsTodo/getTodoCount`) }
