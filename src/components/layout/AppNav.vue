@@ -5,14 +5,14 @@
                 :default-active="this.activedMenu()"
                 class="el-menu-vertical-demo"
                 >
-                <template v-for="(item, index) in indexPage">
+                <template v-for="item in indexPage">
                     <el-menu-item
                         v-if="(!item.children || item.children.length==0) && !item.hidden && (item.role=== userrole || item.role === 'all')"
                         :key="item.path"
                         :index="item.path"
                         @click="toPage(item.path)"
                         class="my-menu-item">
-                        <span slot="title">&nbsp;&nbsp;&nbsp;&nbsp;{{item.meta.title}}<span v-if="index===2">（ {{getTodo}} ）</span></span>
+                        <span slot="title">&nbsp;&nbsp;&nbsp;&nbsp;{{item.meta.title}}<span v-if="item.meta.title==='待办工作'">（ {{getTodo}} ）</span></span>
                     </el-menu-item>
                     <el-submenu
                         v-if="item.children && item.children.length>0 && (item.role=== userrole || item.role === 'all')"
