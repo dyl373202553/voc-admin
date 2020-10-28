@@ -245,7 +245,6 @@ export default class OverseeAnswer extends Vue {
         postOverseeMeasure(params).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    UserModule.getTodo(UserModule.todo - 1)
                     MessageBox.alert(`提交成功`, "成功", { type: "success" })
                     this.$router.push({
                         name: "home"
@@ -279,13 +278,7 @@ export default class OverseeAnswer extends Vue {
             if (res) {
                 if (res.code < 200) {
                     this.load()
-                    const arr = []
-                    for (let i = 0; i < this.superviseMeasuresList.length; i++) {
-                        arr.push(this.superviseMeasuresList[i].status)
-                    }
-                    if (!(/[^0]/gi.test(arr.toString()))) {
-                        UserModule.getTodo(UserModule.todo - 1)
-                    }
+                    UserModule.getTodo()
                     MessageBox.alert(res.message, "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })

@@ -45,8 +45,6 @@ import { Component, Vue } from "vue-property-decorator"
 // @ts-ignore
 import indexPage from "@/router/IndexPage"
 import { UserModule } from "@/store/module/user"
-import { getToDoList } from "@/api/toDoList/toDoList"
-
 @Component
 export default class AppNav extends Vue {
     $router: any;
@@ -101,12 +99,7 @@ export default class AppNav extends Vue {
     }
 
     private load() {
-        const programToDo = getToDoList(this.dataPage)
-        const overseeToDo = getToDoList(this.dataOverseePage)
-        Promise.all([programToDo, overseeToDo]).then((res) => {
-            this.totalAll = res[0].total + res[1].total
-            UserModule.getTodo(this.totalAll)
-        })
+        UserModule.getTodo()
     }
 }
 </script>

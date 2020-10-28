@@ -81,6 +81,7 @@ import { getFocusList } from "@/api/IndexPage/home"
 import { getRecentProgram, getEffectiveness } from "@/api/programList/programList"
 import { getViewStatus } from "@/api/dict"
 import { MessageBox } from "element-ui"
+import { UserModule } from "@/store/module/user"
 import Rank from "./Rank.vue"
 @Component({
     components: { Rank }
@@ -102,6 +103,7 @@ export default class Home extends Vue {
     private programTime = ""
     protected mounted() {
         this.load()
+        UserModule.getTodo()
     }
 
     private load() {

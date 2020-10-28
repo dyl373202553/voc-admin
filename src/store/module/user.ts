@@ -7,6 +7,7 @@ import {
 } from "vuex-module-decorators"
 import store from "@/store"
 import { login, refresh, getUser, getRoleInfo } from "@/api/user"
+import { getToDoList } from "@/api/toDoList/toDoList"
 
 import Cookies from "js-cookie"
 
@@ -246,9 +247,22 @@ class User extends VuexModule implements UserState {
     }
 
     @Mutation
-    public getTodo(val: number) {
-        this.todo = val
+    public getTodo() {
+        const dataPage = {
+            type: "1", // 1：节目待办，2：督办待办
+            pageNum: 1,
+            pageSize: 10
+        }
+        const dataOverseePage = {
+            type: "2", // 1：节目待办，2：督办待办
+            pageNum: 1,
+            pageSize: 10
+        }
+        const programToDo = getToDoList(dataPage)
+        const overseeToDo = getToDoList(dataOverseePage)
+        Promise.all([programToDo, overseeToDo]).then((res) => {
+            this.todo = res[0].total + res[1].total
+        })
     }
 }
-
 export const UserModule = getModule(User)

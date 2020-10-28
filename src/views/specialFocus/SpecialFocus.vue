@@ -150,7 +150,7 @@ export default class SpecialFocus extends Vue {
         postSpecialFocus(this.dataForm).then((res) => {
             if (res) {
                 if (res.code === 0) {
-                    MessageBox.alert(res.message, "成功", { type: "success" })
+                    MessageBox.alert("发布成功", "成功", { type: "success" })
                     this.$router.push({
                         name: "ContentManagement"
                     })

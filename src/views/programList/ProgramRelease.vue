@@ -228,9 +228,6 @@ export default class ProgramRelease extends Vue {
         postProgramRelease(this.dataForm).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    if (!this.$route.params.id) {
-                        UserModule.getTodo(UserModule.todo - 1)
-                    }
                     MessageBox.alert(`发布成功`, "成功", { type: "success" })
                     this.$router.push({
                         name: "home"
