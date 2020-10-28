@@ -74,14 +74,6 @@
                     </div>
                 </div>
             </div>
-             <!-- <div class="dsummary-mian">
-                <div class="dsummary-title">退回意见</div>
-                <template>
-                    <div class="main-info">
-                        退回退回退回
-                    </div>
-                </template>
-            </div> -->
             <div v-show="this.$route.params.status === '2' || this.$route.params.status === '5'" class="dsummary-mian">
                 <div class="dsummary-title">上传附件</div>
                 <div>
@@ -104,7 +96,8 @@
             </div>
             <div v-show="this.$route.params.status === '2' || this.$route.params.status === '5'" class="bottom dbtn">
                 <el-button round>取消</el-button>
-                <el-button type="primary" round :disabled="!dsummaryContent" @click="onSubmit">提交</el-button>
+                <el-button v-if="this.$route.params.status === '2'"  type="primary" round :disabled="!dsummaryContent" @click="onSubmit">提交</el-button>
+                <el-button v-if="this.$route.params.status === '5'" type="primary" round @click="onSubmit">提交</el-button>
             </div>
             <div v-show="this.$route.params.status === '3'" class="bottom dbtn">
                 <el-button type="danger" round plain @click="allBack">一键退回</el-button>
