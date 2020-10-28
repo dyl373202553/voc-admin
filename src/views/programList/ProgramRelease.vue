@@ -79,7 +79,7 @@
                 <el-button size="small" slot="tip" type="danger" plain @click="upbtn" v-if="showFile" style="margin-left:15px;">附件上传</el-button>
                 <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
             </el-upload>
-            <el-progress v-show="progressFlag" class="dprogress" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
+            <el-progress v-show="false" class="dprogress" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
         </el-form-item>
         <el-form-item class="text-center dbtn">
           <el-button v-show="$route.params.summaryName" plain round @click="back">返回</el-button>
@@ -310,6 +310,7 @@ export default class ProgramRelease extends Vue {
                             this.progressStatus = "success"
                             this.showFile = true
                         }
+                        MessageBox.alert(`上传成功`, "成功", { type: "success" })
                     }
                 } else {
                     // 上传失败

@@ -45,11 +45,13 @@
                     <el-button size="small" slot="tip" type="danger" plain @click="upbtn" v-if="showFile" style="margin-left:15px;">附件上传</el-button>
                     <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
                 </el-upload>
-                <el-progress v-show="progressFlag" class="dprogress" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
+                <el-progress v-show="false" class="dprogress" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
 
             <div class="downloadClick" @click="haveDownload">
-                <i class="el-icon-paperclip" />
-                <span class="info-title">{{this.fileIdsName}}</span>
+                <template v-if="this.fileIds">
+                    <i class="el-icon-paperclip" />
+                    <span class="info-title">{{this.fileIds}}</span>
+                </template>
             </div>
         </div>
         <div class="bottom dbtn">
@@ -121,26 +123,28 @@ export default class ProgramSummary extends Vue {
         this.getSummaryDetail()
     }
 
-    private fileName() {
-        // 测试附件详情
-        const params = {
-            fileId: this.fileIds
-        }
-        getFileId(params).then((res) => {
-            if (res) {
-                if (res.code === 0) {
-                    const arr = []
-                    for (let i = 0; i < res.data.length; i++) {
-                        arr.push(res.data[i].fileName)
-                    }
-                    this.fileIdsName = arr.toString()
-                } else {
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                }
-            } else {
-                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+    private fileName(fileIds: string) {
+        if (fileIds) {
+            const params = {
+                fileId: fileIds
             }
-        })
+            getFileId(params).then((res) => {
+                if (res) {
+                    if (res.code === 0) {
+                        const arr = []
+                        for (let i = 0; i < res.data.length; i++) {
+                            arr.push(res.data[i].fileName)
+                        }
+                        this.fileIdsName = arr.toString()
+                        console.log(this.fileIdsName)
+                    } else {
+                        MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                        return false
+                    }
+                }
+            })
+            return this.fileIdsName
+        }
     }
 
     private getSummaryDetail() {
@@ -155,7 +159,6 @@ export default class ProgramSummary extends Vue {
                         this.deptnamesData = res.data.summaryEntity.deptnames
                         this.fileIds = res.data.summaryEntity.fileIds
                     }
-                    this.fileName()
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
@@ -295,6 +298,7 @@ export default class ProgramSummary extends Vue {
                             this.progressStatus = "success"
                             this.showFile = true
                         }
+                        MessageBox.alert(`上传成功`, "成功", { type: "success" })
                     }
                 } else {
                     // 上传失败

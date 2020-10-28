@@ -56,7 +56,7 @@
                             <div class="downloadClick" @click="haveDownload(item.fileIds)">
                                 <template v-if="item.fileIds">
                                     <i class="el-icon-paperclip"/>
-                                    <span class="info-title" v-if="item.fileIds">{{fileName(item.fileIds)}}</span>
+                                    <span class="info-title" v-if="item.fileIds">{{item.fileIds}}</span>
                                 </template>
                             </div>
                             <div class="dsummary-mian delete-back" v-if="item.returnOpinion">

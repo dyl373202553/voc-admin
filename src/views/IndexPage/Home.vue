@@ -40,7 +40,7 @@
                                     <div>
                                         <span class="title-left">督办状态：</span>
                                         <span
-                                        :class="value.superviseItemEntity.status !== '0'? 'dred':'dblue'">
+                                        :class="(value.superviseItemEntity.status !== '0' && value.superviseItemEntity.status !== '4')? 'dred':'dblue'">
                                             {{getStatusName(value.superviseItemEntity.status)}}
                                         </span>
                                     </div>

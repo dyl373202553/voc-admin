@@ -10,7 +10,7 @@
                     {{this.programForm.title}}
                 </h2>
                 <div class="top-info">
-                    <span>{{this.programForm.time}}</span>
+                    <span>{{this.programForm.startTime}} -- {{this.programForm.endTime}}</span>
                     <span>{{this.programForm.speakers}}</span>
                     <span><img src="@/assets/images/icon_look.png"/>{{this.programForm.browerNum}}</span>
                     <!-- 点赞数 -->
@@ -118,7 +118,8 @@ export default class ProgramDetail extends Vue {
     private allList = []
     private programForm = {
         title: "",
-        time: "",
+        startTime: "",
+        endTime: "",
         speakers: "",
         praiseNum: "", // 点赞数
         browerNum: "", // 预览人数
@@ -186,7 +187,8 @@ export default class ProgramDetail extends Vue {
                     this.allList = res.data
                     this.programForm = {
                         title: res.data.title,
-                        time: res.data.liveEntity.startTime,
+                        startTime: res.data.liveEntity.startTime,
+                        endTime: res.data.liveEntity.endTime,
                         speakers: res.data.liveEntity.speakers,
                         praiseNum: res.data.praiseNum, // 点赞数
                         browerNum: res.data.browerNum, // 预览人数
