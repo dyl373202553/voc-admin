@@ -53,8 +53,8 @@
                         </div>
                         <div class="info-right">
                             <div>
-                            <span class="info-title">{{this.supervise.userCode}}</span>
-                            <span>部门没有字段</span>
+                            <span class="info-title">{{this.supervise.userName}}</span>
+                            <span>{{this.supervise.deptName}}</span>
                             </div>
                             <p>{{this.supervise.content}}</p>
                             <div>
@@ -135,7 +135,10 @@ export default class ProgramDetail extends Vue {
         content: "",
         deptnames: "",
         userCode: "",
-        status: ""
+        status: "",
+        deptName: "",
+        userName: ""
+
     }
 
     private summary = { // 直播小结
@@ -198,6 +201,8 @@ export default class ProgramDetail extends Vue {
                             content: res.data.superviseItemEntity.content,
                             deptnames: res.data.superviseItemEntity.deptnames,
                             userCode: res.data.superviseItemEntity.userCode,
+                            userName: res.data.superviseItemEntity.userName,
+                            deptName: res.data.superviseItemEntity.deptName,
                             status: res.data.superviseItemEntity.status
                         }
                     }
