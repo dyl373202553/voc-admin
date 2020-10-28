@@ -24,13 +24,14 @@ export const postMessageSetWonderful = (
 // 全部留言
 
 export const postMessageAll = (
-    { programId, pageNum, pageSize, wonderfulFlag }: {
+    { programId, pageNum, pageSize, wonderfulFlag, targetId }: {
         programId: string;
+        targetId: string;
         pageNum: number;
         pageSize: number;
         wonderfulFlag: string; // 0：精彩留言，1：取消
     }
-) => { return getData(`${voc}/khzsComment/data`, { programId, pageNum, pageSize, wonderfulFlag }) }
+) => { return getData(`${voc}/khzsComment/data`, { programId, pageNum, pageSize, wonderfulFlag, targetId }) }
 
 // 获取下级留言
 export const postMessageBack = (

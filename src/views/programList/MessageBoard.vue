@@ -182,7 +182,8 @@ export default class MessageBoard extends Vue {
         pageNum: 1,
         pageSize: 10,
         programId: this.$route.params.promId,
-        wonderfulFlag: "" // 是否为精彩留言（0：是，1：否）
+        wonderfulFlag: "", // 是否为精彩留言（0：是，1：否）
+        targetId: this.$route.params.promId
     }
 
     protected mounted() {
