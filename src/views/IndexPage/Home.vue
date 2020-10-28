@@ -5,16 +5,16 @@
                 <span class="header-title">特别关注</span>
             </div>
             <div>
-                <el-carousel height="400px">
-                <el-carousel-item v-for="(item, key) in slideshowList" :key="key">
-                    <template>
-                        <!-- <img :src="`/resources/`+ item.content" class="image" style="width:100%;height: 400px;"> -->
-                        <el-image v-if="item.type ==='img'" :src="`/resources/`+ item.content" fit="cover" class="image" />
-                        <video :src="`/resources/`+ item.content" :controls="true" v-if="item.type === 'video'">
-                            您的浏览器不支持视频播放
-                        </video>
-                    </template>
-                </el-carousel-item>
+                <el-carousel height="400px" :arrow="(this.slideshowList.length>1)? 'hover':'never'">
+                    <el-carousel-item v-for="(item, key) in slideshowList" :key="key">
+                        <template>
+                            <!-- <img :src="`/resources/`+ item.content" class="image" style="width:100%;height: 400px;"> -->
+                            <el-image v-if="item.type ==='img'" :src="`/resources/`+ item.content" fit="cover" class="image" />
+                            <video :src="`/resources/`+ item.content" :controls="true" v-if="item.type === 'video'">
+                                您的浏览器不支持视频播放
+                            </video>
+                        </template>
+                    </el-carousel-item>
                 </el-carousel>
             </div>
             </el-card>
