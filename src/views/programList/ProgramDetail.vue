@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="main">
-                <div>
+                <div v-if="this.programForm.guests">
                     <div class="main-title">本期嘉宾</div>
                     <p>{{this.programForm.guests}}</p>
                 </div>
@@ -34,7 +34,7 @@
                     <div class="main-title">附件</div>
                     <div class="downloadClick" @click="haveDownload('jiemu')">
                         <i class="el-icon-paperclip" />
-                        <span class="info-title"> {{fileName(this.programForm.fileIds)}}</span>
+                        <span class="info-title"> {{this.programForm.fileIds}}</span>
                     </div>
                 </div>
                 <div class="main-btn">
@@ -79,7 +79,7 @@
                             <div class="downloadClick" @click="haveDownload(item.fileIds)">
                                 <template v-if="item.fileIds">
                                     <i class="el-icon-paperclip"/>
-                                    <span class="info-title" v-if="item.fileIds">{{fileName(item.fileIds)}}</span>
+                                    <span class="info-title" v-if="item.fileIds">{{item.fileIds}}</span>
                                 </template>
                             </div>
                         </div>
@@ -92,7 +92,7 @@
                     <div class="downloadClick" @click="haveDownload('zhibo')">
                         <template v-if="this.summary.fileIds">
                             <i class="el-icon-paperclip"/>
-                            <span class="info-title" v-if="this.summary.fileIds">{{fileName(this.summary.fileIds)}}</span>
+                            <span class="info-title" v-if="this.summary.fileIds">{{this.summary.fileIds}}</span>
                         </template>
                     </div>
                 </div>

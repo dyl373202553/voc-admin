@@ -49,7 +49,7 @@
                   </el-table>
                 </el-tab-pane>
               </el-tabs>
-              <span class="fr dspan-info"># 所有统计数据截止  {{this.rankListTime}}，每周更新一次 #</span>
+              <span class="fr dspan-info"># 所有统计数据截止  {{this.rankListTime? this.rankListTime : "--"}}，每周更新一次 #</span>
             </div>
           </el-tab-pane>
           <el-tab-pane>
@@ -98,7 +98,7 @@
                   </el-table>
                 </el-tab-pane>
               </el-tabs>
-              <span class="fr dspan-info"># 所有统计数据截止  {{this.rankListTime}}，每周更新一次 #</span>
+              <span class="fr dspan-info"># 所有统计数据截止  {{this.rankListTime? this.rankListTime : "--"}}，每周更新一次 #</span>
             </div>
           </el-tab-pane>
         </el-tabs>
