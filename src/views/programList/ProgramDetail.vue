@@ -34,7 +34,7 @@
                     <div class="main-title">附件</div>
                     <div class="downloadClick" @click="haveDownload('jiemu')">
                         <i class="el-icon-paperclip" />
-                        <span class="info-title">{{this.fileIdsName}}</span>
+                        <span class="info-title"> {{fileName(this.programForm.fileIds)}}</span>
                     </div>
                 </div>
                 <div class="main-btn">
@@ -77,8 +77,10 @@
                             </div>
                             <p>{{item.content}}</p>
                             <div class="downloadClick" @click="haveDownload(item.fileIds)">
-                                <i class="el-icon-paperclip" />
-                                <span class="info-title">{{item.fileIds}}</span>
+                                <template v-if="item.fileIds">
+                                    <i class="el-icon-paperclip"/>
+                                    <span class="info-title" v-if="item.fileIds">{{fileName(item.fileIds)}}</span>
+                                </template>
                             </div>
                         </div>
                         </div>
@@ -88,8 +90,10 @@
                     <div class="main-title">直播小结</div>
                     <p>{{this.summary.content}}</p>
                     <div class="downloadClick" @click="haveDownload('zhibo')">
-                        <i class="el-icon-paperclip" />
-                        <span class="info-title">{{this.summary.fileIds}}</span>
+                        <template v-if="this.summary.fileIds">
+                            <i class="el-icon-paperclip"/>
+                            <span class="info-title" v-if="this.summary.fileIds">{{fileName(this.summary.fileIds)}}</span>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -145,26 +149,31 @@ export default class ProgramDetail extends Vue {
         this.load()
     }
 
-    private fileName() {
-        // 测试附件详情
-        const params = {
-            fileId: this.programForm.fileIds
-        }
-        getFileId(params).then((res) => {
-            if (res) {
-                if (res.code === 0) {
-                    const arr = []
-                    for (let i = 0; i < res.data.length; i++) {
-                        arr.push(res.data[i].fileName)
+    private fileName(fileId: string) {
+        if (fileId) {
+            // 测试附件详情
+            const params = {
+                fileId: fileId
+            }
+            getFileId(params).then((res) => {
+                if (res) {
+                    if (res.code === 0) {
+                        const arr = []
+                        for (let i = 0; i < res.data.length; i++) {
+                            arr.push(res.data[i].fileName)
+                        }
+                        this.fileIdsName = arr.toString()
+                    } else {
+                        MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                     }
-                    this.fileIdsName = arr.toString()
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
-            } else {
-                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-            }
-        })
+            })
+            return this.fileIdsName
+        } else {
+            MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+        }
     }
 
     private load() {
@@ -201,7 +210,6 @@ export default class ProgramDetail extends Vue {
                     if (res.data.superviseItemEntity.superviseMeasuresList) {
                         this.superviseMeasuresList = res.data.superviseItemEntity.superviseMeasuresList
                     }
-                    this.fileName()
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }

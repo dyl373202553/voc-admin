@@ -7,14 +7,6 @@ export default [
         component: (resolve: any) => require(["@/views/IndexPage/Home.vue"], resolve)
     },
     {
-        path: "/img",
-        name: "img",
-        role: "all",
-        hidden: true,
-        meta: { title: "img" },
-        component: () => import("@/views/specialFocus/Image.vue")
-    },
-    {
         path: "/toDolist",
         name: "ToDoList",
         role: "all",
