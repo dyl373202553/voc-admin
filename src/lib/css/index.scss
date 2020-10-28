@@ -269,6 +269,7 @@
         flex: 1;
         .info-title {
           color: #333;
+          margin-left: 15px;
         }
         .backStatus {
           text-align: center;
@@ -276,6 +277,7 @@
           padding: 2px 16px;
           border-radius: 4px;
           color: #9E9E9E;
+          margin-left: 15px;
         }
         .backStatus-sure{
           border-color: #409EFF;
@@ -284,9 +286,6 @@
         .backStatus-back{
           border-color: #F56C6C;
           color: #F56C6C;
-        }
-        span {
-          margin-right: 15px;
         }
         .time {
           font-size: 12px;
