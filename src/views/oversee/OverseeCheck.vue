@@ -54,8 +54,18 @@
                             </div>
                             <p>{{item.content}}</p>
                             <div class="downloadClick" @click="haveDownload(item.fileIds)">
-                                <i class="el-icon-paperclip" />
-                                <span class="info-title">{{item.fileIds}}</span>
+                                <template v-if="item.fileIds">
+                                    <i class="el-icon-paperclip"/>
+                                    <span class="info-title" v-if="item.fileIds">{{fileName(item.fileIds)}}</span>
+                                </template>
+                            </div>
+                            <div class="dsummary-mian delete-back" v-if="item.returnOpinion">
+                                <div class="dsummary-title">退回意见</div>
+                                <template>
+                                    <div class="main-info">
+                                        {{item.returnOpinion}}
+                                    </div>
+                                </template>
                             </div>
                             <div class="text-center dbtn" v-if="item.status === '1' ">
                                 <el-button type="danger" round plain @click="backDialog(item.id)">退回</el-button>
@@ -65,11 +75,10 @@
                     </div>
                 </template>
 
-            <div v-show="$route.params.status === '2' && this.superviseMeasuresList.length===0" class="main-info">
-                暂无内容！
+                <div v-show="$route.params.status === '2' && this.superviseMeasuresList.length===0" class="main-info">
+                    暂无内容！
+                </div>
             </div>
-            </div>
-
             <div class="bottom dbtn">
             <el-button v-show="$route.params.status !== '3'" round @click="back">返回</el-button>
             <el-button v-show="$route.params.status === '1' || $route.params.status === '2'" type="primary" round
@@ -107,7 +116,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getProgramDetail } from "@/api/programList/programList"
+import { getProgramDetail, getFileId } from "@/api/programList/programList"
 import TreeDepartment from "@/components/addressBook/TreeDepartment.vue"
 import { postOverseeAdd, getOverseeDetail, postOverseeCancel, postOverseeMakesure, postOverseeBack } from "@/api/oversee/oversee"
 import { UserModule } from "@/store/module/user"
@@ -141,6 +150,7 @@ export default class OverseeCheck extends Vue {
     }
 
     private departmentArr= []
+    private fileIdsName = ""
 
     protected mounted() {
         this.load()
@@ -158,6 +168,33 @@ export default class OverseeCheck extends Vue {
         }).catch(() => {
             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
         })
+    }
+
+    private fileName(fileId: string) {
+        if (fileId) {
+            // 测试附件详情
+            const params = {
+                fileId: fileId
+            }
+            getFileId(params).then((res) => {
+                if (res) {
+                    if (res.code === 0) {
+                        const arr = []
+                        for (let i = 0; i < res.data.length; i++) {
+                            arr.push(res.data[i].fileName)
+                        }
+                        this.fileIdsName = arr.toString()
+                    } else {
+                        MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                    }
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            })
+            return this.fileIdsName
+        } else {
+            MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+        }
     }
 
     // 提交

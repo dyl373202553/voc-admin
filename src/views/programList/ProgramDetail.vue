@@ -28,7 +28,7 @@
                 </div>
                 <div>
                     <div class="main-title">节目内容</div>
-                    <pre v-html="this.programForm.content"></pre>
+                    <div v-html="this.programForm.content"></div>
                 </div>
                 <div v-if="this.programForm.fileIds">
                     <div class="main-title">附件</div>
