@@ -21,7 +21,7 @@
                 <p><span>责任部门：</span><span>{{this.deptnamesData}}</span></p>
                 </div>
             </div>
-            <div v-show="this.$route.params.status === '2'|| this.$route.params.status === '5' " class="dsummary-mian">
+            <div v-show="this.$route.params.status === '2' " class="dsummary-mian">
                 <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>督办举措</div>
                 <el-input
                     v-model="dsummaryContent"
@@ -30,7 +30,7 @@
                     placeholder="请输入举措内容"
                 />
             </div>
-            <div v-show="this.$route.params.status === '3'" class="dsummary-mian">
+            <div v-show="this.$route.params.status === '3' || this.$route.params.status === '5'" class="dsummary-mian">
                 <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>督办举措</div>
                 <div class="main-info" v-for="(item, key) in superviseMeasuresList" :key="key">
                     <div class="info-left">
@@ -44,11 +44,19 @@
                             <span class="backStatus" v-if="item.status === '1'">未确认</span>
                             <span class="backStatus backStatus-back" v-if="item.status === '2'">已退回</span>
                         </div>
-                        <p>{{item.content}}</p>
-                        <div class="downloadClick" @click="haveDownload(item.fileIds)">
-                            <template v-if="item.fileIds">
+                        <p v-if="!item.returnOpinion">{{item.content}}</p>
+                        <div class="dsummary-mian" style="padding-left:0;">
+                            <el-input v-if="item.returnOpinion"
+                                v-model="item.content"
+                                type="textarea"
+                                :rows="3"
+                                placeholder="请输入举措内容"
+                            />
+                        </div>
+                        <div class="downloadClick" v-if="item.fileIds" @click="haveDownload(item.fileIds)">
+                            <template>
                                 <i class="el-icon-paperclip"/>
-                                <span class="info-title" v-if="item.fileIds">{{fileName(item.fileIds)}}</span>
+                                <span class="info-title">{{item.fileIds}}</span>
                             </template>
                         </div>
                         <div class="dsummary-mian delete-back" v-if="item.returnOpinion">
@@ -225,11 +233,15 @@ export default class OverseeAnswer extends Vue {
                     } else {
                         MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                     }
+                    // if (this.fileIdsName) {
+                    //     return this.fileIdsName
+                    // } else {
+                    //     return ""
+                    // }
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
             })
-            return this.fileIdsName
         } else {
             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
         }

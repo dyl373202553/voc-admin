@@ -42,12 +42,11 @@
                 <el-table-column prop="content" label="内容" align="center" />
                 <el-table-column label="操作" align="center" width="200">
                   <template slot-scope="scope">
-                    <router-link :to="{name:'OverseeAnswer', params: {status:scope.row.link, id:scope.row.id , businessId:scope.row.businessId}, query: { id: scope.row.id } }">
+                    <!-- link 节目待办（1：待处理，0：已完结）、督办待办（0：督办已完成，1：督办未发布，2：督办未回复，3：督办未确认，4：本期无督办，5：被退回）、通知（1：待处理，0：已完结） -->
+                    <!--type 1：节目待办，2：督办待办，3：通知 -->
+                    <router-link v-if="scope.row.type !=='3'" :to="{name:'OverseeAnswer', params: {status:scope.row.link, id:scope.row.id , businessId:scope.row.businessId}, query: { id: scope.row.id } }">
                       <el-button type="text" size="small">处理</el-button>
                     </router-link>
-                    <!-- <router-link :to="{name:'OverseeAnswer', params: {statusName:'举措确认'} }">
-                      <el-button type="text" size="small">举措确认处理-管理员</el-button>
-                    </router-link> -->
                   </template>
                 </el-table-column>
               </el-table>
