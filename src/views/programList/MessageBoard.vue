@@ -15,138 +15,138 @@
                         <el-button type="primary" round @click="onSubmit" :disabled="this.message === '' ">评论</el-button>
                     </div>
                 </div>
-            <el-tab-pane label="精彩留言" name="first">
-                <div class="bottom dliuyan">
-                    <div v-for="(item, key) in messageList" :key="key">
-                        <div class="main-info" v-if="item.wonderfulFlag === '0'">
-                            <div class="info-left">
-                                <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
-                            </div>
-                            <div class="info-right">
-                                <div>
-                                    <span class="info-title">{{item.userName}}</span>
-                                    <span>{{item.dept2Name}}</span>
-                                    <span class="fr time">{{item.updateTime}}</span>
+                <el-tab-pane label="全部留言" name="first">
+                    <span slot="label">全部留言（{{this.dataTotal}}）</span>
+                    <div class="bottom dliuyan">
+                        <div class="bottom-main" v-for="(item, key) in messageList" :key="key">
+                            <div class="main-info">
+                                <div class="info-left">
+                                    <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
                                 </div>
-                                <p>{{item.content}}</p>
-                                <div class="text-right margin-top10 info">
-                                    <span class="fl wonderful" v-show="item.wonderfulFlag === '0'">精彩留言</span>
-                                    <span class="optionBtn"><img src="@/assets/images/icon_repeat.png"/></span>
-                                    <span class="optionBtn" v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)">
-                                        <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
-                                        <span>{{item.praiseNum}}</span>
-                                    </span>
-                                    <span class="optionBtn" v-if="item.ownerPraiseStatus ==='0'" >
-                                        <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
-                                        <span>{{item.praiseNum}}</span>
-                                    </span>
-                                    <span class="optionBtn"><img src="@/assets/images/icon_del.png"/></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </el-tab-pane>
-            <el-tab-pane label="全部留言" name="fourth">
-                <span slot="label">全部留言（{{this.dataTotal}}）</span>
-                <div class="bottom dliuyan">
-                    <div class="bottom-main" v-for="(item, key) in messageList" :key="key">
-                        <div class="main-info">
-                            <div class="info-left">
-                                <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
-                            </div>
-                            <div class="info-right">
-                                <div>
-                                    <span class="info-title">{{item.userName}}</span>
-                                    <span>{{item.dept2Name}}</span>
-                                    <span class="fr time">{{item.updateTime}}</span>
-                                </div>
-                                <p>{{item.content}}</p>
-                                <div class="text-right margin-top10 info">
-                                    <span class="fl checkBack" @click="checkBack(item.id, key)">查看回复</span>
-                                    <span class="fl wonderful" v-show="item.wonderfulFlag === '1' && userrole===0"
-                                        @click="setWonderful(item.id, '0')">设置精彩留言</span>
-                                    <span class="fl wonderful" v-show="item.wonderfulFlag === '0' && userrole===0"
-                                        @click="setWonderful(item.id, '1')">取消精彩留言</span>
-                                    <span class="optionBtn" @click="indexKey=item.id"><img src="@/assets/images/icon_repeat.png"/></span>
-                                    <span class="optionBtn" v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)">
-                                        <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
-                                        <span>{{item.praiseNum}}</span>
-                                    </span>
-                                    <span class="optionBtn" v-if="item.ownerPraiseStatus ==='0'" >
-                                        <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
-                                        <span>{{item.praiseNum}}</span>
-                                    </span>
-                                    <span class="optionBtn" v-if="userrole===0"><img src="@/assets/images/icon_del.png"/></span>
-                                </div>
-                                <div class="text-right margin-top10 info" v-if="indexKey=== item.id">
-                                    <template>
-                                        <el-input
-                                            v-model="backMessage"
-                                            type="textarea"
-                                            :rows="4"
-                                            placeholder="说点什么吧"
-                                        />
+                                <div class="info-right">
+                                    <div>
+                                        <span class="info-title">{{item.userName}}</span>
+                                        <span>{{item.dept2Name}}</span>
+                                        <span class="fr time">{{item.updateTime}}</span>
+                                    </div>
+                                    <p>{{item.content}}</p>
+                                    <div class="text-right margin-top10 info">
+                                        <span class="fl checkBack" @click="checkBack(item.id, key)">查看回复</span>
+                                        <span class="fl wonderful" v-show="item.wonderfulFlag === '1' && userrole===0"
+                                            @click="setWonderful(item.id, '0')">设置精彩留言</span>
+                                        <span class="fl wonderful" v-show="item.wonderfulFlag === '0' && userrole===0"
+                                            @click="setWonderful(item.id, '1')">取消精彩留言</span>
+                                        <span class="optionBtn" @click="indexKey=item.id"><img src="@/assets/images/icon_repeat.png"/></span>
+                                        <span class="optionBtn" v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)">
+                                            <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
+                                            <span>{{item.praiseNum}}</span>
+                                        </span>
+                                        <span class="optionBtn" v-if="item.ownerPraiseStatus ==='0'" >
+                                            <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
+                                            <span>{{item.praiseNum}}</span>
+                                        </span>
+                                        <span class="optionBtn" v-if="userrole===0"><img src="@/assets/images/icon_del.png"/></span>
+                                    </div>
+                                    <div class="text-right margin-top10 info" v-if="indexKey=== item.id">
+                                        <template>
+                                            <el-input
+                                                v-model="backMessage"
+                                                type="textarea"
+                                                :rows="4"
+                                                placeholder="说点什么吧"
+                                            />
+                                        </template>
+                                        <div class="text-right margin-top10 dbackBtn">
+                                            <el-button type="text" round @click="onCancelSubmit()">取消</el-button>
+                                            <el-button type="primary" @click="onBackSubmit(item.id)">回复</el-button>
+                                        </div>
+                                    </div>
+                                    <!-- 子级留言 -->
+                                    <template v-if="indexKey === item.id+key">
+                                        <div class="liuyan-children" v-if="messageChild.length !==0">
+                                            <div class="main-info" v-for="(itemChild, indexChild) in messageChild" :key="indexChild" >
+                                                <div class="info-left">
+                                                    <el-avatar :src="`/resources/bluepage/a/`+itemChild.userCode+`_A.jpg`"/>
+                                                </div>
+                                                <div class="info-right">
+                                                    <div>
+                                                        <span class="info-title">{{itemChild.userName}}</span>
+                                                        <span>{{itemChild.dept2Name}}</span>
+                                                        <span class="fr time">{{itemChild.updateTime}}</span>
+                                                    </div>
+                                                    <p>{{itemChild.content}}</p>
+                                                    <div class="text-right margin-top10 info">
+                                                        <span class="optionBtn" v-if="itemChild.ownerPraiseStatus !=='0'" @click="getLike(itemChild.id)">
+                                                            <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
+                                                            <span>{{itemChild.praiseNum}}</span>
+                                                        </span>
+                                                        <span class="optionBtn" v-if="itemChild.ownerPraiseStatus ==='0'" >
+                                                            <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
+                                                            <span>{{itemChild.praiseNum}}</span>
+                                                        </span>
+                                                        <span class="optionBtn"><img src="@/assets/images/icon_del.png"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="fl checkBack" @click="checkBackDown()">收起</span>
+                                        </div>
+                                        <div class="liuyan-children" v-if="messageChild.length ===0">
+                                            <div class="main-info">
+                                                没有数据
+                                            </div>
+                                            <span class="fl checkBack" @click="checkBackDown()">收起</span>
+                                        </div>
                                     </template>
-                                    <div class="text-right margin-top10 dbackBtn">
-                                        <el-button type="text" round @click="onCancelSubmit()">取消</el-button>
-                                        <el-button type="primary" @click="onBackSubmit(item.id)">回复</el-button>
-                                    </div>
-                                </div>
-                                <!-- 子级留言 -->
-                                <template v-if="indexKey === item.id+key">
-                                    <div class="liuyan-children" v-if="messageChild.length !==0">
-                                        <div class="main-info" v-for="(itemChild, indexChild) in messageChild" :key="indexChild" >
-                                            <div class="info-left">
-                                                <el-avatar :src="`/resources/bluepage/a/`+itemChild.userCode+`_A.jpg`"/>
-                                            </div>
-                                            <div class="info-right">
-                                                <div>
-                                                    <span class="info-title">{{itemChild.userName}}</span>
-                                                    <span>{{itemChild.dept2Name}}</span>
-                                                    <span class="fr time">{{itemChild.updateTime}}</span>
-                                                </div>
-                                                <p>{{itemChild.content}}</p>
-                                                <div class="text-right margin-top10 info">
-                                                    <span class="optionBtn" v-if="itemChild.ownerPraiseStatus !=='0'" @click="getLike(itemChild.id)">
-                                                        <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
-                                                        <span>{{itemChild.praiseNum}}</span>
-                                                    </span>
-                                                    <span class="optionBtn" v-if="itemChild.ownerPraiseStatus ==='0'" >
-                                                        <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
-                                                        <span>{{itemChild.praiseNum}}</span>
-                                                    </span>
-                                                    <span class="optionBtn"><img src="@/assets/images/icon_del.png"/></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <span class="fl checkBack" @click="checkBackDown()">收起</span>
-                                    </div>
-                                    <div class="liuyan-children" v-if="messageChild.length ===0">
-                                        <div class="main-info">
-                                            没有数据
-                                        </div>
-                                        <span class="fl checkBack" @click="checkBackDown()">收起</span>
-                                    </div>
-                                </template>
 
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div class="dpagination">
-                        <el-pagination
-                        background
-                        @current-change="handleCurrentChange"
-                        :current-page="dataPage.pageNum"
-                        :total="dataTotal"
-                        :page-size="dataPage.pageSize"
-                        layout="prev, pager, next, jumper">
-                        </el-pagination>
+                        <div class="dpagination">
+                            <el-pagination
+                            background
+                            @current-change="handleCurrentChange"
+                            :current-page="dataPage.pageNum"
+                            :total="dataTotal"
+                            :page-size="dataPage.pageSize"
+                            layout="prev, pager, next, jumper">
+                            </el-pagination>
+                        </div>
                     </div>
-                </div>
-            </el-tab-pane>
+                </el-tab-pane>
+                <el-tab-pane label="精彩留言" name="secound">
+                    <div class="bottom dliuyan">
+                        <div v-for="(item, key) in messageList" :key="key">
+                            <div class="main-info" v-if="item.wonderfulFlag === '0'">
+                                <div class="info-left">
+                                    <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
+                                </div>
+                                <div class="info-right">
+                                    <div>
+                                        <span class="info-title">{{item.userName}}</span>
+                                        <span>{{item.dept2Name}}</span>
+                                        <span class="fr time">{{item.updateTime}}</span>
+                                    </div>
+                                    <p>{{item.content}}</p>
+                                    <div class="text-right margin-top10 info">
+                                        <span class="fl wonderful" v-show="item.wonderfulFlag === '0'">精彩留言</span>
+                                        <span class="optionBtn"><img src="@/assets/images/icon_repeat.png"/></span>
+                                        <span class="optionBtn" v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)">
+                                            <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
+                                            <span>{{item.praiseNum}}</span>
+                                        </span>
+                                        <span class="optionBtn" v-if="item.ownerPraiseStatus ==='0'" >
+                                            <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
+                                            <span>{{item.praiseNum}}</span>
+                                        </span>
+                                        <span class="optionBtn"><img src="@/assets/images/icon_del.png"/></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </el-tab-pane>
             </el-tabs>
         </div>
     </el-card>

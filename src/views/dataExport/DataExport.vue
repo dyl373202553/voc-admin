@@ -71,10 +71,10 @@
               {{ scope.row.liveEntity.speakers }}
             </div>
           </el-table-column>
-          <el-table-column align="center" label="节目时间">
+          <el-table-column align="center" label="节目时间" min-width="150">
             <div slot-scope="scope">
               <i class="el-icon-time" />
-              <span>{{ scope.row.liveEntity.startTime }}</span>
+              <span>{{ scope.row.liveEntity.startTime }} -- {{ scope.row.liveEntity.endTime }}</span>
             </div>
           </el-table-column>
           <el-table-column label="点赞数" align="center">

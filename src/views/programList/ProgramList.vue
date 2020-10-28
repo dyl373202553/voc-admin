@@ -34,7 +34,7 @@
             <el-table-column prop="superviseItemEntity.status" label="督办状态" align="center">
                 <!-- 督办状态： 0:督办已完成， 1：督办未发布，2：督办未回复，3：督办未确认，4：本期无督办 -->
                 <template slot-scope="scope">
-                    <span :class="{'dred':scope.row.superviseItemEntity.status !== '0' ,'dblue':scope.row.superviseItemEntity.status === '0'}">
+                    <span :class="(scope.row.superviseItemEntity.status !== '0' && scope.row.superviseItemEntity.status !== '4')? 'dred':'dblue'">
                         {{getStatusName(scope.row.superviseItemEntity.status)}}
                     </span>
                 </template>

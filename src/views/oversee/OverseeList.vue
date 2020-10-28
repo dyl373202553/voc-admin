@@ -10,7 +10,7 @@
           <el-table-column prop="deptnames" label="责任部门" align="center"  />
           <el-table-column prop="status" label="督办状态" align="center">
             <template slot-scope="scope">
-                <span :class="{'dred':scope.row.status !== '0' ,'dblue':scope.row.status === '0'}">
+                <span :class="(scope.row.status !== '0' && scope.row.status !== '4')? 'dred':'dblue'">
                 {{getStatusName(scope.row.status)}}
                 </span>
             </template>

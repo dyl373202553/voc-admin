@@ -1,5 +1,7 @@
 import dayjs from "dayjs"
 import { UserModule } from "@/store/module/user"
+// import { getFileId } from "@/api/programList/programList"
+// import { MessageBox } from "element-ui"
 export function deepCopy(templateData: object, type = -1, field = "") {
     const data = JSON.parse(JSON.stringify(templateData))
     switch (type) {
@@ -79,3 +81,28 @@ export const handleDownload = (fildIds: any) => {
     const oh = document.body
     oh.appendChild(link).click()
 }
+
+// // 获取fileids详情
+// let fileIdsName = ""
+// export const getFileName = (fildIds: any) => {
+//     if (fildIds) {
+//         const params = {
+//             fileId: fildIds
+//         }
+//         getFileId(params).then((res) => {
+//             if (res) {
+//                 if (res.code === 0) {
+//                     const arr = []
+//                     for (let i = 0; i < res.data.length; i++) {
+//                         arr.push(res.data[i].fileName)
+//                     }
+//                     fileIdsName = arr.toString()
+//                     console.log(fileIdsName)
+//                 } else {
+//                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+//                 }
+//             }
+//         })
+//     }
+//     console.log(fileIdsName)
+// }
