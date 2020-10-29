@@ -58,7 +58,7 @@
                                         </template>
                                         <div class="text-right margin-top10 dbackBtn">
                                             <el-button type="text" round @click="onCancelSubmit()">取消</el-button>
-                                            <el-button type="primary" @click="onBackSubmit(item.id)">回复</el-button>
+                                            <el-button type="primary" @click="onBackSubmit(item.id, backMessage)">回复</el-button>
                                         </div>
                                     </div>
                                     <!-- 子级留言 -->
@@ -237,9 +237,9 @@ export default class MessageBoard extends Vue {
     }
 
     // 回复
-    private onBackSubmit(id: string) {
+    private onBackSubmit(id: string, backMessage: string) {
         const dataMessagePage = {
-            content: "回复",
+            content: backMessage,
             targetId: id,
             programId: this.$route.params.promId,
             wonderfulFlag: "1"
