@@ -9,12 +9,17 @@
           <el-row :gutter="40">
             <el-col :span="12">
               <el-form-item label="节目开始时间">
-                <el-date-picker v-model="dataForm.startTime" type="datetime" placeholder="请选择开始时间" @change="checkDate" suffix-icon="el-icon-date" style="width:100%" />
+                <el-date-picker v-model="dataForm.startTime"
+                    type="datetime" placeholder="请选择开始时间"
+                    :picker-options="expireTimeOption"
+                    @change="checkDate" suffix-icon="el-icon-date" style="width:100%" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="节目结束时间">
-                <el-date-picker v-model="dataForm.endTime" type="date" placeholder="请选择结束时间" @change="checkDate" suffix-icon="el-icon-date" style="width:100%" />
+                <el-date-picker v-model="dataForm.endTime" type="date"
+                    :picker-options="expireTimeOption"
+                    placeholder="请选择结束时间" @change="checkDate" suffix-icon="el-icon-date" style="width:100%" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -143,6 +148,14 @@ export default class OverseeCheck extends Vue {
 
     private dialogTableVisible = false
     private dialogTreeVisible = false
+
+    // 时间-不得选早于之前的
+    private expireTimeOption = {
+        disabledDate(date: { getTime: () => number }) {
+            // disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
+            return date.getTime() < Date.now() - 24 * 60 * 60 * 1000
+        }
+    }
 
     get userToken() {
         // @ts-ignore

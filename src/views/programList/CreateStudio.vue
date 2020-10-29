@@ -12,7 +12,7 @@
                     :rules="[
                     { required: true, message: '节目时间开始时间不能为空'}
                     ]">
-                    <el-date-picker v-model="dataForm.startTime" type="datetime" placeholder="请选择开始时间" style="width: 100%;" @change="checkDate" />
+                    <el-date-picker v-model="dataForm.startTime" :picker-options="expireTimeOption" type="datetime" placeholder="请选择开始时间" style="width: 100%;" @change="checkDate" />
                 </el-form-item>
             </el-col>
             <el-col :span="2" class="line">至</el-col>
@@ -21,7 +21,7 @@
                     :rules="[
                     { required: true, message: '节目时间结束时间不能为空'}
                     ]">
-                    <el-date-picker v-model="dataForm.endTime" type="datetime" placeholder="请选择结束时间" style="width: 100%;" @change="checkDate" />
+                    <el-date-picker v-model="dataForm.endTime" :picker-options="expireTimeOption" type="datetime" placeholder="请选择结束时间" style="width: 100%;" @change="checkDate" />
                 </el-form-item>
             </el-col>
         </el-form-item>
@@ -124,6 +124,14 @@ export default class CreateStudio extends Vue {
         children: "children",
         label: "label",
         isLeaf: "isLeaf"
+    }
+
+    // 时间-不得选早于之前的
+    private expireTimeOption = {
+        disabledDate(date: { getTime: () => number }) {
+            // disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
+            return date.getTime() < Date.now() - 24 * 60 * 60 * 1000
+        }
     }
 
     private departmentArr= []

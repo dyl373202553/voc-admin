@@ -16,6 +16,7 @@
                             type="datetime"
                             placeholder="请选择开始时间"
                             style="width: 100%;"
+                            :picker-options="expireTimeOption"
                             :disabled="$route.params.viewStatus === '3' || this.over"
                             @change="checkDate"
                         />
@@ -32,6 +33,7 @@
                             type="datetime"
                             placeholder="请选择结束时间"
                             style="width: 100%;"
+                            :picker-options="expireTimeOption"
                             :disabled="$route.params.viewStatus === '3' || this.over"
                             @change="checkDate"
                         />
@@ -122,6 +124,14 @@ export default class SpecialFocus extends Vue {
         { color: "#1989fa", percentage: 80 },
         { color: "#6f7ad3", percentage: 100 }
     ]
+
+    // 时间-不得选早于之前的
+    private expireTimeOption = {
+        disabledDate(date: { getTime: () => number }) {
+            // disabledDate 文档上：设置禁用状态，参数为当前日期，要求返回 Boolean
+            return date.getTime() < Date.now() - 24 * 60 * 60 * 1000
+        }
+    }
 
     protected mounted() {
         if (this.$route.params.id) {
