@@ -47,7 +47,7 @@
                 </el-upload>
                 <el-progress v-show="false" class="dprogress" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
 
-            <div class="downloadClick" @click="haveDownload">
+            <div class="downloadClick" @click="haveDownload" v-if="$route.params.summaryName ==='管理小结'">
                 <template v-if="this.fileIds">
                     <i class="el-icon-paperclip" />
                     <span class="info-title">{{this.fileIds}}</span>
@@ -69,7 +69,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { postProgramSummary, getProgramDetail, postProgramSummaryDelete, getFileId } from "@/api/programList/programList"
+import { postProgramSummary, getProgramDetail, postProgramSummaryDelete } from "@/api/programList/programList"
 import TreeDepartment from "@/components/addressBook/TreeDepartment.vue"
 import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
@@ -125,26 +125,25 @@ export default class ProgramSummary extends Vue {
 
     private fileName(fileIds: string) {
         if (fileIds) {
-            const params = {
-                fileId: fileIds
-            }
-            getFileId(params).then((res) => {
-                if (res) {
-                    if (res.code === 0) {
-                        const arr = []
-                        for (let i = 0; i < res.data.length; i++) {
-                            arr.push(res.data[i].fileName)
-                        }
-                        this.fileIdsName = arr.toString()
-                        console.log(this.fileIdsName)
-                    } else {
-                        MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                        return false
-                    }
-                }
-            })
-            return this.fileIdsName
+            // const params = {
+            //     fileId: fileIds
+            // }
+            // getFileId(params).then((res) => {
+            //     if (res) {
+            //         if (res.code === 0) {
+            //             const arr = []
+            //             for (let i = 0; i < res.data.length; i++) {
+            //                 arr.push(res.data[i].fileName)
+            //             }
+            //             this.fileIdsName = arr.toString()
+            //         } else {
+            //             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            //         }
+            //     }
+            // })
+            return "附件"
         }
+        return "--"
     }
 
     private getSummaryDetail() {
