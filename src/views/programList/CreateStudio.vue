@@ -12,7 +12,7 @@
                     :rules="[
                     { required: true, message: '节目时间开始时间不能为空'}
                     ]">
-                    <el-date-picker v-model="dataForm.startTime" type="datetime" placeholder="请选择开始时间" style="width: 100%;" />
+                    <el-date-picker v-model="dataForm.startTime" type="datetime" placeholder="请选择开始时间" style="width: 100%;" @change="checkDate" />
                 </el-form-item>
             </el-col>
             <el-col :span="2" class="line">至</el-col>
@@ -21,7 +21,7 @@
                     :rules="[
                     { required: true, message: '节目时间结束时间不能为空'}
                     ]">
-                    <el-date-picker v-model="dataForm.endTime" type="datetime" placeholder="请选择结束时间" style="width: 100%;" />
+                    <el-date-picker v-model="dataForm.endTime" type="datetime" placeholder="请选择结束时间" style="width: 100%;" @change="checkDate" />
                 </el-form-item>
             </el-col>
         </el-form-item>
@@ -266,6 +266,16 @@ export default class CreateStudio extends Vue {
                 // 请求失败
                 this.progressStatus = "warning"
             })
+    }
+
+    // 校验时间
+    private checkDate() {
+        if (this.dataForm.startTime && this.dataForm.endTime) {
+            if (this.dataForm.endTime <= this.dataForm.startTime) {
+                MessageBox.alert("节目结束时间不能早于开始时间", "error", { type: "error" })
+                this.dataForm.endTime = ""
+            }
+        }
     }
 }
 </script>

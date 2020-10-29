@@ -12,11 +12,12 @@
                     ]">
                     <el-col :span="11">
                         <el-date-picker
-                        v-model="dataForm.startTime"
-                        type="datetime"
-                        placeholder="请选择开始时间"
-                        style="width: 100%;"
-                        :disabled="$route.params.viewStatus === '3' || this.over"
+                            v-model="dataForm.startTime"
+                            type="datetime"
+                            placeholder="请选择开始时间"
+                            style="width: 100%;"
+                            :disabled="$route.params.viewStatus === '3' || this.over"
+                            @change="checkDate"
                         />
                     </el-col>
                 </el-form-item>
@@ -27,11 +28,12 @@
                     ]">
                     <el-col :span="11">
                         <el-date-picker
-                        v-model="dataForm.endTime"
-                        type="datetime"
-                        placeholder="请选择结束时间"
-                        style="width: 100%;"
-                        :disabled="$route.params.viewStatus === '3' || this.over"
+                            v-model="dataForm.endTime"
+                            type="datetime"
+                            placeholder="请选择结束时间"
+                            style="width: 100%;"
+                            :disabled="$route.params.viewStatus === '3' || this.over"
+                            @change="checkDate"
                         />
                     </el-col>
                 </el-form-item>
@@ -264,6 +266,16 @@ export default class SpecialFocus extends Vue {
                 // 请求失败
                 this.progressStatus = "warning"
             })
+    }
+
+    // 校验时间
+    private checkDate() {
+        if (this.dataForm.startTime && this.dataForm.endTime) {
+            if (this.dataForm.endTime <= this.dataForm.startTime) {
+                MessageBox.alert("节目结束时间不能早于开始时间", "error", { type: "error" })
+                this.dataForm.endTime = ""
+            }
+        }
     }
 }
 </script>

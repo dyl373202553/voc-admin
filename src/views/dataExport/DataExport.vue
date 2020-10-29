@@ -9,12 +9,12 @@
           <el-row :gutter="40">
             <el-col :span="12">
               <el-form-item label="节目开始时间">
-                <el-date-picker v-model="dataForm.startTime" type="datetime" placeholder="请选择开始时间" suffix-icon="el-icon-date" style="width:100%" />
+                <el-date-picker v-model="dataForm.startTime" type="datetime" placeholder="请选择开始时间" @change="checkDate" suffix-icon="el-icon-date" style="width:100%" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="节目结束时间">
-                <el-date-picker v-model="dataForm.endTime" type="date" placeholder="请选择结束时间" suffix-icon="el-icon-date" style="width:100%" />
+                <el-date-picker v-model="dataForm.endTime" type="date" placeholder="请选择结束时间" @change="checkDate" suffix-icon="el-icon-date" style="width:100%" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -262,6 +262,16 @@ export default class OverseeCheck extends Vue {
             this.dataForm.dept3Code = data[0].id
         } else {
             this.dataForm.dept3Code = ""
+        }
+    }
+
+    // 校验时间
+    private checkDate() {
+        if (this.dataForm.startTime && this.dataForm.endTime) {
+            if (this.dataForm.endTime <= this.dataForm.startTime) {
+                MessageBox.alert("节目结束时间不能早于开始时间", "error", { type: "error" })
+                this.dataForm.endTime = ""
+            }
         }
     }
 }
