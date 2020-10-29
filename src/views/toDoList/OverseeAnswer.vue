@@ -32,6 +32,13 @@
             </div>
             <div v-show="this.$route.params.status === '3' || this.$route.params.status === '5'" class="dsummary-mian">
                 <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>督办举措</div>
+                <el-input
+                    v-show="this.$route.params.status === '5'"
+                    v-model="dsummaryContent"
+                    type="textarea"
+                    :rows="3"
+                    placeholder="请输入举措内容"
+                />
                 <div class="main-info" v-for="(item, key) in superviseMeasuresList" :key="key">
                     <div class="info-left">
                         <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
@@ -44,15 +51,15 @@
                             <span class="backStatus" v-if="item.status === '1'">未确认</span>
                             <span class="backStatus backStatus-back" v-if="item.status === '2'">已退回</span>
                         </div>
-                        <p v-if="!item.returnOpinion">{{item.content}}</p>
-                        <div class="dsummary-mian" style="padding-left:0;">
+                        <p>{{item.content}}</p>
+                        <!-- <div class="dsummary-mian" style="padding-left:0;">
                             <el-input v-if="item.returnOpinion"
                                 v-model="item.content"
                                 type="textarea"
                                 :rows="3"
                                 placeholder="请输入举措内容"
                             />
-                        </div>
+                        </div> -->
                         <div class="downloadClick" v-if="item.fileIds" @click="haveDownload(item.fileIds)">
                             <template>
                                 <i class="el-icon-paperclip"/>
@@ -96,8 +103,7 @@
             </div>
             <div v-show="this.$route.params.status === '2' || this.$route.params.status === '5'" class="bottom dbtn">
                 <el-button round>取消</el-button>
-                <el-button v-if="this.$route.params.status === '2'"  type="primary" round :disabled="!dsummaryContent" @click="onSubmit">提交</el-button>
-                <el-button v-if="this.$route.params.status === '5'" type="primary" round @click="onSubmit">提交</el-button>
+                <el-button v-if="this.$route.params.status === '2' || this.$route.params.status === '5'"  type="primary" round :disabled="!dsummaryContent" @click="onSubmit">提交</el-button>
             </div>
             <div v-show="this.$route.params.status === '3'" class="bottom dbtn">
                 <el-button type="danger" round plain @click="allBack">一键退回</el-button>
