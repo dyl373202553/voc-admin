@@ -296,6 +296,7 @@ export default class OverseeCheck extends Vue {
             if (res) {
                 if (res.code < 200) {
                     this.load()
+                    UserModule.getTodo()
                     MessageBox.alert(res.message, "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })

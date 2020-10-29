@@ -75,6 +75,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { getToDoList } from "@/api/toDoList/toDoList"
+import { UserModule } from "@/store/module/user"
 @Component
 export default class ToDoList extends Vue {
     private listLoading = false
@@ -103,6 +104,7 @@ export default class ToDoList extends Vue {
     }
 
     protected mounted() {
+        UserModule.getTodo()
         this.load()
     }
 
