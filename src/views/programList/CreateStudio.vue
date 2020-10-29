@@ -31,7 +31,7 @@
             :rules="[
             { required: true, message: '节目封面不能为空'}
             ]" style="positon:relative;"
-            :class="progressFlag? 'imgList': ''">
+            :class="(showFile === 1)? 'imgList': ''">
            <el-upload
                 class="upload-image"
                 :action="' '"
@@ -46,10 +46,10 @@
                 ref="uploadicon"
                 >
                 <el-button size="small" type="primary" plain v-show="showFile === 0">选择文件</el-button>
-                <el-button size="small" slot="tip" type="danger" plain @click="upbtn" v-show="showFile === 1">上传封面</el-button>
+                <el-button size="small" class="dprogress-btn" slot="tip" type="danger" plain @click="upbtn" v-show="showFile === 1">上传封面</el-button>
                 <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于2M的文件，支持格式jpg/png/jpeg;</span>
             </el-upload>
-            <el-progress v-show="progressFlag" :stroke-width="9" class="dprogress" type="circle" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
+            <el-progress v-show="progressFlag" :stroke-width="9" type="line" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
         </el-form-item>
         <el-form-item label="节目主讲人"
             prop="speakersData"
@@ -253,8 +253,9 @@ export default class CreateStudio extends Vue {
                         // 上传成功
                         this.dataForm.logoUrl = res.data.data.filePath
                         if (this.progressPercent === 100) {
-                            this.progressFlag = false
+                            // this.progressFlag = false
                             this.showFile = 3
+                            this.progressStatus = "success"
                         }
                     }
                 } else {

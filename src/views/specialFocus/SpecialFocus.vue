@@ -41,7 +41,7 @@
                     :rules="[
                     { required: true, message: '内容上传不能为空'}
                     ]"
-                    :class="progressFlag? 'imgList': ''">
+                    :class="(showFile === 1)? 'imgList': ''">
                     <el-upload
                         v-show="$route.params.viewStatus !== '3'"
                         class="upload-image"
@@ -57,11 +57,10 @@
                         ref="uploadicon"
                         >
                         <el-button size="small" type="primary" plain v-show="showFile === 0">选择文件</el-button>
-                        <el-button size="small" slot="tip" type="danger" plain @click="upbtn" v-show="showFile === 1">上传封面</el-button>
+                        <el-button size="small" class="dprogress-btn" slot="tip" type="danger" plain @click="upbtn" v-show="showFile === 1">上传封面</el-button>
                         <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于150M的文件，支持格式png/jpg/mp4/wma</span>
                     </el-upload>
-                    <el-progress v-show="progressFlag" :stroke-width="9" class="dprogress" type="circle" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
-
+                    <el-progress v-show="progressFlag" :stroke-width="9" type="line" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
                     <el-col :span="24" v-show="$route.params.id && $route.params.viewStatus === '3'">
                         <div class="dimg-div">
                             <el-image :src="`/resources/`+ dataForm.content" fit="cover" class="image" v-if="this.dataForm.type === 'img'" />
@@ -253,8 +252,9 @@ export default class SpecialFocus extends Vue {
                         // 上传成功
                         this.dataForm.content = res.data.data.filePath
                         if (this.progressPercent === 100) {
-                            this.progressFlag = false
+                            // this.progressFlag = false
                             this.showFile = 3
+                            this.progressStatus = "success"
                         }
                     }
                 } else {

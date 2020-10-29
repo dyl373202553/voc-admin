@@ -629,3 +629,16 @@
 .border-none {
   border: none !important;
 }
+// .dprogress-circle .el-progress__text {
+//   font-weight: bolder !important;
+//   color: #fff;
+// }
+.dprogress-btn {
+  position: absolute;
+  top: 150px;
+  z-index: 11;
+  left: 45%;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
