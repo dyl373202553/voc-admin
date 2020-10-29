@@ -19,7 +19,7 @@ export const postMessageSetWonderful = (
         id: string;
         wonderfulFlag: string; // 0：精彩留言，1：取消
     }
-) => { return postData(`${voc}/khzsComment/save`, { id, wonderfulFlag }) }
+) => { return postData(`${voc}/khzsComment/saveWonderful`, { id, wonderfulFlag }) }
 
 // 全部留言
 
