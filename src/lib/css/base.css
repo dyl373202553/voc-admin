@@ -232,6 +232,7 @@ body > .el-container {
   margin-top: 12px;
 }
 .wonderful {
+  cursor: pointer;
   border: 1px solid #FFA73E;
   border-radius: 20px;
   border-radius: 20px;

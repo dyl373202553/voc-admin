@@ -172,6 +172,7 @@
       display: flex;
       margin-top: 15px;
       padding-bottom: 15px;
+      border-bottom: 1px solid #EEEEEE;
       .info-left {
         width: 60px;
         padding: 0 10px;
@@ -192,7 +193,6 @@
 
   .dliuyan {
       .bottom-main {
-        border-bottom: 1px solid #EEEEEE;
         .info-right {
           .info {
             span {
