@@ -1,4 +1,4 @@
-<template>
+<template v-if="this.userrole==='0'">
   <div class="app-container dtable-text">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
@@ -128,6 +128,7 @@ import axios from "axios"
 import { UserModule } from "@/store/module/user"
 import TreeDepartment from "@/components/addressBook/TreeDepartment.vue"
 import TreeDepartmentAll from "@/components/addressBook/TreeDepartmentAll.vue"
+import Cookies from "js-cookie"
 
 @Component({
     components: { TreeDepartment, TreeDepartmentAll }
@@ -162,8 +163,16 @@ export default class OverseeCheck extends Vue {
         return UserModule.token
     }
 
+    private userrole: any= ""
     protected mounted() {
-        this.load()
+        this.userrole = Cookies.get("userrole")
+        if (this.userrole === "0") {
+            this.load()
+        } else {
+            this.$router.push({
+                name: "home"
+            })
+        }
     }
 
     private load() {

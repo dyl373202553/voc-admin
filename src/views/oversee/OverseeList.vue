@@ -1,4 +1,4 @@
-<template>
+<template v-if="this.userrole==='0'">
   <div class="app-container dtable-text">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
@@ -44,6 +44,7 @@ import { Component, Vue } from "vue-property-decorator"
 import { getOverseeList } from "@/api/oversee/oversee"
 import { getViewStatus } from "@/api/dict"
 import { MessageBox } from "element-ui"
+import Cookies from "js-cookie"
 @Component
 
 export default class OverseeList extends Vue {
@@ -55,9 +56,17 @@ export default class OverseeList extends Vue {
     }
 
     private status: any = []
+    private userrole: any= ""
 
     protected mounted() {
-        this.load()
+        this.userrole = Cookies.get("userrole")
+        if (this.userrole === "0") {
+            this.load()
+        } else {
+            this.$router.push({
+                name: "home"
+            })
+        }
     }
 
     private load() {

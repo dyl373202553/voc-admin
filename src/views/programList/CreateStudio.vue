@@ -1,4 +1,4 @@
-<template>
+<template v-if="this.userrole==='0'">
   <div class="app-container">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
@@ -94,7 +94,7 @@ import { MessageBox } from "element-ui"
 import { day } from "@/lib/js/unitls"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
-// import Cookies from "js-cookie"
+import Cookies from "js-cookie"
 
 @Component({
     components: { TreePerson }
@@ -150,6 +150,17 @@ export default class CreateStudio extends Vue {
         { color: "#1989fa", percentage: 80 },
         { color: "#6f7ad3", percentage: 100 }
     ]
+
+    private userrole: any= ""
+
+    protected mounted() {
+        this.userrole = Cookies.get("userrole")
+        if (this.userrole !== "0") {
+            this.$router.push({
+                name: "home"
+            })
+        }
+    }
 
     private onSubmit() {
         this.loading = true

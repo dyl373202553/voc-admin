@@ -1,4 +1,4 @@
-<template>
+<template v-if="this.userrole==='0'">
     <div class="app-container dtable-text">
         <el-card class="box-card">
         <div slot="header" class="clearfix">
@@ -47,6 +47,7 @@ import { Component, Vue } from "vue-property-decorator"
 import { getSpecialFocusList, postOffLine } from "@/api/specialFocus/SpecialFocus"
 import { getViewStatus } from "@/api/dict"
 import { MessageBox } from "element-ui"
+import Cookies from "js-cookie"
 @Component
 export default class ContentManagement extends Vue {
     private centerDialogVisible = false
@@ -59,19 +60,28 @@ export default class ContentManagement extends Vue {
 
     private status: any = []
 
+    private userrole: any= ""
+
     protected mounted() {
-        const params = {
-            type: "khzs_special_attention_status"
+        this.userrole = Cookies.get("userrole")
+        if (this.userrole === "0") {
+            const params = {
+                type: "khzs_special_attention_status"
+            }
+            const status = getViewStatus(params)
+            const tableData = getSpecialFocusList(this.dataPage)
+            Promise.all([status, tableData]).then((res) => {
+                this.status = res[0]
+                this.tableData = res[1].data
+                this.dataTotal = res[1].total
+            }).catch(() => {
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            })
+        } else {
+            this.$router.push({
+                name: "home"
+            })
         }
-        const status = getViewStatus(params)
-        const tableData = getSpecialFocusList(this.dataPage)
-        Promise.all([status, tableData]).then((res) => {
-            this.status = res[0]
-            this.tableData = res[1].data
-            this.dataTotal = res[1].total
-        }).catch(() => {
-            MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-        })
     }
 
     private load() {

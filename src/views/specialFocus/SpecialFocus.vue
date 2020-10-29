@@ -1,4 +1,4 @@
-<template>
+<template v-if="this.userrole==='0'">
     <div class="app-container">
         <el-card class="box-card">
             <div slot="header" class="clearfix">
@@ -92,6 +92,7 @@ import { MessageBox } from "element-ui"
 import { day } from "@/lib/js/unitls"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
+import Cookies from "js-cookie"
 @Component
 export default class SpecialFocus extends Vue {
     get userToken() {
@@ -133,9 +134,18 @@ export default class SpecialFocus extends Vue {
         }
     }
 
+    private userrole: any= ""
+
     protected mounted() {
-        if (this.$route.params.id) {
-            this.load()
+        this.userrole = Cookies.get("userrole")
+        if (this.userrole === "0") {
+            if (this.$route.params.id) {
+                this.load()
+            }
+        } else {
+            this.$router.push({
+                name: "home"
+            })
         }
     }
 

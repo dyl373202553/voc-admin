@@ -154,7 +154,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { postMessageAll, postMessageAdd, postLikeAdd, postMessageSetWonderful, postMessageBack } from "@/api/programList/message"
+import { postMessageAll, postMessageAdd, postLikeAdd, postMessageSetWonderful } from "@/api/programList/message"
 import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
 @Component
@@ -303,10 +303,13 @@ export default class MessageBoard extends Vue {
         this.showIndex = !this.showIndex
         this.indexKey = id + index
         const dataPage = {
-            pageNum: -1,
+            pageNum: 1,
+            pageSize: 10,
+            programId: this.$route.params.promId,
+            wonderfulFlag: "", // 是否为精彩留言（0：是，1：否）
             targetId: id
         }
-        postMessageBack(dataPage).then((res) => {
+        postMessageAll(dataPage).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.messageChildrenList[index] = res.data
