@@ -138,7 +138,9 @@ export default class ProgramSummary extends Vue {
                         this.summaryId = res.data.summaryEntity.id
                         this.deptnamesData = res.data.summaryEntity.deptnames
                         this.fileIds = res.data.summaryEntity.fileIds
-                        this.fileId = JSON.parse(this.fileIds)
+                        if (this.fileId) {
+                            this.fileId = JSON.parse(this.fileIds)
+                        }
                     }
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })

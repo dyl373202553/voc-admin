@@ -74,16 +74,19 @@
                         </div>
                         <div class="info-right">
                             <div>
-                            <span class="info-title">{{item.userName}}</span>
-                            <span>{{item.deptName}}</span>
+                                <span class="info-title">{{item.userName}}</span>
+                                <span>{{item.deptName}}</span>
                             </div>
                             <p>{{item.content}}</p>
-                            <div class="downloadClick" @click="haveDownload(item.fileIds)">
-                                <template v-if="item.fileIds">
-                                    <i class="el-icon-paperclip"/>
-                                    <span class="info-title" v-if="item.fileIds">{{item.fileIds}}</span>
-                                </template>
-                            </div>
+
+                            <template v-if="item.fileIds">
+                                <div class="downloadClick" v-for="(itemChild, key) in JSON.parse(item.fileIds)" :key="key">
+                                    <a @click="haveDownload(itemChild.fileIds)">
+                                        <i class="el-icon-paperclip"/>
+                                        <span class="info-title">{{itemChild.fileName}}</span>
+                                    </a>
+                                </div>
+                            </template>
                         </div>
                         </div>
                     </div>
@@ -211,7 +214,9 @@ export default class ProgramDetail extends Vue {
                         likeShow: res.data.ownerPraiseStatus,
                         fileIds: res.data.fileIds
                     }
-                    this.programFormFileId = JSON.parse(res.data.fileIds)
+                    if (res.data.fileIds) {
+                        this.programFormFileId = JSON.parse(res.data.fileIds)
+                    }
                     if (res.data.superviseItemEntity) {
                         this.supervise = {
                             content: res.data.superviseItemEntity.content,
@@ -227,7 +232,9 @@ export default class ProgramDetail extends Vue {
                             content: res.data.summaryEntity.content,
                             fileIds: res.data.summaryEntity.fileIds
                         }
-                        this.summaryFileId = JSON.parse(res.data.summaryEntity.fileIds)
+                        if (res.data.summaryEntity.fileIds) {
+                            this.summaryFileId = JSON.parse(res.data.summaryEntity.fileIds)
+                        }
                     }
                     if (res.data.superviseItemEntity.superviseMeasuresList) {
                         this.superviseMeasuresList = res.data.superviseItemEntity.superviseMeasuresList
