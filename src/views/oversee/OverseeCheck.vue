@@ -53,12 +53,15 @@
                                 <span class="backStatus backStatus-back" v-if="item.status === '2'">已退回</span>
                             </div>
                             <p>{{item.content}}</p>
-                            <div class="downloadClick" @click="haveDownload(item.fileIds)">
-                                <template v-if="item.fileIds">
-                                    <i class="el-icon-paperclip"/>
-                                    <span class="info-title" v-if="item.fileIds">{{item.fileIds}}</span>
-                                </template>
-                            </div>
+                            <template v-if="item.fileIds">
+                                <div class="downloadClick" v-for="(itemChild, key) in JSON.parse(item.fileIds)" :key="key">
+                                    <a @click="haveDownload(itemChild.fileIds)">
+                                        <i class="el-icon-paperclip"/>
+                                        <span class="info-title">{{itemChild.fileName}}</span>
+                                    </a>
+                                </div>
+                            </template>
+
                             <div class="dsummary-mian delete-back" v-if="item.returnOpinion">
                                 <div class="dsummary-title">退回意见</div>
                                 <template>
@@ -116,7 +119,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getProgramDetail, getFileId } from "@/api/programList/programList"
+import { getProgramDetail } from "@/api/programList/programList"
 import TreeDepartment from "@/components/addressBook/TreeDepartment.vue"
 import { postOverseeAdd, getOverseeDetail, postOverseeCancel, postOverseeMakesure, postOverseeBack } from "@/api/oversee/oversee"
 import { UserModule } from "@/store/module/user"
@@ -170,34 +173,7 @@ export default class OverseeCheck extends Vue {
         })
     }
 
-    private fileName(fileId: string) {
-        if (fileId) {
-            // 测试附件详情
-            const params = {
-                fileId: fileId
-            }
-            getFileId(params).then((res) => {
-                if (res) {
-                    if (res.code === 0) {
-                        const arr = []
-                        for (let i = 0; i < res.data.length; i++) {
-                            arr.push(res.data[i].fileName)
-                        }
-                        this.fileIdsName = arr.toString()
-                    } else {
-                        MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                    }
-                } else {
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                }
-            })
-            return this.fileIdsName
-        } else {
-            MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-        }
-    }
-
-    // 提交
+    // 提交-督办事项
     private submit() {
         const params = {
             id: this.$route.params.id, // ID

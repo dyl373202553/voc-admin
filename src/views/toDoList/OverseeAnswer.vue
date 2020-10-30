@@ -60,12 +60,15 @@
                                 placeholder="请输入举措内容"
                             />
                         </div> -->
-                        <div class="downloadClick" v-if="item.fileIds" @click="haveDownload(item.fileIds)">
-                            <template>
-                                <i class="el-icon-paperclip"/>
-                                <span class="info-title">{{item.fileIds}}</span>
-                            </template>
-                        </div>
+                        <template v-if="item.fileIds">
+                            <div class="downloadClick" v-for="(itemChild, key) in JSON.parse(item.fileIds)" :key="key">
+                                <a @click="haveDownload(itemChild.fileIds)">
+                                    <i class="el-icon-paperclip"/>
+                                    <span class="info-title">{{itemChild.fileName}}</span>
+                                </a>
+                            </div>
+                        </template>
+
                         <div class="dsummary-mian delete-back" v-if="item.returnOpinion">
                             <div class="dsummary-title">退回意见</div>
                             <template>
@@ -137,7 +140,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getProgramDetail, getFileId } from "@/api/programList/programList"
+import { getProgramDetail } from "@/api/programList/programList"
 import { postOverseeMeasure, getOverseeDetail, postOverseeCancel, postOverseeBack, postOverseeMakesure } from "@/api/oversee/oversee"
 import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
@@ -215,38 +218,8 @@ export default class OverseeAnswer extends Vue {
         })
     }
 
-    private fileName(fileId: string) {
-        if (fileId) {
-            // 测试附件详情
-            const params = {
-                fileId: fileId
-            }
-            getFileId(params).then((res) => {
-                if (res) {
-                    if (res.code === 0) {
-                        const arr = []
-                        for (let i = 0; i < res.data.length; i++) {
-                            arr.push(res.data[i].fileName)
-                        }
-                        this.fileIdsName = arr.toString()
-                    } else {
-                        MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                    }
-                    // if (this.fileIdsName) {
-                    //     return this.fileIdsName
-                    // } else {
-                    //     return ""
-                    // }
-                } else {
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                }
-            })
-        } else {
-            MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-        }
-    }
-
     private onSubmit() {
+        this.fileIds = JSON.stringify(this.fileIdsArr)
         const params = {
             todoId: this.$route.params.id, // 待办ID
             content: this.dsummaryContent, // 督办举措内容
@@ -346,7 +319,7 @@ export default class OverseeAnswer extends Vue {
     private handleAvatarChangeIcon(file: any, fileList: any) {
         let isLt10M = 0
         if (fileList.length > 0) {
-            this.showFile = !this.showFile
+            this.showFile = true
         }
         for (let i = 0; i < fileList.length; i++) {
             isLt10M += fileList[i].size
@@ -403,8 +376,10 @@ export default class OverseeAnswer extends Vue {
                 if (res) {
                     if (res.data.code < 200) {
                         // 上传成功
-                        this.fileIdsArr.push(res.data.data.fileId)
-                        this.fileIds = this.fileIdsArr.toString()
+                        const obj: any = {}
+                        obj.fileName = res.data.data.fileName
+                        obj.fileId = res.data.data.fileId
+                        this.fileIdsArr.push(obj)
                         if (this.progressPercent === 100) {
                             // this.progressFlag = false
                             // this.progressPercent = 0
