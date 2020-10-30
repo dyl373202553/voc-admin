@@ -37,9 +37,16 @@ export default class App extends Vue {
         return UserModule.user.userCode
     }
 
-    private clientHeight = "auto"
+    private clientHeight: any = (document.documentElement.clientHeight - 69).toString() + "px"
+
     protected mounted() {
-        this.clientHeight = (document.documentElement.clientHeight - 69).toString() + "px"
+        window.onresize = () => {
+            return (() => {
+                this.clientHeight = (document.documentElement.clientHeight - 69).toString() + "px"
+            })()
+        }
+
+        // this.clientHeight = (document.documentElement.clientHeight - 69).toString() + "px"
     }
 
     private created() {
