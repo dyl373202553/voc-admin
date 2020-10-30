@@ -8,13 +8,16 @@
                 <el-aside>
                     <AppNav />
                 </el-aside>
-                <el-main>
+                <el-main class="dmain"  :style="{height: this.clientHeight}">
                     <AppMain />
                 </el-main>
             </el-container>
             <el-footer>
                 <NavFooter />
             </el-footer>
+            <template>
+                <el-backtop target=".dmain" :bottom="150"></el-backtop>
+            </template>
         </el-container>
     </div>
 </template>
@@ -34,8 +37,13 @@ export default class App extends Vue {
         return UserModule.user.userCode
     }
 
+    private clientHeight = "auto"
+    protected mounted() {
+        this.clientHeight = (document.documentElement.clientHeight - 69).toString() + "px"
+    }
+
     private created() {
-        UserModule.initialize({ userName: "0804553E53D2E5BA", passWord: "D928596B9DB10AA6EBF55A9F5B339667" })
+        UserModule.initialize({ userName: "512005DB8B513C626C7FBB1940F2B8A2", passWord: "D928596B9DB10AA6EBF55A9F5B339667" })
     }
 }
 </script>
