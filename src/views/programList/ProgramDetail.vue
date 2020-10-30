@@ -89,12 +89,20 @@
                 <div class="bottom-main" v-if="this.allList.summaryEntity">
                     <div class="main-title">直播小结</div>
                     <p>{{this.summary.content}}</p>
-                    <div class="downloadClick" @click="haveDownload('zhibo')">
+
+                    <div class="downloadClick" v-for="(item, key) in summaryFileId" :key="key">
+                        <a @click="haveDownload(item.fileId)" >
+                            <i class="el-icon-paperclip" />
+                            <span class="info-title">{{item.fileName}}</span>
+                        </a>
+                    </div>
+
+                    <!-- <div class="downloadClick" @click="haveDownload('zhibo')">
                         <template v-if="this.summary.fileIds">
                             <i class="el-icon-paperclip"/>
                             <span class="info-title" v-if="this.summary.fileIds">{{this.summary.fileIds}}</span>
                         </template>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -146,6 +154,8 @@ export default class ProgramDetail extends Vue {
         content: " ",
         fileIds: " "
     }
+
+    private summaryFileId = []
 
     private superviseMeasuresList= []
 
@@ -213,6 +223,7 @@ export default class ProgramDetail extends Vue {
                             content: res.data.summaryEntity.content,
                             fileIds: res.data.summaryEntity.fileIds
                         }
+                        this.summaryFileId = JSON.parse(res.data.summaryEntity.fileIds)
                     }
                     if (res.data.superviseItemEntity.superviseMeasuresList) {
                         this.superviseMeasuresList = res.data.superviseItemEntity.superviseMeasuresList
@@ -244,9 +255,7 @@ export default class ProgramDetail extends Vue {
 
     // 文件下载
     private haveDownload(fileId: any) {
-        if (fileId === "zhibo") {
-            handleDownload(this.summary.fileIds)
-        } else if (fileId === "jiemu") {
+        if (fileId === "jiemu") {
             handleDownload(this.programForm.fileIds)
         } else {
             handleDownload(fileId)

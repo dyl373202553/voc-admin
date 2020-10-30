@@ -47,12 +47,14 @@
                 </el-upload>
                 <el-progress v-show="false" class="dprogress" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
 
-            <div class="downloadClick" @click="haveDownload" v-if="$route.params.summaryName ==='管理小结'">
-                <template v-if="this.fileIds">
-                    <i class="el-icon-paperclip" />
-                    <span class="info-title">{{this.fileIds}}</span>
-                </template>
-            </div>
+            <template v-if="$route.params.summaryName ==='管理小结' && this.fileIds">
+                <div class="downloadClick" v-for="(item, key) in fileId" :key="key">
+                    <a @click="haveDownload(item.fileId)" >
+                        <i class="el-icon-paperclip" />
+                        <span class="info-title">{{item.fileName}}</span>
+                    </a>
+                </div>
+            </template>
         </div>
         <div class="bottom dbtn">
           <el-button round @click="back">返回</el-button>
@@ -91,6 +93,7 @@ export default class ProgramSummary extends Vue {
     private deptnamesData = "";
     private dataList: any = []
     private fileIds = "";
+    private fileId: any = {}
     private dialogTableVisible = false
 
     // 上传附件
@@ -109,6 +112,7 @@ export default class ProgramSummary extends Vue {
     ]
 
     private fileIdsArr: any = []
+
     private fileIdsName = ""
 
     private defaultProps={
@@ -123,29 +127,6 @@ export default class ProgramSummary extends Vue {
         this.getSummaryDetail()
     }
 
-    private fileName(fileIds: string) {
-        if (fileIds) {
-            // const params = {
-            //     fileId: fileIds
-            // }
-            // getFileId(params).then((res) => {
-            //     if (res) {
-            //         if (res.code === 0) {
-            //             const arr = []
-            //             for (let i = 0; i < res.data.length; i++) {
-            //                 arr.push(res.data[i].fileName)
-            //             }
-            //             this.fileIdsName = arr.toString()
-            //         } else {
-            //             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-            //         }
-            //     }
-            // })
-            return "附件"
-        }
-        return "--"
-    }
-
     private getSummaryDetail() {
         getProgramDetail({ id: this.$route.params.id }).then((res) => {
             if (res) {
@@ -157,6 +138,7 @@ export default class ProgramSummary extends Vue {
                         this.summaryId = res.data.summaryEntity.id
                         this.deptnamesData = res.data.summaryEntity.deptnames
                         this.fileIds = res.data.summaryEntity.fileIds
+                        this.fileId = JSON.parse(this.fileIds)
                     }
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
@@ -166,6 +148,7 @@ export default class ProgramSummary extends Vue {
     }
 
     private onSubmit() {
+        this.fileIds = JSON.stringify(this.fileIdsArr)
         const params = {
             programId: this.$route.params.id, // 节目ID
             content: this.summaryContent, // 小结内容
@@ -224,8 +207,8 @@ export default class ProgramSummary extends Vue {
     }
 
     // 文件下载
-    private haveDownload() {
-        handleDownload(this.fileIds)
+    private haveDownload(fileIds: string) {
+        handleDownload(fileIds)
     }
 
     // 上传附件
@@ -289,8 +272,10 @@ export default class ProgramSummary extends Vue {
                 if (res) {
                     if (res.data.code < 200) {
                         // 上传成功
-                        this.fileIdsArr.push(res.data.data.fileId)
-                        this.fileIds = this.fileIdsArr.toString()
+                        const obj: any = {}
+                        obj.fileName = res.data.data.fileName
+                        obj.fileId = res.data.data.fileId
+                        this.fileIdsArr.push(obj)
                         if (this.progressPercent === 100) {
                             // this.progressFlag = false
                             // this.progressPercent = 0
