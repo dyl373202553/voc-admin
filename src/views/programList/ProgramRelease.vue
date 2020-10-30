@@ -222,6 +222,7 @@ export default class ProgramRelease extends Vue {
 
     // 提交
     private onSubmit() {
+        this.dataForm.fileIds = JSON.stringify(this.fileIdsArr)
         this.dataForm.type = this.programType
         this.dataForm.content = this.dataContent
         this.dataForm.content = encodeURIComponent(this.dataForm.content)
@@ -302,8 +303,10 @@ export default class ProgramRelease extends Vue {
                     if (res.data.code < 200) {
                         // 上传成功
                         // this.dataForm.fileIds = res.data.data.fileId
-                        this.fileIdsArr.push(res.data.data.fileId)
-                        this.dataForm.fileIds = this.fileIdsArr.toString()
+                        const obj: any = {}
+                        obj.fileName = res.data.data.fileName
+                        obj.fileId = res.data.data.fileId
+                        this.fileIdsArr.push(obj)
                         if (this.progressPercent === 100) {
                             // this.progressFlag = false
                             // this.progressPercent = 0

@@ -32,9 +32,11 @@
                 </div>
                 <div v-if="this.programForm.fileIds">
                     <div class="main-title">附件</div>
-                    <div class="downloadClick" @click="haveDownload('jiemu')">
-                        <i class="el-icon-paperclip" />
-                        <span class="info-title"> {{this.programForm.fileIds}}</span>
+                    <div class="downloadClick" v-for="(item, key) in programFormFileId" :key="key">
+                        <a @click="haveDownload(item.fileId)" >
+                            <i class="el-icon-paperclip" />
+                            <span class="info-title">{{item.fileName}}</span>
+                        </a>
                     </div>
                 </div>
                 <div class="main-btn">
@@ -156,6 +158,7 @@ export default class ProgramDetail extends Vue {
     }
 
     private summaryFileId = []
+    private programFormFileId= []
 
     private superviseMeasuresList= []
 
@@ -208,6 +211,7 @@ export default class ProgramDetail extends Vue {
                         likeShow: res.data.ownerPraiseStatus,
                         fileIds: res.data.fileIds
                     }
+                    this.programFormFileId = JSON.parse(res.data.fileIds)
                     if (res.data.superviseItemEntity) {
                         this.supervise = {
                             content: res.data.superviseItemEntity.content,
@@ -255,11 +259,7 @@ export default class ProgramDetail extends Vue {
 
     // 文件下载
     private haveDownload(fileId: any) {
-        if (fileId === "jiemu") {
-            handleDownload(this.programForm.fileIds)
-        } else {
-            handleDownload(fileId)
-        }
+        handleDownload(fileId)
     }
 }
 </script>
