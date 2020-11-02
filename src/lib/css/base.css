@@ -245,6 +245,7 @@ table {
 }
 .downloadClick {
   cursor: pointer;
+  margin-top: 15px;
 }
 .dsummary .dsummary-mian .main-info .info-right .downloadClick .info-title:hover {
   color: #4484F6;

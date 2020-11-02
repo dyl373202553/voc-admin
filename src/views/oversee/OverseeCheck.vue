@@ -86,8 +86,8 @@
             <el-button v-show="$route.params.status !== '3'" round @click="back">返回</el-button>
             <el-button v-show="$route.params.status === '1' || $route.params.status === '2'" type="primary" round
             :disabled="!(this.deptnamesDataList && this.programOversee)" @click="submit">提交</el-button>
-            <el-button v-show="$route.params.status === '3'" type="danger" round  @click="allBack">一键退回</el-button>
-            <el-button v-show="$route.params.status === '3'" type="primary" round @click="allMakesureComfire">一键确认</el-button>
+            <el-button v-show="$route.params.status === '3' && this.superviseMeasuresList.lenght>1" type="danger" round  @click="allBack">一键退回</el-button>
+            <el-button v-show="$route.params.status === '3' && this.superviseMeasuresList.lenght>1" type="primary" round @click="allMakesureComfire">一键确认</el-button>
             <el-button v-show="$route.params.status === '3' || $route.params.status === '2'" type="danger" plain round @click="overseeCancel">撤销督办</el-button>
             </div>
         </div>
