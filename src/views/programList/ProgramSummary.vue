@@ -32,21 +32,17 @@
         <div class="dsummary-mian">
             <div class="dsummary-title">上传附件</div>
                 <el-upload
-                    class="upload-image"
-                    accept=".jpg,.png,.jpeg,.doc,.docx,.ppt,.pptx,.pdf,.xls,.txt,.zip,.rar"
-                    :action="' '"
-                    :auto-upload="false"
-                    :file-list="fileDataList"
+                    class="dupload"
+                    ref="upload"
+                    :auto-upload="true"
+                    :action="''"
                     :on-remove="handleRemove"
-                    :on-change="handleAvatarChangeIcon"
-                    ref="uploadicon"
+                    :http-request="uploadRequest"
+                    multiple
                     >
                     <el-button size="small" type="primary" plain>选择文件</el-button>
-                    <el-button size="small" slot="tip" type="danger" plain @click="upbtn" v-if="showFile" style="margin-left:15px;">附件上传</el-button>
                     <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
                 </el-upload>
-                <el-progress v-show="false" class="dprogress" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
-
             <template v-if="$route.params.summaryName ==='管理小结' && this.fileIds">
                 <div class="downloadClick" v-for="(item, key) in fileId" :key="key">
                     <a @click="haveDownload(item.fileId)" >
@@ -97,22 +93,9 @@ export default class ProgramSummary extends Vue {
     private dialogTableVisible = false
 
     // 上传附件
-    private dfile: any
-    private showFile = false
-    private fileDataList: any = []
-    private progressPercent = 0
-    private progressFlag = false
-    private progressStatus: any = null
-    private customColors = [
-        { color: "#f56c6c", percentage: 20 },
-        { color: "#e6a23c", percentage: 40 },
-        { color: "#5cb87a", percentage: 60 },
-        { color: "#1989fa", percentage: 80 },
-        { color: "#6f7ad3", percentage: 100 }
-    ]
+    private bigSize = 0
 
     private fileIdsArr: any = []
-
     private fileIdsName = ""
 
     private defaultProps={
@@ -213,92 +196,59 @@ export default class ProgramSummary extends Vue {
         handleDownload(fileIds)
     }
 
+    private back() {
+        this.$router.back()
+    }
+
     // 上传附件
-    private handleAvatarChangeIcon(file: any, fileList: any) {
-        let isLt10M = 0
-        if (fileList.length > 0) {
-            this.showFile = true
-        }
-        for (let i = 0; i < fileList.length; i++) {
-            isLt10M += fileList[i].size
-        }
-        const isLt = isLt10M / 1024 / 1024 <= 10
+
+    private handleRemove(file: any) {
+        this.bigSize -= file.size
+    }
+
+    private uploadRequest(option: any) {
+        this.bigSize += option.file.size
+        const isLt = this.bigSize / 1024 / 1024 <= 10
         if (!isLt) {
-            if (fileList.length > 1) {
-                this.fileDataList = []
-                for (let i = 0; i < fileList.length - 1; i++) {
-                    this.fileDataList.push(fileList[i])
-                }
-            }
+            option.onError()
             this.$message.error("上传附件大小不能超过 10M! 请重新选择")
             return false
         } else if (isLt) {
-            this.fileDataList.push(file)
-            this.dfile = file
-            this.progressFlag = true
-        }
-    }
-
-    private handleRemove(file: any, fileList: any) {
-        this.fileDataList.splice(this.fileDataList.findIndex((item: any) => item.uid === file.uid), 1)
-        if (fileList.length === 0) {
-            this.showFile = false
-            this.progressFlag = false
-        }
-    }
-
-    private upbtn() {
-        for (let i = 0; i < this.fileDataList.length; i++) {
             const formData = new FormData()
-            formData.append("file", this.fileDataList[i].raw) // 传参改为formData格式
-            this.postFile(formData)
-        }
-    }
-
-    private postFile(params: any) {
-        axios({
-            method: "post",
-            url: `/vue-potal/portal-file/api/file/provider/uploadfile?busSource=moa-customervoice`, // 请求后端的url
-            headers: {
-                "Content-Type": "multipart/form-data", // 设置headers
-                Authorization: `Bearer ${this.userToken}`
-            },
-            data: params,
-            onUploadProgress: progressEvent => {
-                // progressEvent.loaded:已上传文件大小
-                // progressEvent.total:被上传文件的总大小
-                this.progressPercent = (progressEvent.loaded / progressEvent.total * 100)
-            }
-        })
-            .then((res: any) => {
-                if (res) {
-                    if (res.data.code < 200) {
-                        // 上传成功
-                        const obj: any = {}
-                        obj.fileName = res.data.data.fileName
-                        obj.fileId = res.data.data.fileId
-                        this.fileIdsArr.push(obj)
-                        if (this.progressPercent === 100) {
-                            // this.progressFlag = false
-                            // this.progressPercent = 0
-                            this.progressStatus = "success"
-                            this.showFile = true
-                        }
-                        MessageBox.alert(`上传成功`, "成功", { type: "success" })
-                    }
-                } else {
-                    // 上传失败
-                    this.progressStatus = "exception"
+            formData.append("file", option.file) // 传参改为formData格式
+            axios({
+                method: "post",
+                url: `/vue-potal/portal-file/api/file/provider/uploadfile?busSource=moa-customervoice`, // 请求后端的url
+                headers: {
+                    "Content-Type": "multipart/form-data", // 设置headers
+                    Authorization: `Bearer ${this.userToken}`
+                },
+                data: formData,
+                onUploadProgress: (progressEvent) => {
+                    const num = progressEvent.loaded / progressEvent.total * 100 | 0 // 百分比
+                    option.onProgress({ percent: num }) // 进度条
                 }
             })
-            .catch(() => {
-                // 请求失败
-                this.progressStatus = "warning"
-            })
-    }
-
-    private back() {
-        this.$router.back()
+                .then((res: any) => {
+                    if (res) {
+                        if (res.data.code < 200) {
+                            // 上传成功
+                            const obj: any = {}
+                            obj.fileName = res.data.data.fileName
+                            obj.fileId = res.data.data.fileId
+                            this.fileIdsArr.push(obj)
+                            option.onSuccess() // 上传成功(打钩的小图标)
+                        }
+                    } else {
+                        // 上传失败
+                        option.onError("上传失败")
+                    }
+                })
+                .catch(() => {
+                    // 请求失败
+                    option.onError("上传失败")
+                })
+        }
     }
 }
 </script>
