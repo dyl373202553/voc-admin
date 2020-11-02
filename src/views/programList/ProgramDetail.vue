@@ -118,7 +118,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getProgramDetail, getFileId } from "@/api/programList/programList"
+import { getProgramDetail } from "@/api/programList/programList"
 import { postLikeAdd } from "@/api/programList/message"
 import { MessageBox } from "element-ui"
 import MessageBoard from "./MessageBoard.vue"
@@ -167,33 +167,6 @@ export default class ProgramDetail extends Vue {
 
     protected mounted() {
         this.load()
-    }
-
-    private fileName(fileId: string) {
-        if (fileId) {
-            // 测试附件详情
-            const params = {
-                fileId: fileId
-            }
-            getFileId(params).then((res) => {
-                if (res) {
-                    if (res.code === 0) {
-                        const arr = []
-                        for (let i = 0; i < res.data.length; i++) {
-                            arr.push(res.data[i].fileName)
-                        }
-                        this.fileIdsName = arr.toString()
-                    } else {
-                        MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                    }
-                } else {
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                }
-            })
-            return this.fileIdsName
-        } else {
-            MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-        }
     }
 
     private load() {

@@ -47,7 +47,9 @@
                     <router-link v-if="scope.row.type !=='3'" :to="{name:'OverseeAnswer', params: {status:scope.row.link, id:scope.row.id , businessId:scope.row.businessId}, query: { id: scope.row.id } }">
                       <el-button type="text" size="small">处理</el-button>
                     </router-link>
-                    <el-button v-if="scope.row.type ==='3'" type="text" size="small">已阅</el-button>
+                    <router-link v-if="scope.row.type ==='3'" :to="{name:'ProgramDetail', params: {promId:scope.row.businessId}, query: { id: scope.row.businessId } }">
+                      <el-button type="text" size="small">已阅</el-button>
+                    </router-link>
                   </template>
                 </el-table-column>
               </el-table>
