@@ -44,11 +44,7 @@
             ]">
           <el-input v-model="dataForm.title" :disabled="programType!=='3'" :maxlength="50"/>
         </el-form-item>
-        <el-form-item label="节目简介"
-            prop="summary"
-            :rules="[
-            { required: true, message: '节目简介不能为空'}
-            ]">
+        <el-form-item label="节目简介">
           <el-input
             v-model="dataForm.summary"
             type="textarea"
@@ -81,7 +77,7 @@
         <el-form-item class="text-center dbtn">
           <el-button v-show="$route.params.summaryName" plain round @click="back">返回</el-button>
           <el-button type="primary" round @click="onSubmit"
-          :disabled="!(dataForm.liveId && dataForm.title && dataForm.summary && dataContent)"
+          :disabled="!(dataForm.liveId && dataForm.title && dataContent)"
           >提交</el-button>
         </el-form-item>
       </el-form>
