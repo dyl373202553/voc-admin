@@ -1,6 +1,6 @@
 <template>
   <div class="footer">
-    <span>vipjr.com 版权所有(2008-2017) 翻印必究 | 隐私保护 安全条款 服务条款 | 京ICP备11004351号</span>
+    <span></span>
   </div>
 </template>
 
