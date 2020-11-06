@@ -9,7 +9,7 @@ import "element-ui/lib/theme-chalk/index.css"
 import "@/lib/js/leakRepair"
 import "@/lib/css/base.css"
 import "@/lib/css/index.scss"
-import { deepCopy, getSlotData, getImg, day, getFileIcon } from "@/lib/js/unitls"
+import { deepCopy, getSlotData, getImg, day, getFileIcon, getNameByCode } from "@/lib/js/unitls"
 
 Vue.config.productionTip = false
 Vue.use(ElementUI)
@@ -18,6 +18,7 @@ Vue.prototype.$getImg = getImg
 Vue.prototype.$getSlotData = getSlotData
 Vue.prototype.$day = day
 Vue.prototype.$getFileIcon = getFileIcon
+Vue.prototype.$getNameByCode = getNameByCode
 
 new Vue({
     router,
