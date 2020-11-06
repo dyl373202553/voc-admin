@@ -5,11 +5,12 @@ const { voc, file } = ConfigModule
 /* 节目列表 */
 // 节目列表 - 近期节目数据获取（同首页）
 export const getRecentProgram = (
-    { pageNum, pageSize }: {
+    { pageNum, pageSize, queryParam }: {
         pageNum: number;
         pageSize: number;
+        queryParam?: string;
     }
-) => { return getData(`${voc}/khzsProgram/validData`, { pageNum, pageSize }) }
+) => { return getData(`${voc}/khzsProgram/validData`, { pageNum, pageSize, queryParam }) }
 
 // 节目列表 - 详情前(验证节目有效性) 1：未开始，2：进行中，3：已结束
 export const getEffectiveness = (
