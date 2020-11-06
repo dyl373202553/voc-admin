@@ -12,9 +12,9 @@
                     <AppMain />
                 </el-main>
             </el-container>
-            <el-footer>
+            <!-- <el-footer>
                 <NavFooter />
-            </el-footer>
+            </el-footer> -->
             <template>
                 <el-backtop target=".dmain" :bottom="150"></el-backtop>
             </template>
@@ -37,12 +37,12 @@ export default class App extends Vue {
         return UserModule.user.userCode
     }
 
-    private clientHeight: any = (document.documentElement.clientHeight - 69).toString() + "px"
+    private clientHeight: any = (document.documentElement.clientHeight - 19).toString() + "px"
 
     protected mounted() {
         window.onresize = () => {
             return (() => {
-                this.clientHeight = (document.documentElement.clientHeight - 69).toString() + "px"
+                this.clientHeight = (document.documentElement.clientHeight - 19).toString() + "px"
             })()
         }
 
@@ -50,7 +50,7 @@ export default class App extends Vue {
     }
 
     private created() {
-        UserModule.initialize({ userName: "512005DB8B513C626C7FBB1940F2B8A2", passWord: "D928596B9DB10AA6EBF55A9F5B339667" })
+        UserModule.initialize({ userName: "512005DB8B513C626C7FBB1940F2B8A2", passWord: "01EA97683EA65D95C4801D492F03088E" })
     }
 }
 </script>
