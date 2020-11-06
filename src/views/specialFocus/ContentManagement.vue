@@ -15,7 +15,7 @@
                     <span v-show="scope.row.viewStatus === '3'" class="dblue">{{ scope.row.viewStatus }} 已下线</span>
                     <span v-show="scope.row.viewStatus === '2'" class="dgreen">{{ scope.row.viewStatus }} 进行中</span> -->
                    <span :class="{'dred':scope.row.viewStatus === '1' ,'dblue':scope.row.viewStatus === '3','dgreen':scope.row.viewStatus === '2'}">
-                        {{getStatusName(scope.row.viewStatus)}}
+                        {{$getNameByCode(status, scope.row.viewStatus)}}
                     </span>
                 </div>
             </el-table-column>
@@ -132,15 +132,6 @@ export default class ContentManagement extends Vue {
     //         }
     //     })
     // }
-
-    private getStatusName(cellValue: any) {
-        if (cellValue) {
-            return this.status.find((item: { value: any }) => {
-                return item.value === cellValue
-            })?.label
-        }
-        return "--"
-    }
 }
 </script>
 <style lang="scss" scoped>

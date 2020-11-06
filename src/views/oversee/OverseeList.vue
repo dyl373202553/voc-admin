@@ -11,14 +11,14 @@
           <el-table-column prop="status" label="督办状态" align="center">
             <template slot-scope="scope">
                 <span :class="(scope.row.status !== '0' && scope.row.status !== '4')? 'dred':'dblue'">
-                {{getStatusName(scope.row.status)}}
+                {{$getNameByCode(status, scope.row.status)}}
                 </span>
             </template>
           </el-table-column>
           <el-table-column label="操作" align="center">
             <div slot-scope="scope">
               <router-link v-if=" scope.row.status!=='4'" :to="{name:'OverseeCheck',
-                params: {status:scope.row.status, statusName:getStatusName(scope.row.status), programId:scope.row.programId, id:scope.row.id},
+                params: {status:scope.row.status, statusName:$getNameByCode(status, scope.row.status), programId:scope.row.programId, id:scope.row.id},
                 query: { id: scope.row.id } }">
                 <el-button type="text" size="small">查看</el-button>
               </router-link>
@@ -88,16 +88,6 @@ export default class OverseeList extends Vue {
     private handleCurrentChange(val: number) {
         this.dataPage.pageNum = val
         this.load()
-    }
-
-    // 获取督办状态name
-    private getStatusName(cellValue: any) {
-        if (cellValue) {
-            return this.status.find((item: { value: any }) => {
-                return item.value === cellValue
-            })?.label
-        }
-        return "--"
     }
 }
 </script>

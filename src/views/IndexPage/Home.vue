@@ -41,7 +41,7 @@
                                         <span class="title-left">督办状态：</span>
                                         <span
                                         :class="(value.superviseItemEntity.status !== '0' && value.superviseItemEntity.status !== '4')? 'dred':'dblue'">
-                                            {{getStatusName(value.superviseItemEntity.status)}}
+                                            {{$getNameByCode(status,value.superviseItemEntity.status)}}
                                         </span>
                                     </div>
                                     <div>
@@ -49,7 +49,7 @@
                                         <span class="title-left">节目状态：</span>
                                         <el-button type="primary" size="small "
                                             :class="'border-none dbtn statusBtn'+value.status" round
-                                        >{{getStatusProName(value.status)}}</el-button>
+                                        >{{$getNameByCode(programStatus,value.status)}}</el-button>
                                     </div>
                                 </div>
                             </div>
@@ -125,46 +125,6 @@ export default class Home extends Vue {
         }).catch(() => {
             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
         })
-        // // 特别关注数据获取
-        // getFocusList().then((res) => {
-        //     if (res) {
-        //         if (res.code < 200) {
-        //             this.slideshowList = res.data
-        //         } else {
-        //             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-        //         }
-        //     }
-        // })
-        // // 节目数据获取
-        // getProgramList(this.dataPage).then((res) => {
-        //     if (res) {
-        //         if (res.code < 200) {
-        //             this.recentList = res.data
-        //         } else {
-        //             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-        //         }
-        //     }
-        // })
-    }
-
-    // 获取督办状态name
-    private getStatusName(cellValue: any) {
-        if (cellValue) {
-            return this.status.find((item: { value: any }) => {
-                return item.value === cellValue
-            })?.label
-        }
-        return "--"
-    }
-
-    // 获取节目状态name
-    private getStatusProName(cellValue: any) {
-        if (cellValue) {
-            return this.programStatus.find((item: { value: any }) => {
-                return item.value === cellValue
-            })?.label
-        }
-        return "--"
     }
 
     // 检查节目有效性 1：未开始，2：进行中，3：已结束

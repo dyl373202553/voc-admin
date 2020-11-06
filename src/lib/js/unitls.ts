@@ -79,3 +79,12 @@ export const handleDownload = (fildIds: any) => {
     const oh = document.body
     oh.appendChild(link).click()
 }
+
+export const getNameByCode = (list: any[], cellValue?: any) => {
+    if (cellValue) {
+        return list.find((item: { value: any }) => {
+            return item.value === cellValue
+        })?.label
+    }
+    return "- -"
+}
