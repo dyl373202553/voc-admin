@@ -227,7 +227,7 @@ export default class OverseeAnswer extends Vue {
 
     // 撤销
     private overseeCancel() {
-        postOverseeCancel({ id: this.$route.params.id }).then((res) => {
+        postOverseeCancel({ id: this.$route.params.businessId }).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.$router.push({
