@@ -94,13 +94,13 @@ export default class AppNav extends Vue {
     }
 
     private totalAll = 0
-    protected mounted() {
-        this.load()
-    }
+    // protected mounted() {
+    //     this.load()
+    // }
 
-    private load() {
-        UserModule.getTodo()
-    }
+    // private load() {
+    //     UserModule.getTodo()
+    // }
 }
 </script>
 <style lang="less" scoped>

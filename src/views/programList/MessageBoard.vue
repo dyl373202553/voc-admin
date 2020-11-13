@@ -45,7 +45,7 @@
                                             <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
                                             <span>{{item.praiseNum}}</span>
                                         </span>
-                                        <span class="optionBtn" v-if="userrole===0"><img src="@/assets/images/icon_del.png"/></span>
+                                        <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(item.id)"><img src="@/assets/images/icon_del.png"/></span>
                                     </div>
                                     <div class="text-right margin-top10 info" v-if="indexKey=== item.id">
                                         <template>
@@ -84,7 +84,7 @@
                                                             <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
                                                             <span>{{itemChild.praiseNum}}</span>
                                                         </span>
-                                                        <span class="optionBtn"><img src="@/assets/images/icon_del.png"/></span>
+                                                        <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(item.id)"><img src="@/assets/images/icon_del.png"/></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -206,7 +206,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { postMessageAll, postMessageAdd, postLikeAdd, postMessageSetWonderful } from "@/api/programList/message"
+import { postMessageAll, postMessageAdd, postLikeAdd, postMessageSetWonderful, getMessageDelete } from "@/api/programList/message"
 import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
 @Component
@@ -325,11 +325,6 @@ export default class MessageBoard extends Vue {
         })
     }
 
-    // // 留言回复
-    // private getIndexBack(key: number) {
-    //     this.indexKey = key
-    // }
-
     // 设置精彩留言
     private setWonderful(id: string, type: string) {
         const params = {
@@ -346,6 +341,22 @@ export default class MessageBoard extends Vue {
                 }
             } else {
                 MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            }
+        })
+    }
+
+    // 删除留言
+    private liuyanDel(id: string) {
+        const params = {
+            id: id
+        }
+        getMessageDelete(params).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    this.load()
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
             }
         })
     }

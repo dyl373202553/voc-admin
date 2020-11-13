@@ -33,6 +33,13 @@ export const postMessageAll = (
     }
 ) => { return getData(`${voc}/khzsComment/data`, { programId, pageNum, pageSize, wonderfulFlag, targetId }) }
 
+// 删除留言
+export const getMessageDelete = (
+    { id }: {
+        id: string;
+    }
+) => { return postData(`${voc}/khzsComment/delete`, { id }) }
+
 // 获取下级留言
 export const postMessageBack = (
     { pageNum, targetId }: {
