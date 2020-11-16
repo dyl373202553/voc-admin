@@ -45,7 +45,7 @@
                 </el-upload>
             <template v-if="$route.params.summaryName ==='管理小结' && this.fileIds">
                 <div class="downloadClick" v-for="(item, key) in fileId" :key="key">
-                    <a @click="haveDownload(item.fileId)" >
+                    <a @click="$handleDownload(item.fileId)" >
                         <i class="el-icon-paperclip" />
                         <span class="info-title">{{item.fileName}}</span>
                     </a>
@@ -72,11 +72,11 @@ import TreeDepartment from "@/components/addressBook/TreeDepartment.vue"
 import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
-import { handleDownload } from "@/lib/js/unitls"
 @Component({
     components: { TreeDepartment }
 })
 export default class ProgramSummary extends Vue {
+    $handleDownload: Function|undefined
     get userToken() {
         // @ts-ignore
         return UserModule.token
@@ -189,11 +189,6 @@ export default class ProgramSummary extends Vue {
             brr.push(obj.deptName)
         }
         this.deptnamesData = brr.toString()
-    }
-
-    // 文件下载
-    private haveDownload(fileIds: string) {
-        handleDownload(fileIds)
     }
 
     private back() {

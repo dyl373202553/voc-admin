@@ -62,7 +62,7 @@
                         </div> -->
                         <template v-if="item.fileIds">
                             <div class="downloadClick" v-for="(itemChild, key) in JSON.parse(item.fileIds)" :key="key">
-                                <a @click="haveDownload(itemChild.fileIds)">
+                                <a @click="$handleDownload(itemChild.fileId)" >
                                     <i class="el-icon-paperclip"/>
                                     <span class="info-title">{{itemChild.fileName}}</span>
                                 </a>
@@ -142,9 +142,9 @@ import { postOverseeMeasure, getOverseeDetail, postOverseeCancel, postOverseeBac
 import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
-import { handleDownload } from "@/lib/js/unitls"
 @Component
 export default class OverseeAnswer extends Vue {
+    $handleDownload: Function|undefined
     get userToken() {
         // @ts-ignore
         return UserModule.token
@@ -348,11 +348,6 @@ export default class OverseeAnswer extends Vue {
                     option.onError("上传失败")
                 })
         }
-    }
-
-    // 文件下载
-    private haveDownload(fileIds: any) {
-        handleDownload(fileIds)
     }
 }
 </script>

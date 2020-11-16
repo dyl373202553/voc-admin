@@ -33,7 +33,7 @@
                 <div v-if="this.programForm.fileIds">
                     <div class="main-title">附件</div>
                     <div class="downloadClick" v-for="(item, key) in programFormFileId" :key="key">
-                        <a @click="haveDownload(item.fileId)" >
+                        <a @click="$handleDownload(item.fileId)" >
                             <i class="el-icon-paperclip" />
                             <span class="info-title">{{item.fileName}}</span>
                         </a>
@@ -81,9 +81,9 @@
 
                             <template v-if="item.fileIds">
                                 <div class="downloadClick" v-for="(itemChild, key) in JSON.parse(item.fileIds)" :key="key">
-                                    <a @click="haveDownload(itemChild.fileIds)">
+                                    <a @click="$handleDownload(itemChild.fileId)">
                                         <i class="el-icon-paperclip"/>
-                                        <span class="info-title">{{itemChild.fileName}}</span>
+                                        <span class="info-title">{{itemChild}}</span>
                                     </a>
                                 </div>
                             </template>
@@ -96,18 +96,11 @@
                     <p>{{this.summary.content}}</p>
 
                     <div class="downloadClick" v-for="(item, key) in summaryFileId" :key="key">
-                        <a @click="haveDownload(item.fileId)" >
+                        <a @click="$handleDownload(item.fileId)" >
                             <i class="el-icon-paperclip" />
                             <span class="info-title">{{item.fileName}}</span>
                         </a>
                     </div>
-
-                    <!-- <div class="downloadClick" @click="haveDownload('zhibo')">
-                        <template v-if="this.summary.fileIds">
-                            <i class="el-icon-paperclip"/>
-                            <span class="info-title" v-if="this.summary.fileIds">{{this.summary.fileIds}}</span>
-                        </template>
-                    </div> -->
                 </div>
             </div>
         </div>
@@ -122,11 +115,11 @@ import { getProgramDetail } from "@/api/programList/programList"
 import { postLikeAdd } from "@/api/programList/message"
 import { MessageBox } from "element-ui"
 import MessageBoard from "./MessageBoard.vue"
-import { handleDownload } from "@/lib/js/unitls"
 @Component({
     components: { MessageBoard }
 })
 export default class ProgramDetail extends Vue {
+    $handleDownload: Function|undefined
     // ownerPraiseStatus个人点赞状态（0：是，1：否） ,-->
     private allList = []
     private programForm = {
@@ -235,11 +228,6 @@ export default class ProgramDetail extends Vue {
                 MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
             }
         })
-    }
-
-    // 文件下载
-    private haveDownload(fileId: any) {
-        handleDownload(fileId)
     }
 }
 </script>

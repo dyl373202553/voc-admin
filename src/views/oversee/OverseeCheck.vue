@@ -55,7 +55,7 @@
                             <p>{{item.content}}</p>
                             <template v-if="item.fileIds">
                                 <div class="downloadClick" v-for="(itemChild, key) in JSON.parse(item.fileIds)" :key="key">
-                                    <a @click="haveDownload(itemChild.fileIds)">
+                                    <a @click="$handleDownload(itemChild.fileId)" >
                                         <i class="el-icon-paperclip"/>
                                         <span class="info-title">{{itemChild.fileName}}</span>
                                     </a>
@@ -124,11 +124,11 @@ import TreeDepartment from "@/components/addressBook/TreeDepartment.vue"
 import { postOverseeAdd, getOverseeDetail, postOverseeCancel, postOverseeMakesure, postOverseeBack } from "@/api/oversee/oversee"
 import { UserModule } from "@/store/module/user"
 import { MessageBox } from "element-ui"
-import { handleDownload } from "@/lib/js/unitls"
 @Component({
     components: { TreeDepartment }
 })
 export default class OverseeCheck extends Vue {
+    $handleDownload: Function|undefined
     private programOversee = "";
     private deptnamesData = "";
     private deptnamesDataList = "";
@@ -289,11 +289,6 @@ export default class OverseeCheck extends Vue {
             arr.push(this.superviseMeasuresList[i].id)
         }
         this.returnOpinionId = arr.toString()
-    }
-
-    // 文件下载
-    private haveDownload(fileIds: any) {
-        handleDownload(fileIds)
     }
 
     private back() {
