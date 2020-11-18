@@ -42,7 +42,7 @@
                                             <span>{{item.praiseNum}}</span>
                                         </span>
                                         <span class="optionBtn" v-if="item.ownerPraiseStatus ==='0'" >
-                                            <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
+                                            <img src="@/assets/images/icon_like_blue.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
                                             <span>{{item.praiseNum}}</span>
                                         </span>
                                         <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(item.id)"><img src="@/assets/images/icon_del.png"/></span>
@@ -81,7 +81,7 @@
                                                             <span>{{itemChild.praiseNum}}</span>
                                                         </span>
                                                         <span class="optionBtn" v-if="itemChild.ownerPraiseStatus ==='0'" >
-                                                            <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
+                                                            <img src="@/assets/images/icon_like_blue.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
                                                             <span>{{itemChild.praiseNum}}</span>
                                                         </span>
                                                         <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(item.id)"><img src="@/assets/images/icon_del.png"/></span>
@@ -138,7 +138,7 @@
                                             <span>{{item.praiseNum}}</span>
                                         </span>
                                         <span class="optionBtn" v-if="item.ownerPraiseStatus ==='0'" >
-                                            <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
+                                            <img src="@/assets/images/icon_like_blue.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
                                             <span>{{item.praiseNum}}</span>
                                         </span>
                                         <span class="optionBtn" v-if="userrole===0"><img src="@/assets/images/icon_del.png"/></span>
@@ -177,7 +177,7 @@
                                                             <span>{{itemChild.praiseNum}}</span>
                                                         </span>
                                                         <span class="optionBtn" v-if="itemChild.ownerPraiseStatus ==='0'" >
-                                                            <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
+                                                            <img src="@/assets/images/icon_like_blue.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
                                                             <span>{{itemChild.praiseNum}}</span>
                                                         </span>
                                                         <span class="optionBtn"><img src="@/assets/images/icon_del.png"/></span>
@@ -315,7 +315,6 @@ export default class MessageBoard extends Vue {
             if (res) {
                 if (res.code < 200) {
                     this.load()
-                    MessageBox.alert("点赞成功", "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`操作失败`, "失败", { type: "error" })
                 }
