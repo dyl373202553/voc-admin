@@ -1,89 +1,89 @@
 <template v-if="this.userrole==='0'">
-  <div class="app-container">
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span class="header-title">创建直播间</span>
-      </div>
-      <el-form ref="dataForm" :model="dataForm" label-width="150px"  v-loading="loading" element-loading-background="rgba(255, 255, 255, 0.5)">
-        <el-form-item label="节目时间" class="dimportant-before">
-            <el-col :span="11">
-                <el-form-item
-                    prop="startTime"
-                    :rules="[
-                    { required: true, message: '节目时间开始时间不能为空'}
-                    ]">
-                    <el-date-picker v-model="dataForm.startTime" :picker-options="expireTimeOption" type="datetime" placeholder="请选择开始时间" style="width: 100%;" @change="checkDate" />
+    <div class="app-container">
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span class="header-title">创建直播间</span>
+            </div>
+            <el-form ref="dataForm" :model="dataForm" label-width="150px"  v-loading="loading" element-loading-background="rgba(255, 255, 255, 0.5)">
+                <el-form-item label="节目时间" class="dimportant-before">
+                    <el-col :span="11">
+                        <el-form-item
+                            prop="startTime"
+                            :rules="[
+                            { required: true, message: '节目时间开始时间不能为空'}
+                            ]">
+                            <el-date-picker v-model="dataForm.startTime" :picker-options="expireTimeOption" type="datetime" placeholder="请选择开始时间" style="width: 100%;" @change="checkDate" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="2" class="line">至</el-col>
+                    <el-col :span="11">
+                        <el-form-item prop="endTime"
+                            :rules="[
+                            { required: true, message: '节目时间结束时间不能为空'}
+                            ]">
+                            <el-date-picker v-model="dataForm.endTime" :picker-options="expireTimeOption" type="datetime" placeholder="请选择结束时间" style="width: 100%;" @change="checkDate" />
+                        </el-form-item>
+                    </el-col>
                 </el-form-item>
-            </el-col>
-            <el-col :span="2" class="line">至</el-col>
-            <el-col :span="11">
-                <el-form-item prop="endTime"
-                    :rules="[
-                    { required: true, message: '节目时间结束时间不能为空'}
-                    ]">
-                    <el-date-picker v-model="dataForm.endTime" :picker-options="expireTimeOption" type="datetime" placeholder="请选择结束时间" style="width: 100%;" @change="checkDate" />
-                </el-form-item>
-            </el-col>
-        </el-form-item>
 
-        <el-form-item label="节目封面"
-            prop="logoUrl"
-            :rules="[
-            { required: true, message: '节目封面不能为空'}
-            ]" style="positon:relative;"
-            :class="(showFile === 1)? 'imgList': ''">
-           <el-upload
-                class="upload-image"
-                :action="' '"
-                list-type="picture"
-                accept=".jpg,.png,.jpeg"
-                :auto-upload="false"
-                :on-exceed="handleExceed"
-                :on-remove="handleRemove"
-                :limit="1"
-                :file-list="fileDataList"
-                :on-change="handleAvatarChangeIcon"
-                ref="uploadicon"
-                >
-                <el-button size="small" type="primary" plain v-show="showFile === 0">选择文件</el-button>
-                <el-button size="small" class="dprogress-btn" slot="tip" type="danger" plain @click="upbtn" v-show="showFile === 1">上传封面</el-button>
-                <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于2M的文件，支持格式jpg/png/jpeg;</span>
-            </el-upload>
-            <el-progress v-show="progressFlag" :stroke-width="9" type="line" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
-        </el-form-item>
-        <el-form-item label="节目主讲人"
-            prop="speakersData"
-            :rules="[
-            { required: true, message: '节目主讲人不能为空'}
-            ]">
-          <el-input v-model="speakersData" placeholder="请选择主讲人"  @focus="dialogTableVisible = true" suffix-icon="el-icon-s-home" />
-        </el-form-item>
-        <el-form-item label="本期嘉宾">
-          <el-input v-model="dataForm.guests"  placeholder="请填写内容" />
-        </el-form-item>
-        <el-form-item label="是否发布督办举措">
-          <el-radio-group v-model="dataForm.superviseFlag">
-            <el-radio v-model="dataForm.superviseFlag" label="0">是</el-radio>
-            <el-radio v-model="dataForm.superviseFlag" label="1">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="是否发布节目小结">
-          <el-radio-group v-model="dataForm.summaryFlag">
-            <el-radio v-model="dataForm.summaryFlag" label="0">是</el-radio>
-            <el-radio v-model="dataForm.summaryFlag" label="1">否</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item class="text-center dbtn">
-          <el-button type="primary" round @click="onSubmit"
-            :disabled="!(dataForm.speakersData && dataForm.startTime && dataForm.endTime && this.dataForm.logoUrl)"
-          >提交</el-button>
-        </el-form-item>
-      </el-form>
-    </el-card>
-    <el-dialog title="通讯录" :visible.sync="dialogTableVisible" >
-        <TreePerson @func="getMsgFormSon" />
-    </el-dialog>
-  </div>
+                <el-form-item label="节目封面"
+                    prop="logoUrl"
+                    :rules="[
+                    { required: true, message: '节目封面不能为空'}
+                    ]" style="positon:relative;"
+                    :class="(showFile === 1)? 'imgList': ''">
+                <el-upload
+                        class="upload-image"
+                        :action="' '"
+                        list-type="picture"
+                        accept=".jpg,.png,.jpeg"
+                        :auto-upload="false"
+                        :on-exceed="handleExceed"
+                        :on-remove="handleRemove"
+                        :limit="1"
+                        :file-list="fileDataList"
+                        :on-change="handleAvatarChangeIcon"
+                        ref="uploadicon"
+                        >
+                        <el-button size="small" type="primary" plain v-show="showFile === 0">选择文件</el-button>
+                        <el-button size="small" class="dprogress-btn" slot="tip" type="danger" plain @click="upbtn" v-show="showFile === 1">上传封面</el-button>
+                        <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于2M的文件，支持格式jpg/png/jpeg;</span>
+                    </el-upload>
+                    <el-progress v-show="progressFlag" :stroke-width="9" type="line" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
+                </el-form-item>
+                <el-form-item label="节目主讲人"
+                    prop="speakersData"
+                    :rules="[
+                    { required: true, message: '节目主讲人不能为空'}
+                    ]">
+                <el-input v-model="speakersData" placeholder="请选择主讲人"  @focus="dialogTableVisible = true" suffix-icon="el-icon-s-home" />
+                </el-form-item>
+                <el-form-item label="本期嘉宾">
+                <el-input v-model="dataForm.guests"  placeholder="请填写内容" />
+                </el-form-item>
+                <el-form-item label="是否发布督办举措">
+                <el-radio-group v-model="dataForm.superviseFlag">
+                    <el-radio v-model="dataForm.superviseFlag" label="0">是</el-radio>
+                    <el-radio v-model="dataForm.superviseFlag" label="1">否</el-radio>
+                </el-radio-group>
+                </el-form-item>
+                <el-form-item label="是否发布节目小结">
+                <el-radio-group v-model="dataForm.summaryFlag">
+                    <el-radio v-model="dataForm.summaryFlag" label="0">是</el-radio>
+                    <el-radio v-model="dataForm.summaryFlag" label="1">否</el-radio>
+                </el-radio-group>
+                </el-form-item>
+                <el-form-item class="text-center dbtn">
+                <el-button type="primary" round @click="onSubmit"
+                    :disabled="!(dataForm.speakersData && dataForm.startTime && dataForm.endTime && this.dataForm.logoUrl)"
+                >提交</el-button>
+                </el-form-item>
+            </el-form>
+        </el-card>
+        <el-dialog title="通讯录" :visible.sync="dialogTableVisible" >
+            <TreePerson @func="getMsgFormSon" />
+        </el-dialog>
+    </div>
 </template>
 
 <script lang="ts">

@@ -1,42 +1,42 @@
 <template v-if="this.userrole==='0'">
-  <div class="app-container dtable-text">
-    <el-card class="box-card">
-      <div slot="header" class="clearfix">
-        <span class="header-title">督办管理</span>
-      </div>
-      <div class="dtable">
-        <el-table :data="tableData" element-loading-text="Loading" stripe>
-          <el-table-column prop="programTitle" label="直播名称" align="center"/>
-          <el-table-column prop="deptnames" label="责任部门" align="center"  />
-          <el-table-column prop="status" label="督办状态" align="center">
-            <template slot-scope="scope">
-                <span :class="(scope.row.status !== '0' && scope.row.status !== '4')? 'dred':'dblue'">
-                {{$getNameByCode(status, scope.row.status)}}
-                </span>
-            </template>
-          </el-table-column>
-          <el-table-column label="操作" align="center">
-            <div slot-scope="scope">
-              <router-link v-if=" scope.row.status!=='4'" :to="{name:'OverseeCheck',
-                params: {status:scope.row.status, statusName:$getNameByCode(status, scope.row.status), programId:scope.row.programId, id:scope.row.id},
-                query: { id: scope.row.id } }">
-                <el-button type="text" size="small">查看</el-button>
-              </router-link>
+    <div class="app-container dtable-text">
+        <el-card class="box-card">
+            <div slot="header" class="clearfix">
+                <span class="header-title">督办管理</span>
             </div>
-          </el-table-column>
-        </el-table>
-        <div class="dpagination">
-            <el-pagination
-            background
-            @current-change="handleCurrentChange"
-            :current-page="dataPage.pageNum"
-            :total="dataTotal"
-            layout="prev, pager, next, jumper">
-            </el-pagination>
-        </div>
-      </div>
-    </el-card>
-  </div>
+            <div class="dtable">
+                <el-table :data="tableData" element-loading-text="Loading" stripe>
+                <el-table-column prop="programTitle" label="直播名称" align="center"/>
+                <el-table-column prop="deptnames" label="责任部门" align="center"  />
+                <el-table-column prop="status" label="督办状态" align="center">
+                    <template slot-scope="scope">
+                        <span :class="(scope.row.status !== '0' && scope.row.status !== '4')? 'dred':'dblue'">
+                        {{$getNameByCode(status, scope.row.status)}}
+                        </span>
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" align="center">
+                    <div slot-scope="scope">
+                    <router-link v-if=" scope.row.status!=='4'" :to="{name:'OverseeCheck',
+                        params: {status:scope.row.status, statusName:$getNameByCode(status, scope.row.status), programId:scope.row.programId, id:scope.row.id},
+                        query: { id: scope.row.id } }">
+                        <el-button type="text" size="small">查看</el-button>
+                    </router-link>
+                    </div>
+                </el-table-column>
+                </el-table>
+                <div class="dpagination">
+                    <el-pagination
+                        background
+                        @current-change="handleCurrentChange"
+                        :current-page="dataPage.pageNum"
+                        :total="dataTotal"
+                        layout="prev, pager, next, jumper">
+                    </el-pagination>
+                </div>
+            </div>
+        </el-card>
+    </div>
 </template>
 
 <script lang="ts">

@@ -41,8 +41,10 @@
                 </div>
                 <div class="main-btn">
                     <!-- ownerPraiseStatus个人点赞状态（0：是，1：否） , -->
-                    <el-button v-if="this.programForm.likeShow === '1'" type="primary" round @click="getLikeShow">点赞支持一下</el-button>
-                    <el-button v-if="this.programForm.likeShow === '0'" type="info" round>您已点过赞啦</el-button>
+                    <el-button v-if="this.programForm.likeShow === '1'" type="primary" round @click="getLikeShow">
+                        <img src="@/assets/images/icon_like_white.png"/>点赞支持一下</el-button>
+                    <el-button v-if="this.programForm.likeShow === '0'" type="info" round>
+                        <img src="@/assets/images/icon_like_done.png"/>您已点过赞啦</el-button>
                 </div>
             </div>
             <div class="bottom">
@@ -221,6 +223,7 @@ export default class ProgramDetail extends Vue {
             if (res) {
                 if (res.code < 200) {
                     this.programForm.likeShow = "0"
+                    this.programForm.praiseNum = this.programForm.praiseNum + 1
                 } else {
                     MessageBox.alert(`操作失败`, "失败", { type: "error" })
                 }

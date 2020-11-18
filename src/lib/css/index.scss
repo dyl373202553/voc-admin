@@ -151,6 +151,10 @@ body {
       .el-button {
         padding: 15px 40px;
         border-radius: 40px;
+        img {
+          margin-right: 12px;
+          vertical-align: bottom;
+        }
       }
       .el-button--info {
         background: #EEEEEE;
