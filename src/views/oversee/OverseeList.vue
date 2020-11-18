@@ -17,11 +17,12 @@
                 </el-table-column>
                 <el-table-column label="操作" align="center">
                     <div slot-scope="scope">
-                    <router-link v-if=" scope.row.status!=='4'" :to="{name:'OverseeCheck',
-                        params: {status:scope.row.status, statusName:$getNameByCode(status, scope.row.status), programId:scope.row.programId, id:scope.row.id},
-                        query: { id: scope.row.id } }">
-                        <el-button type="text" size="small">查看</el-button>
-                    </router-link>
+                        <!-- <router-link v-if=" scope.row.status!=='4'" :to="{name:'OverseeCheck',
+                            params: {status:scope.row.status, statusName:$getNameByCode(status, scope.row.status), programId:scope.row.programId, id:scope.row.id},
+                            query: { id: scope.row.id } }">
+                            <el-button type="text" size="small">查看</el-button>
+                        </router-link> -->
+                        <el-button type="text" size="small" @click="checkValid( scope.row.status, $getNameByCode(status, scope.row.status), scope.row.programId, scope.row.id)">查看</el-button>
                     </div>
                 </el-table-column>
                 </el-table>
@@ -36,18 +37,32 @@
                 </div>
             </div>
         </el-card>
+        <el-dialog
+            custom-class="info-dialog"
+            title="提示"
+            :visible.sync="centerDialogVisible"
+            width="25%"
+            center
+            >
+            <span>本期节目暂未开始，请稍后再试</span>
+            <span slot="footer" class="dialog-footer dbtn">
+                <el-button type="primary" round @click="centerDialogVisible = false">确 定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
 import { getOverseeList } from "@/api/oversee/oversee"
+import { getEffectiveness } from "@/api/programList/programList"
 import { getViewStatus } from "@/api/dict"
 import { MessageBox } from "element-ui"
 import Cookies from "js-cookie"
 @Component
 
 export default class OverseeList extends Vue {
+    private centerDialogVisible=false
     private tableData = []
     private dataTotal = 0
     private dataPage = {
@@ -88,6 +103,27 @@ export default class OverseeList extends Vue {
     private handleCurrentChange(val: number) {
         this.dataPage.pageNum = val
         this.load()
+    }
+
+    // 检查节目有效性 1：未开始，2：进行中，3：已结束
+    private checkValid(status: string, statusName: string, programId: string, id: string) {
+        getEffectiveness({ id: programId }).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    if (res.data !== "1") {
+                        this.$router.push({
+                            name: "OverseeCheck",
+                            params: { status: status, statusName: statusName, programId: programId, id: id },
+                            query: { id: id }
+                        })
+                    } else {
+                        this.centerDialogVisible = true
+                    }
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
     }
 }
 </script>

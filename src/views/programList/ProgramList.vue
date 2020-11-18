@@ -41,7 +41,7 @@
             </el-table-column>
             <el-table-column label="操作" align="center">
                 <div slot-scope="scope">
-                <el-button type="text" size="small" @click="checkValid(scope.row.id, scope.row.liveEntity.startTime, scope.row.liveId)">进入</el-button>
+                    <el-button type="text" size="small" @click="checkValid(scope.row.id, scope.row.liveEntity.startTime, scope.row.liveId)">进入</el-button>
                 </div>
             </el-table-column>
             </el-table>
@@ -64,7 +64,7 @@
             width="25%"
             center
             >
-            <span>本期节目暂无开始。开始时间：{{this.programTime}}，请稍后再试</span>
+            <span>本期节目暂未开始。开始时间：{{this.programTime}}，请稍后再试</span>
             <span slot="footer" class="dialog-footer dbtn">
                 <el-button type="primary" round @click="centerDialogVisible = false">确 定</el-button>
             </span>
