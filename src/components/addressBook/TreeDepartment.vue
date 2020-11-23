@@ -167,8 +167,7 @@ export default class SpecialFocus extends Vue {
         overflow-x: hidden;
     }
     .ReleaseBox {
-        position: absolute;
-        right: 20px;
+        text-align: right;
     }
     .ReleaseBox .el-button {
         padding: 10px 30px;
