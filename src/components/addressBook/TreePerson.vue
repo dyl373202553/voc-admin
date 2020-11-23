@@ -2,7 +2,27 @@
     <div class="app-container">
         <el-row :gutter="20">
             <el-col :span="12">
-                <div class="treePerson">
+                <div class="treePersonSearch" style="margin-bottom:10px;">
+                    <el-input v-model="searchPerson" placeholder="请输入搜索关键字" @change="searchChange"/>
+                </div>
+                <div class="searchPerson" v-if="searchPerson">
+                    <div  class="nameShow" >
+                        <div class="selecteContain">
+                            <el-checkbox-group v-model="checkList" @change="perChange">
+                                <ul>
+                                    <li v-for="pr in searchList" class="nameShow" :key="pr.userCode">
+                                        <div class="userleft">
+                                            <div>
+                                                <el-checkbox :label="pr" :key="pr.userCode">{{pr.parentOrgName}}--{{pr.userName}}</el-checkbox>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </el-checkbox-group>
+                        </div>
+                    </div>
+                </div>
+                <div class="treePerson" v-else>
                     <el-tree  highlight-current show-checkbox :props="defaultProps" ref="tree1" node-key="id" :default-checked-keys="selIdArr"
                         lazy :load="loadAll"  @check-change="handleChangeClick" @node-click="handleNodeClick"
                         @node-expand="handleExpandClick">
@@ -15,10 +35,20 @@
                         <div>已选择联系人</div>
                     </div>
                     <div class="selecteContain">
-                        <div v-for="pr in selInfoArr" class="nameShow" :key="pr.userCode">
-                            {{pr.userName}}
-                            <el-button icon="el-icon-delete" class="dbtn-del" @click="delPerson(pr.userCode)"/>
-                        </div>
+                        <ul>
+                            <li v-for="pr in selInfoArr" class="nameShow" :key="pr.userCode">
+                                <div class="uerImg">
+                                   <el-avatar :src="`/resources/bluepage/a/`+pr.userCode+`_A.jpg`"/>
+                                </div>
+                                <div class="userleft">
+                                    <div>
+                                        <p> {{pr.userName}}</p>
+                                        <p> {{pr.parentOrgName}}</p>
+                                    </div>
+                                    <el-button icon="el-icon-delete" class="dbtn-del" @click="delPerson(pr.userCode)"/>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </el-col>
@@ -32,7 +62,7 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getOrgFirst, getUserListBySecondCode, getOrgTree } from "@/api/addressBook"
+import { getOrgFirst, getUserListBySecondCode, getOrgTree, bluePageSearch } from "@/api/addressBook"
 @Component
 export default class SpecialFocus extends Vue {
     private defaultProps={
@@ -45,6 +75,10 @@ export default class SpecialFocus extends Vue {
     private selInfoArr: any= [] // 选中id的数组
 
     private departmentArr: any= []
+
+    private searchPerson = "" // 搜索人员
+    private searchList = []
+    private checkList = []
 
     // 通讯录获取
     private loadAll(node: any, resolve: (arg0: {}[]) => any) {
@@ -238,11 +272,25 @@ export default class SpecialFocus extends Vue {
         }
     }
 
+    private searchChange() {
+        const params = {
+            pageNum: 1,
+            pageSize: 10,
+            searchValue: this.searchPerson
+        }
+        bluePageSearch(params).then(res => {
+            this.searchList = res.data
+        })
+    }
+
     private clearAll() {
         this.selIdArr = []
         this.selInfoArr = []
-        // @ts-ignore
-        this.$refs.tree1.setCheckedKeys(this.selIdArr)
+        this.checkList = []
+        if (!this.searchPerson) {
+            // @ts-ignore
+            this.$refs.tree1.setCheckedKeys(this.selIdArr)
+        }
     }
 
     private delPerson(id: any) {
@@ -252,8 +300,11 @@ export default class SpecialFocus extends Vue {
                 this.removeAaary(this.selInfoArr, this.selInfoArr[i])
             }
         }
-        // @ts-ignore
-        this.$refs.tree1.setChecked(id, false)
+
+        if (!this.searchPerson) {
+            // @ts-ignore
+            this.$refs.tree1.setChecked(id, false)
+        }
     }
 
     private removeAaary(_arr: any[], _obj: any) { // 删除数组中指定元素
@@ -274,6 +325,10 @@ export default class SpecialFocus extends Vue {
         }
     }
 
+    private perChange() {
+        this.selInfoArr = this.checkList
+    }
+
     private sureSelect() {
         this.$emit("func", this.selInfoArr)
     }
@@ -287,14 +342,17 @@ export default class SpecialFocus extends Vue {
         overflow-x: hidden;
     }
     .ReleaseBox {
-        position: absolute;
-        right: 20px;
+        text-align: right;
+        margin-top: 15px;
     }
     .ReleaseBox .el-button {
         padding: 10px 30px;
     }
     .dbtn-del {
         border: none;
+        background: #f56c6c;
+        color: #fff;
+        margin-top: 15px;
     }
     .dbtn-del:hover {
         background: transparent;
