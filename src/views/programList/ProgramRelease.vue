@@ -175,7 +175,7 @@ export default class ProgramRelease extends Vue {
     // 切换节目类型
     private typeChange() {
         if (this.programType === "3") {
-            this.dataForm.title = ""
+            this.dataForm.title = "自定义"
         } else {
             this.getName()
         }
