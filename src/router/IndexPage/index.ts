@@ -3,14 +3,22 @@ export default [
         path: "/",
         name: "home",
         role: "all",
-        meta: { title: "首页" },
+        meta: {
+            title: "首页",
+            deepth: 1,
+            keepAlive: true // 需要被缓存},
+        },
         component: (resolve: any) => require(["@/views/IndexPage/Home.vue"], resolve)
     },
     {
         path: "/toDolist",
         name: "ToDoList",
         role: "all",
-        meta: { title: "待办工作" },
+        meta: {
+            title: "待办工作",
+            deepth: 1,
+            keepAlive: true // 需要被缓存
+        },
         component: () => import("@/views/toDoList/ToDoList.vue")
     },
     {
@@ -20,7 +28,9 @@ export default [
         role: "all",
         component: () => import("@/views/toDoList/OverseeAnswer.vue"),
         meta: {
-            title: "督办回答"
+            title: "督办回答",
+            deepth: 2,
+            keepAlive: true // 需要被缓存
         }
     },
     {
@@ -44,7 +54,9 @@ export default [
                 role: "all",
                 component: () => import("@/views/programList/ProgramList.vue"),
                 meta: {
-                    title: "节目列表"
+                    title: "节目列表",
+                    deepth: 1,
+                    keepAlive: true // 需要被缓存
                 }
             },
             {
@@ -53,7 +65,9 @@ export default [
                 hidden: true,
                 component: () => import("@/views/programList/ProgramDetail.vue"),
                 meta: {
-                    title: "节目详情"
+                    title: "节目详情",
+                    deepth: 2,
+                    keepAlive: true // 需要被缓存
                 }
             },
             {
@@ -71,7 +85,9 @@ export default [
                 role: "all",
                 component: () => import("@/views/programList/ProgramRelease.vue"),
                 meta: {
-                    title: "发布节目"
+                    title: "发布节目",
+                    deepth: 2,
+                    keepAlive: true // 需要被缓存
                 }
             },
             {
@@ -80,7 +96,9 @@ export default [
                 role: "all",
                 component: () => import("@/views/programList/programManage/ProgramManage.vue"),
                 meta: {
-                    title: "节目管理"
+                    title: "节目管理",
+                    deepth: 1,
+                    keepAlive: true // 需要被缓存
                 }
             }
         ]
@@ -97,7 +115,9 @@ export default [
                 role: 0,
                 component: () => import("@/views/specialFocus/SpecialFocus.vue"),
                 meta: {
-                    title: "发布特别关注"
+                    title: "发布特别关注",
+                    deepth: 2,
+                    keepAlive: true // 需要被缓存
                 }
             },
             {
@@ -106,7 +126,9 @@ export default [
                 role: 0,
                 component: () => import("@/views/specialFocus/ContentManagement.vue"),
                 meta: {
-                    title: "内容管理"
+                    title: "内容管理",
+                    deepth: 1,
+                    keepAlive: true // 需要被缓存
                 }
             }
         ]
@@ -117,7 +139,9 @@ export default [
         role: 0,
         component: () => import("@/views/oversee/OverseeList.vue"),
         meta: {
-            title: "督办管理"
+            title: "督办管理",
+            deepth: 1,
+            keepAlive: true // 需要被缓存
         }
     },
     {
@@ -126,7 +150,9 @@ export default [
         hidden: true,
         component: () => import("@/views/oversee/OverseeCheck.vue"),
         meta: {
-            title: "督办查看"
+            title: "督办查看",
+            deepth: 2,
+            keepAlive: true // 需要被缓存
         }
     },
     {

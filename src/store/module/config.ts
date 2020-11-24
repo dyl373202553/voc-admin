@@ -1,6 +1,7 @@
 import {
     VuexModule,
     Module,
+    Mutation,
     getModule
 } from "vuex-module-decorators"
 
@@ -13,6 +14,7 @@ export interface ConfigState {
     api: string;
     dict: string;
     voc: string;
+    include: any;
 }
 
 @Module({ dynamic: true, store, name: "config" })
@@ -27,6 +29,12 @@ class Config extends VuexModule implements ConfigState {
     public dictValue = `configure-system/api/server/dict/getDictValueList`
     public addressBook = `app-address/api/bluepage` // 通讯录
     public file = `portal-file/api/file/provider/fileUpload` // 查询fileId详情
+    public include = []
+
+    @Mutation
+    public setInclude(arr: any) {
+        this.include = arr
+    }
 }
 
 export const ConfigModule = getModule(Config)
