@@ -70,7 +70,7 @@
                       </div>
                     </el-table-column>
                     <el-table-column prop="commentDept2Name" label="部门" align="center" />
-                    <el-table-column prop="commentDept2Num" label="点赞数" align="center">
+                    <el-table-column prop="commentDept2Num" label="留言数" align="center">
                       <div slot-scope="scope">
                         共<span class="dred total">{{ scope.row.commentDept2Num }}</span>次
                       </div>
@@ -90,7 +90,7 @@
                     </el-table-column>
                     <el-table-column prop="commentUserName" label="姓名" align="center" />
                     <el-table-column prop="commentUserDeptName" label="部门" align="center" />
-                    <el-table-column prop="commentUserNum" label="点赞数" align="center">
+                    <el-table-column prop="commentUserNum" label="留言数" align="center">
                       <div slot-scope="scope">
                         共<span class="dred total">{{ scope.row.commentUserNum }}</span>次
                       </div>

@@ -39,10 +39,11 @@
                                     <div><span class="title-left">本期主播：</span><span>{{ value.liveEntity.speakers }}</span></div>
                                     <div>
                                         <span class="title-left">督办状态：</span>
-                                        <span
+                                        <span v-if="value.superviseItemEntity"
                                         :class="(value.superviseItemEntity.status !== '0' && value.superviseItemEntity.status !== '4')? 'dred':'dblue'">
                                             {{$getNameByCode(status,value.superviseItemEntity.status)}}
                                         </span>
+                                        <span v-else class="dred">无</span>
                                     </div>
                                     <div>
                                         <!-- 节目状态（1：未开始，2：进行中，3：已结束） -->
