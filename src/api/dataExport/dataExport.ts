@@ -29,4 +29,4 @@ export const postExportAll = (
     { ids }: {
         ids: string; // 节目ID，多个以','相隔 非必填
     }
-) => { return getData(`${voc}/khzsProgram/exportAll`, { ids }) }
+) => { return getData(`customervoice-downexecl/exportAll`, { ids }) }

@@ -261,7 +261,7 @@ export default class OverseeCheck extends Vue {
     private exportAll() {
         axios({
             method: "get",
-            url: `/vue-potal/moa-customervoice/api/modules/khzsProgram/exportAll?ids=${this.selectList}`,
+            url: `customervoice-downexecl/exportAll?ids=${this.selectList}`,
             responseType: "blob", // arraybuffer
             headers: {
                 // "Content-Type": "application/json;charset=UTF-8",
