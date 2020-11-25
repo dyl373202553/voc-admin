@@ -46,7 +46,7 @@
                         ref="uploadicon"
                         >
                         <el-button size="small" type="primary" plain v-show="showFile === 0">选择文件</el-button>
-                        <el-button size="small" class="dprogress-btn" slot="tip" type="danger" plain @click="upbtn" v-show="showFile === 1">上传封面</el-button>
+                        <el-button size="small" class="dprogress-btn" slot="tip" type="danger" plain @click="upbtn" v-show="showFile === 1">上传</el-button>
                         <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于2M的文件，支持格式jpg/png/jpeg;</span>
                     </el-upload>
                     <el-progress v-show="progressFlag" :stroke-width="9" type="line" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
