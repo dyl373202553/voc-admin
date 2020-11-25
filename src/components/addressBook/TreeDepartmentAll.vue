@@ -31,10 +31,22 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator"
+import { Component, Vue, Prop, Watch } from "vue-property-decorator"
 import { getOrgFirst, getOrgTree } from "@/api/addressBook"
 @Component
 export default class SpecialFocus extends Vue {
+    @Prop() public readonly restFloat!: any;
+
+    @Watch("restFloat")
+    protected Dept3CodeChange(val: any) {
+        if (val) {
+            this.selIdArr = []
+            this.selInfoArr = []
+            // @ts-ignore
+            this.$refs.tree1.setCheckedKeys(this.selIdArr)
+        }
+    }
+
     private defaultProps={
         children: "children",
         label: "label",

@@ -109,16 +109,16 @@
       </div>
     </el-card>
     <el-dialog title="二级部门" :visible.sync="dialogTableVisible">
-       <TreeDepartment @funcs="getMsgFormSon" />
+       <TreeDepartment @funcs="getMsgFormSon" :restFloat="restDept2Code"/>
     </el-dialog>
     <el-dialog title="三级部门" :visible.sync="dialogTreeVisible">
-       <TreeDepartmentAll @funcs="getMsgFormSonThird" />
+       <TreeDepartmentAll @funcs="getMsgFormSonThird"  :restFloat="restDept3Code"/>
     </el-dialog>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator"
+import { Component, Vue, Watch } from "vue-property-decorator"
 import { getDataExportList } from "@/api/dataExport/dataExport"
 import { MessageBox } from "element-ui"
 import { day, handleDownloadFile } from "@/lib/js/unitls"
@@ -132,6 +132,27 @@ import Cookies from "js-cookie"
     components: { TreeDepartment, TreeDepartmentAll }
 })
 export default class OverseeCheck extends Vue {
+    @Watch("dataForm.dept3Code")
+    protected Dept3CodeChange(val: string) {
+        if (val) {
+            this.restDept3Code = false
+        } else {
+            this.restDept3Code = true
+        }
+    }
+
+    @Watch("dataForm.dept2Code")
+    protected Dept2CodeChange(val: string) {
+        if (val) {
+            this.restDept2Code = false
+        } else {
+            this.restDept2Code = true
+        }
+    }
+
+    private restDept3Code = true
+    private restDept2Code = true
+
     private dataForm = {
         pageNum: 1,
         pageSize: 10,
@@ -144,7 +165,6 @@ export default class OverseeCheck extends Vue {
     private tableData = []
     private dataTotal = 0
     private selectList = ""
-
     private dialogTableVisible = false
     private dialogTreeVisible = false
 
