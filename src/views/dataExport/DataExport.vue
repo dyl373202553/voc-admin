@@ -22,12 +22,12 @@
             </el-col>
             <el-col :span="12">
               <el-form-item label="二级部门选择">
-                <el-input v-model="dataForm.dept2Code" suffix-icon="el-icon-s-home" @focus="dialogTableVisible = true"/>
+                <el-input v-model="dept2Name" suffix-icon="el-icon-s-home" @focus="dialogTableVisible = true"/>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="三级部门选择">
-                <el-input v-model="dataForm.dept3Code" suffix-icon="el-icon-s-home" @focus="dialogTreeVisible = true"/>
+                <el-input v-model="dept3Name" suffix-icon="el-icon-s-home" @focus="dialogTreeVisible = true"/>
               </el-form-item>
             </el-col>
             <el-col :span="24">
@@ -152,6 +152,8 @@ export default class OverseeCheck extends Vue {
 
     private restDept3Code = true
     private restDept2Code = true
+    private dept2Name = ""
+    private dept3Name = ""
 
     private dataForm = {
         pageNum: 1,
@@ -279,11 +281,14 @@ export default class OverseeCheck extends Vue {
 
     // 获取通讯录传回的数据 -责任部门返回数据
     private getMsgFormSon(data: string|any[]) {
+        console.log(data)
         this.dialogTableVisible = false
         if (data.length !== 0) {
             this.dataForm.dept2Code = data[0].id
+            this.dept2Name = data[0].label
         } else {
             this.dataForm.dept2Code = ""
+            this.dept2Name = ""
         }
     }
 
@@ -292,8 +297,10 @@ export default class OverseeCheck extends Vue {
         this.dialogTreeVisible = false
         if (data.length !== 0) {
             this.dataForm.dept3Code = data[0].id
+            this.dept3Name = data[0].label
         } else {
             this.dataForm.dept3Code = ""
+            this.dept3Name = ""
         }
     }
 

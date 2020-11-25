@@ -71,7 +71,7 @@ export default class SpecialFocus extends Vue {
                     for (let i = 0; i < leaderList.length; i++) {
                         const obj: any = {}
                         obj.isLeaf = false // 是否有下级
-                        obj.disabled = false // 是否可以选择
+                        obj.disabled = true // 是否可以选择
                         obj.id = leaderList[i].orgCode
                         obj.label = leaderList[i].orgName
                         obj.level = leaderList[i].level
