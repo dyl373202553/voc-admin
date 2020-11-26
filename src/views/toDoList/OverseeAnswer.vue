@@ -40,48 +40,74 @@
                     placeholder="请输入举措内容"
                 />
                 <div class="main-info" v-for="(item, key) in superviseMeasuresList" :key="key">
-                    <div class="info-left">
-                        <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
-                    </div>
-                    <div class="info-right">
-                        <div>
-                            <span class="info-title">{{item.userName}}</span>
-                            <span>{{item.deptName}}</span>
-                            <span class="backStatus backStatus-sure " v-if="item.status === '0'">已确认</span>
-                            <span class="backStatus" v-if="item.status === '1'">未确认</span>
-                            <span class="backStatus backStatus-back" v-if="item.status === '2'">已退回</span>
+                    <template v-if="userrole===0">
+                        <div class="info-left">
+                            <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
                         </div>
-                        <p>{{item.content}}</p>
-                        <!-- <div class="dsummary-mian" style="padding-left:0;">
-                            <el-input v-if="item.returnOpinion"
-                                v-model="item.content"
-                                type="textarea"
-                                :rows="3"
-                                placeholder="请输入举措内容"
-                            />
-                        </div> -->
-                        <template v-if="item.fileIds">
-                            <div class="downloadClick" v-for="(itemChild, key) in JSON.parse(item.fileIds)" :key="key">
-                                <a @click="$handleDownload(itemChild.fileId)" >
-                                    <i class="el-icon-paperclip"/>
-                                    <span class="info-title">{{itemChild.fileName}}</span>
-                                </a>
+                        <div class="info-right">
+                            <div>
+                                <span class="info-title">{{item.userName}}</span>
+                                <span>{{item.deptName}}</span>
+                                <span class="backStatus backStatus-sure " v-if="item.status === '0'">已确认</span>
+                                <span class="backStatus" v-if="item.status === '1'">未确认</span>
+                                <span class="backStatus backStatus-back" v-if="item.status === '2'">已退回</span>
                             </div>
-                        </template>
-
-                        <div class="dsummary-mian delete-back" v-if="item.returnOpinion">
-                            <div class="dsummary-title">退回意见</div>
-                            <template>
-                                <div class="main-info">
-                                    {{item.returnOpinion}}
+                            <p>{{item.content}}</p>
+                            <template v-if="item.fileIds">
+                                <div class="downloadClick" v-for="(itemChild, key) in JSON.parse(item.fileIds)" :key="key">
+                                    <a @click="$handleDownload(itemChild.fileId)" >
+                                        <i class="el-icon-paperclip"/>
+                                        <span class="info-title">{{itemChild.fileName}}</span>
+                                    </a>
                                 </div>
                             </template>
+
+                            <div class="dsummary-mian delete-back" v-if="item.returnOpinion">
+                                <div class="dsummary-title">退回意见</div>
+                                <template>
+                                    <div class="main-info">
+                                        {{item.returnOpinion}}
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="text-center dbtn" v-if="item.status === '1' ">
+                                <el-button type="danger" round plain @click="backDialog(item.id)">退回</el-button>
+                                <el-button type="primary" round @click="overseeMakesureComfire(item.id)">确认</el-button>
+                            </div>
                         </div>
-                        <div class="text-center dbtn" v-if="item.status === '1' ">
-                            <el-button type="danger" round plain @click="backDialog(item.id)">退回</el-button>
-                            <el-button type="primary" round @click="overseeMakesureComfire(item.id)">确认</el-button>
+                    </template>
+                    <template v-if="userrole!==0 && userCode===item.userCode">
+                        <div class="info-left">
+                            <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
                         </div>
-                    </div>
+                        <div class="info-right">
+                            <div>
+                                <span class="info-title">{{item.userName}}</span>
+                                <span>{{item.deptName}}</span>
+                                <span class="backStatus backStatus-sure " v-if="item.status === '0'">已确认</span>
+                                <span class="backStatus" v-if="item.status === '1'">未确认</span>
+                                <span class="backStatus backStatus-back" v-if="item.status === '2'">已退回</span>
+                            </div>
+                            <p>{{item.content}}</p>
+                            <template v-if="item.fileIds">
+                                <div class="downloadClick" v-for="(itemChild, key) in JSON.parse(item.fileIds)" :key="key">
+                                    <a @click="$handleDownload(itemChild.fileId)" >
+                                        <i class="el-icon-paperclip"/>
+                                        <span class="info-title">{{itemChild.fileName}}</span>
+                                    </a>
+                                </div>
+                            </template>
+
+                            <div class="dsummary-mian delete-back" v-if="item.returnOpinion">
+                                <div class="dsummary-title">退回意见</div>
+                                <template>
+                                    <div class="main-info">
+                                        {{item.returnOpinion}}
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
                 </div>
             </div>
             <div v-show="this.$route.params.status === '2' || this.$route.params.status === '5'" class="dsummary-mian">
@@ -148,6 +174,16 @@ export default class OverseeAnswer extends Vue {
     get userToken() {
         // @ts-ignore
         return UserModule.token
+    }
+
+    get userCode() {
+        // @ts-ignore
+        return UserModule.user.userCode
+    }
+
+    get userrole() {
+        // @ts-ignore
+        return UserModule.userrole
     }
 
     private status = ""
@@ -282,6 +318,7 @@ export default class OverseeAnswer extends Vue {
             if (res) {
                 if (res.code < 200) {
                     this.load()
+                    UserModule.getTodo()
                     MessageBox.alert(res.message, "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
