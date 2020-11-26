@@ -22,7 +22,7 @@
                             query: { id: scope.row.id } }">
                             <el-button type="text" size="small">查看</el-button>
                         </router-link> -->
-                        <el-button type="text" size="small" @click="checkValid( scope.row.status, $getNameByCode(status, scope.row.status), scope.row.programId, scope.row.id)">查看</el-button>
+                        <el-button v-if=" scope.row.status!=='4'" type="text" size="small" @click="checkValid( scope.row.status, $getNameByCode(status, scope.row.status), scope.row.programId, scope.row.id)">查看</el-button>
                     </div>
                 </el-table-column>
                 </el-table>
