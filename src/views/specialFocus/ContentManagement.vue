@@ -21,7 +21,7 @@
             </el-table-column>
             <el-table-column label="操作" width="150px">
                 <div slot-scope="scope">
-                <router-link :to="{name:'SpecialFocus', params: {viewStatus:scope.row.viewStatus, id:scope.row.id} }">
+                <router-link :to="{name:'SpecialFocus', params: {viewStatus:scope.row.viewStatus, id:scope.row.id}, query: { id: scope.row.id } }">
                     <el-button type="text" size="small">查看</el-button>
                 </router-link>
                 <el-button v-show="scope.row.viewStatus !== '3'" type="text" size="small"  @click="onOffLine(scope.row.id)">结束</el-button>

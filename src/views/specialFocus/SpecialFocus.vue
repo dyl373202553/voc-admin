@@ -17,7 +17,7 @@
                             placeholder="请选择开始时间"
                             style="width: 100%;"
                             :picker-options="expireTimeOption"
-                            :disabled="$route.params.viewStatus === '3' || this.over"
+                            :disabled="$route.params.viewStatus !== '1' || this.over"
                             @change="checkDate"
                         />
                     </el-col>
@@ -73,7 +73,7 @@
                     </el-col>
                 </el-form-item>
                 <el-form-item v-show="$route.params.viewStatus !== '3'" class="dbtn text-center">
-                    <el-button type="primary" round @click="onSubmit"
+                    <el-button type="primary" round @click="onSubmit" v-show="!this.over"
                      :disabled="!(dataForm.startTime && dataForm.endTime && this.dataForm.content)"
                      >发布</el-button>
                     <!-- <el-button v-show="$route.params.statusName" type="primary" round>编辑</el-button> -->
