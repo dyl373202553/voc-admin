@@ -17,7 +17,7 @@
                             placeholder="请选择开始时间"
                             style="width: 100%;"
                             :picker-options="expireTimeOption"
-                            :disabled="$route.params.viewStatus !== '1' || this.over"
+                            :disabled="$route.params.viewStatus === '2' || $route.params.viewStatus === '3'|| this.over"
                             @change="checkDate"
                         />
                     </el-col>
