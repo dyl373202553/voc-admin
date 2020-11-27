@@ -54,18 +54,33 @@
                         :on-exceed="handleExceed"
                         :on-remove="handleRemove"
                         :limit="1"
+                        :show-file-list="false"
                         :file-list="fileDataList"
                         :on-change="handleAvatarChangeIcon"
                         ref="uploadicon"
                         >
-                        <el-button size="small" type="primary" plain v-show="showFile === 0">选择文件</el-button>
                         <el-button size="small" class="dprogress-btn" slot="tip" type="danger" plain @click="upbtn" v-show="showFile === 1">上传</el-button>
+                        <el-button size="small" type="primary" plain v-show="showFile === 0">选择文件</el-button>
                         <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于150M的文件，支持格式png/jpg/mp4/wma</span>
                     </el-upload>
+                    <!-- 编辑 -->
+                    <template v-if="dataListFile.length!==0">
+                        <div :class="progressPercent===100? 'dataListFile opacity1':'dataListFile opacity4'">
+                            <i class="el-icon-close del" @click="updel"></i>
+                            <template>
+                              <el-image :src="dataListFile[0].content" v-if="this.dataForm.type === 'img'" fit="contain" class="image"/>
+                              <video :src="dataListFile[0].content" v-if="this.dataForm.type === 'video'" :controls="true">
+                                  您的浏览器不支持视频播放
+                              </video>
+                            </template>
+                        </div>
+                    </template>
+
                     <el-progress v-show="progressFlag" :stroke-width="9" type="line" :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
-                    <el-col :span="24" v-show="$route.params.id && $route.params.viewStatus === '3'">
+                    <!-- 详情 -->
+                    <el-col :span="24" v-if="$route.params.id && $route.params.viewStatus === '3'">
                         <div class="dimg-div">
-                            <el-image :src="`/resources/`+ dataForm.content" fit="cover" class="image" v-if="this.dataForm.type === 'img'" />
+                            <el-image :src="`/resources/`+ dataForm.content" fit="contain" class="image" v-if="this.dataForm.type === 'img'" />
                             <video :src="`/resources/`+ dataForm.content" :controls="true" v-if="this.dataForm.type === 'video'">
                                 您的浏览器不支持视频播放
                             </video>
@@ -126,6 +141,8 @@ export default class SpecialFocus extends Vue {
         { color: "#6f7ad3", percentage: 100 }
     ]
 
+    private dataListFile: any = []
+
     // 时间-不得选早于之前的
     private expireTimeOption = {
         disabledDate(date: { getTime: () => number }) {
@@ -157,6 +174,11 @@ export default class SpecialFocus extends Vue {
             if (res) {
                 this.dataForm = res.data
                 this.fileDataList = [{ name: this.dataForm.content, url: `/resources/` + this.dataForm.content }]
+                const arr = {
+                    content: ""
+                }
+                arr.content = `/resources/` + this.dataForm.content
+                this.dataListFile.push(arr)
             }
         })
     }
@@ -201,6 +223,11 @@ export default class SpecialFocus extends Vue {
 
     // 上传图片
     private handleAvatarChangeIcon(file: any, fileList: any) {
+        const arr = {
+            content: ""
+        }
+        arr.content = file.url
+        this.dataListFile.push(arr)
         const isJPG = file.raw.type === "image/jpeg"
         const isPNG = file.raw.type === "image/png"
         const isMP4 = file.raw.type === "video/mp4"
@@ -286,6 +313,16 @@ export default class SpecialFocus extends Vue {
                 // 请求失败
                 this.progressStatus = "warning"
             })
+    }
+
+    private updel() {
+        this.dataListFile = []
+        this.fileDataList = []
+        this.dataForm.content = ""
+        this.progressFlag = false
+        this.progressPercent = 0
+        this.showFile = 0
+        this.progressStatus = null
     }
 
     // 校验时间

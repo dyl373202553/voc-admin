@@ -301,3 +301,29 @@ textarea {
   width: 65%;
   float: left;
 }
+.dataListFile {
+  width: 100%;
+  position: relative;
+  text-align: center;
+  max-height: 400px;
+}
+.dataListFile video, .dataListFile img {
+  max-height: 400px;
+}
+.dataListFile .del{
+  display: inline-block;
+  position: absolute;
+  right: 0;
+  top: -32px;
+  font-size: 20px;
+}
+.dataListFile .del:hover{
+  color: #4484F6;
+}
+
+.opacity4 {
+  opacity: .4;
+}
+.opacity1 {
+  opacity:  1;
+}
