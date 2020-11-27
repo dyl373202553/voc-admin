@@ -1,8 +1,36 @@
 <template lang="html">
-  <div class="editor">
-    <div ref="toolbar" class="toolbar" />
-    <div ref="editor" class="text" />
-  </div>
+    <div class="wang">
+        <div class="editor">
+            <div ref="toolbar" class="toolbar" />
+            <div ref="editor" class="text" />
+            <div class="editor-upload">
+                <el-upload
+                    class="dupload"
+                    ref="upload"
+                    :auto-upload="true"
+                    :show-file-list ="false"
+                    :action="''"
+                    :http-request="uploadRequest"
+                    >
+                    <el-button size="small" type="primary" plain>上传</el-button>
+                </el-upload>
+            </div>
+        </div>
+        <el-dialog
+            custom-class="info-dialog"
+            title="提示"
+            :visible.sync="centerDialogVisible"
+            width="25%"
+            :center="true"
+            >
+            <div style="text-align:center;">
+                <el-progress :stroke-width="9" type="circle"  :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                视频上传中，请稍等......
+            </span>
+        </el-dialog>
+    </div>
 </template>
 
 <script>
@@ -29,7 +57,17 @@ export default {
         return {
         // uploadPath,
             editor: null,
-            info_: null
+            info_: null,
+            centerDialogVisible: false,
+            progressPercent: 0,
+            progressStatus: null,
+            customColors: [
+                { color: "#f56c6c", percentage: 20 },
+                { color: "#e6a23c", percentage: 40 },
+                { color: "#5cb87a", percentage: 60 },
+                { color: "#1989fa", percentage: 80 },
+                { color: "#6f7ad3", percentage: 100 }
+            ]
         }
     },
     watch: {
@@ -148,7 +186,6 @@ export default {
                 "emoticon", // 表情
                 "image", // 插入图片
                 "table", // 表格
-                "video", // 插入视频
                 "code", // 插入代码
                 "undo", // 撤销
                 "redo", // 重复
@@ -160,12 +197,59 @@ export default {
             }
             // 创建富文本编辑器
             this.editor.create()
+        },
+        uploadRequest(option) {
+            const isLt = option.file.size / 1024 / 1024 <= 150
+            if (!isLt) {
+                option.onError()
+                this.$message.error("上传附件大小不能超过 150M! 请重新选择")
+                return false
+            } else if (isLt) {
+                this.centerDialogVisible = true
+                const formData = new FormData()
+                formData.append("file", option.file) // 传参改为formData格式
+                axios({
+                    method: "post",
+                    url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsProgram&isystemName=1`, // 请求后端的url
+                    headers: {
+                        "Content-Type": "multipart/form-data", // 设置headers
+                        Authorization: `Bearer ${Cookies.get("kmportaltoken")}`
+                    },
+                    data: formData,
+                    onUploadProgress: (progressEvent) => {
+                        this.progressPercent = parseInt((progressEvent.loaded / progressEvent.total * 100))
+                    }
+                })
+                    .then((res) => {
+                        if (res) {
+                            if (res.data.code < 200) {
+                                // 上传成功
+                                this.centerDialogVisible = false
+                                const paramd = "<video src='/resources/" + res.data.data.filePath + "'controls='true' ></video>"
+                                this.editor.txt.append(paramd)
+                                this.progressStatus = "success"
+                            }
+                        } else {
+                            // 上传失败
+                            this.progressStatus = "exception"
+                        }
+                    })
+                    .catch(() => {
+                        // 请求失败
+                        this.progressStatus = "warning"
+                    })
+            }
         }
     }
 }
 </script>
 
 <style lang="css">
+    .editor-upload {
+        position: absolute;
+        right: 10px;
+        top: 5px;
+    }
   .editor {
     width: 100%;
     margin: 0 auto;
