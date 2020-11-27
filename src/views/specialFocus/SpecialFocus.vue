@@ -177,8 +177,10 @@ export default class SpecialFocus extends Vue {
                 const arr = {
                     content: ""
                 }
-                arr.content = `/resources/` + this.dataForm.content
-                this.dataListFile.push(arr)
+                if (this.$route.params.viewStatus !== "3") {
+                    arr.content = `/resources/` + this.dataForm.content
+                    this.dataListFile.push(arr)
+                }
             }
         })
     }
