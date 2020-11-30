@@ -30,7 +30,7 @@
                     <div class="main-title">节目内容</div>
                     <div v-html="this.programForm.content" style="font-size:14px;letter-spacing: 1px;line-height: 24px;"></div>
                 </div>
-                <div v-if="this.programForm.fileIds">
+                <div v-if="this.programFormFileId.length!==0">
                     <div class="main-title">附件</div>
                     <div class="downloadClick" v-for="(item, key) in programFormFileId" :key="key">
                         <a @click="$handleDownload(item.fileId)" >
