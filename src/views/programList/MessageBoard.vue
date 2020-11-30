@@ -36,7 +36,7 @@
                                             @click="setWonderful(item.id, '0')">设置精彩留言</span>
                                         <span class="fl wonderful" v-show="item.wonderfulFlag === '0' && userrole===0"
                                             @click="setWonderful(item.id, '1')">取消精彩留言</span>
-                                        <span class="optionBtn" @click="indexKey=item.id"><img src="@/assets/images/icon_repeat.png"/></span>
+                                        <span class="optionBtn" @click="indexRepeat=item.id+key"><img src="@/assets/images/icon_repeat.png"/></span>
                                         <span class="optionBtn" v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)">
                                             <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
                                             <span>{{item.praiseNum}}</span>
@@ -47,7 +47,7 @@
                                         </span>
                                         <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(item.id)"><img src="@/assets/images/icon_del.png"/></span>
                                     </div>
-                                    <div class="text-right margin-top10 info" v-if="indexKey=== item.id">
+                                    <div class="text-right margin-top10 info" v-if="indexRepeat=== item.id+key">
                                         <template>
                                             <el-input
                                                 v-model="backMessage"
@@ -58,7 +58,7 @@
                                         </template>
                                         <div class="text-right margin-top10 dbackBtn">
                                             <el-button type="text" round @click="onCancelSubmit()">取消</el-button>
-                                            <el-button type="primary" @click="onBackSubmit(item.id, backMessage)">回复</el-button>
+                                            <el-button type="primary" @click="onBackSubmit(item.id, backMessage, key)">回复</el-button>
                                         </div>
                                     </div>
                                     <!-- 子级留言 -->
@@ -143,7 +143,7 @@
                                         </span>
                                         <span class="optionBtn" v-if="userrole===0"><img src="@/assets/images/icon_del.png"/></span>
                                     </div>
-                                    <div class="text-right margin-top10 info" v-if="indexKey=== item.id">
+                                    <div class="text-right margin-top10 info" v-if="indexRepeat=== item.id+key">
                                         <template>
                                             <el-input
                                                 v-model="backMessage"
@@ -154,7 +154,7 @@
                                         </template>
                                         <div class="text-right margin-top10 dbackBtn">
                                             <el-button type="text" round @click="onCancelSubmit()">取消</el-button>
-                                            <el-button type="primary" @click="onBackSubmit(item.id, backMessage)">回复</el-button>
+                                            <el-button type="primary" @click="onBackSubmit(item.id, backMessage, key)">回复</el-button>
                                         </div>
                                     </div>
                                     <!-- 子级留言 -->
@@ -229,6 +229,7 @@ export default class MessageBoard extends Vue {
     private messageChildrenList: any = []
     private messageChild: any = []
     private indexKey = ""
+    private indexRepeat=""
     private showIndex = false
     private dataPage = {
         pageNum: 1,
@@ -258,13 +259,17 @@ export default class MessageBoard extends Vue {
         })
     }
 
-    private postMessage(params: any) {
+    private postMessage(params: any, id: string, index: number) {
         postMessageAdd(params).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    this.load()
-                    this.backMessage = ""
-                    this.message = ""
+                    if (index < 0) {
+                        this.load()
+                        this.message = ""
+                    } else {
+                        this.backMessage = ""
+                        this.checkBack(id, index)
+                    }
                     MessageBox.alert(`提交成功`, "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
@@ -285,23 +290,23 @@ export default class MessageBoard extends Vue {
             programId: this.$route.params.promId,
             wonderfulFlag: "1"
         }
-        this.postMessage(dataMessagePage)
+        this.postMessage(dataMessagePage, "", -1)
     }
 
     // 回复
-    private onBackSubmit(id: string, backMessage: string) {
+    private onBackSubmit(id: string, backMessage: string, index: number) {
         const dataMessagePage = {
             content: backMessage,
             targetId: id,
             programId: this.$route.params.promId,
             wonderfulFlag: "1"
         }
-        this.postMessage(dataMessagePage)
+        this.postMessage(dataMessagePage, id, index)
     }
 
     // 取消
     private onCancelSubmit() {
-        this.indexKey = ""
+        this.indexRepeat = ""
         this.backMessage = ""
     }
 
