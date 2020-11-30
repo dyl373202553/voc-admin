@@ -7,12 +7,15 @@
                 <el-upload
                     class="dupload"
                     ref="upload"
+                    accept=".mp4,.wma"
                     :auto-upload="true"
                     :show-file-list ="false"
+                    :on-exceed="handleExceed"
                     :action="''"
+                    limit="1"
                     :http-request="uploadRequest"
                     >
-                    <el-button size="small" type="primary" plain>上传</el-button>
+                    <el-button size="small" type="primary" plain>上传视频</el-button>
                 </el-upload>
             </div>
         </div>
@@ -27,7 +30,8 @@
                 <el-progress :stroke-width="9" type="circle"  :color="customColors" :percentage="progressPercent" :status="progressStatus"></el-progress>
             </div>
             <span slot="footer" class="dialog-footer">
-                视频上传中，请稍等......
+                <span v-if="progressStatus=== null">视频上传中，请稍等......</span>
+                <span v-if="progressStatus==='exception' || progressStatus==='warning'">上传视频失败，请联系管理员</span>
             </span>
         </el-dialog>
     </div>
@@ -198,6 +202,10 @@ export default {
             // 创建富文本编辑器
             this.editor.create()
         },
+        // 文件超出限制控制
+        handleExceed() {
+            this.$message.warning("只能上传一个文件")
+        },
         uploadRequest(option) {
             const isLt = option.file.size / 1024 / 1024 <= 150
             if (!isLt) {
@@ -225,7 +233,7 @@ export default {
                             if (res.data.code < 200) {
                                 // 上传成功
                                 this.centerDialogVisible = false
-                                const paramd = "<video src='/resources/" + res.data.data.filePath + "'controls='true' ></video>"
+                                const paramd = "<video src='/resources/" + res.data.data.filePath + "'controls='true' style='max-width:100%' ></video>"
                                 this.editor.txt.append(paramd)
                                 this.progressStatus = "success"
                             }
