@@ -9,14 +9,14 @@
           <el-row :gutter="40">
             <el-col :span="12">
               <el-form-item label="节目开始时间">
-                <el-date-picker v-model="dataForm.startTime"
+                <el-date-picker v-model="startTime"
                     type="datetime" placeholder="请选择开始时间"
                     @change="checkDate" suffix-icon="el-icon-date" style="width:100%" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="节目结束时间">
-                <el-date-picker v-model="dataForm.endTime" type="date"
+                <el-date-picker v-model="endTime" type="date"
                     placeholder="请选择结束时间" @change="checkDate" suffix-icon="el-icon-date" style="width:100%" />
               </el-form-item>
             </el-col>
@@ -154,6 +154,8 @@ export default class OverseeCheck extends Vue {
     private restDept2Code = true
     private dept2Name = ""
     private dept3Name = ""
+    private startTime = ""
+    private endTime = ""
 
     private dataForm = {
         pageNum: 1,
@@ -201,16 +203,18 @@ export default class OverseeCheck extends Vue {
     }
 
     private search() {
-        if (this.dataForm.startTime) {
-            this.dataForm.startTime = day(this.dataForm.startTime, "YYYY-MM-DD HH:mm:ss")
+        if (this.startTime) {
+            this.dataForm.startTime = day(this.startTime, "YYYY-MM-DD HH:mm:ss")
         }
-        if (this.dataForm.endTime) {
-            this.dataForm.endTime = day(this.dataForm.endTime, "YYYY-MM-DD HH:mm:ss")
+        if (this.endTime) {
+            this.dataForm.endTime = day(this.endTime, "YYYY-MM-DD HH:mm:ss")
         }
         this.load()
     }
 
     private rest() {
+        this.startTime = ""
+        this.endTime = ""
         this.dataForm = {
             pageNum: 1,
             pageSize: 10,

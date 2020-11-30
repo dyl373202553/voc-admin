@@ -88,11 +88,11 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <span class="fl checkBack" @click="checkBackDown()">收起</span>
+                                            <span class="fl checkBack" @click="checkBackDown()">收f起</span>
                                         </div>
                                         <div class="liuyan-children" v-if="messageChild.length ===0">
                                             <div class="main-info">
-                                                没有数据
+                                                没有留言
                                             </div>
                                             <span class="fl checkBack" @click="checkBackDown()">收起</span>
                                         </div>
