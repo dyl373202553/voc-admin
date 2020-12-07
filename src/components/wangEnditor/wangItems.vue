@@ -12,7 +12,7 @@
                     :show-file-list ="false"
                     :on-exceed="handleExceed"
                     :action="''"
-                    limit="1"
+                    :limit="1"
                     :http-request="uploadRequest"
                     >
                     <el-button size="small" type="primary" plain>上传视频</el-button>
@@ -233,7 +233,7 @@ export default {
                             if (res.data.code < 200) {
                                 // 上传成功
                                 this.centerDialogVisible = false
-                                const paramd = "<video src='/resources/" + res.data.data.filePath + "'controls='true' style='max-width:100%' ></video>"
+                                const paramd = "<video src='/resources/" + res.data.data.filePath + "'controls='true' poster='https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1606988984300&di=f34898f89454154b0061cc6a1415f609&imgtype=0&src=http%3A%2F%2Fwww.jumacm.com%2Fuploads%2Fallimg%2F190611%2F1609504Y6-0.gif'  style='max-width:100%' ></video>"
                                 this.editor.txt.append(paramd)
                                 this.progressStatus = "success"
                             }

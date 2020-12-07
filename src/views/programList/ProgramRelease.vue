@@ -203,6 +203,7 @@ export default class ProgramRelease extends Vue {
 
     // 提交
     private onSubmit() {
+        console.log(this.dataContent)
         this.dataForm.fileIds = JSON.stringify(this.fileIdsArr)
         this.dataForm.type = this.programType
         this.dataForm.content = this.dataContent
