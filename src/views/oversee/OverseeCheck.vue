@@ -40,7 +40,7 @@
             <div v-show="$route.params.status !== '1'" class="dsummary-mian">
                 <div class="dsummary-title">督办举措</div>
                 <template v-show="$route.params.status !== '2'">
-                    <div class="main-info" v-for="(item, key) in superviseMeasuresList" :key="key">
+                    <div class="main-info dline" v-for="(item, key) in superviseMeasuresList" :key="key">
                         <div class="info-left">
                             <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
                         </div>
@@ -70,7 +70,7 @@
                                     </div>
                                 </template>
                             </div>
-                            <div class="text-center dbtn" v-if="item.status === '1' ">
+                            <div class="text-center dbtn" v-if="item.status === '1' " style="margin:15px 0;">
                                 <el-button type="danger" round plain @click="backDialog(item.id)">退回</el-button>
                                 <el-button type="primary" round @click="overseeMakesureComfire(item.id)">确认</el-button>
                             </div>

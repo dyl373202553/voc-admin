@@ -327,3 +327,10 @@ textarea {
 .opacity1 {
   opacity:  1;
 }
+.dline {
+  border-bottom: 1px dashed rgb(225, 234, 251);
+  padding: 15px 0;
+}
+.dline:last-child {
+    border-bottom: none;
+}
