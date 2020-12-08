@@ -53,7 +53,7 @@
                                                 v-model="backMessage"
                                                 type="textarea"
                                                 :rows="4"
-                                                placeholder="说点什么吧"
+                                                :placeholder="'你想对'+item.userName+'说点什么...'"
                                             />
                                         </template>
                                         <div class="text-right margin-top10 dbackBtn">
