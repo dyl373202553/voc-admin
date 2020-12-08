@@ -132,7 +132,7 @@ export default class Home extends Vue {
         getRankList().then((res) => {
             if (res) {
                 this.rankListData = res.data
-                this.rankListTime = day(res.data[0].updateTime, "YYYY年MM月DD日 HH:mm:ss")
+                this.rankListTime = day(res.data[0].updateTime, "YYYY年MM月DD日")
             }
         })
     }

@@ -34,7 +34,7 @@
                             </div>
                             <div class="box-card-info">
                                 <div class="title">{{ value.title }}</div>
-                                <div class="time">{{ value.liveEntity.startTime }}</div>
+                                <div class="time">{{ $day(value.liveEntity.startTime, "YYYY-MM-DD")}}</div>
                                 <div class="bottom clearfix">
                                     <div><span class="title-left">本期主播：</span><span>{{ value.liveEntity.speakers }}</span></div>
                                     <div>

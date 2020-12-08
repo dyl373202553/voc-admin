@@ -13,7 +13,7 @@
                     <el-col :span="11">
                         <el-date-picker
                             v-model="dataForm.startTime"
-                            type="datetime"
+                            type="date"
                             placeholder="请选择开始时间"
                             style="width: 100%;"
                             :picker-options="expireTimeOption"
@@ -30,7 +30,7 @@
                     <el-col :span="11">
                         <el-date-picker
                             v-model="dataForm.endTime"
-                            type="datetime"
+                            type="date"
                             placeholder="请选择结束时间"
                             style="width: 100%;"
                             :picker-options="expireTimeOption"
@@ -187,8 +187,8 @@ export default class SpecialFocus extends Vue {
 
     // 发布
     private onSubmit() {
-        this.dataForm.startTime = day(this.dataForm.startTime, "YYYY-MM-DD HH:mm:ss")
-        this.dataForm.endTime = day(this.dataForm.endTime, "YYYY-MM-DD HH:mm:ss")
+        this.dataForm.startTime = day(this.dataForm.startTime, "YYYY-MM-DD")
+        this.dataForm.endTime = day(this.dataForm.endTime, "YYYY-MM-DD")
         if (this.$route.params.id) {
             this.dataForm.id = this.$route.params.id
         }
