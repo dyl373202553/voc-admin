@@ -12,7 +12,7 @@
                         />
                     </template>
                     <div class="text-right margin-top10 dmessage">
-                        <el-button type="primary" round @click="onSubmit" :disabled="this.message === '' ">评论</el-button>
+                        <el-button type="primary" round @click="onSubmit" :disabled="this.message === '' ">留言</el-button>
                     </div>
                 </div>
                 <el-tab-pane label="全部留言" name="first">
