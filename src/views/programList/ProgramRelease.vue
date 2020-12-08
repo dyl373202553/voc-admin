@@ -13,10 +13,11 @@
             ]">
             <el-select v-if="!this.$route.params.id" v-model="dataForm.liveId" placeholder="请选择节目时间" style="width: 65%;" :disabled="selectBoolean">
                 <el-option
-                v-for="item in dataOptions"
-                :key="item.id"
+                v-for="(item, index) in dataOptions"
+                :key="index"
                 :label="item.startTime + '--' + item.endTime"
                 :value="item.id"
+                @click.native ="optionChange(item)"
                 />
             </el-select>
             <el-input v-if="this.$route.params.id" v-model="showStart" :disabled="true" style="width: 65%;" />
@@ -58,7 +59,7 @@
             :rules="[
             { required: true, message: '节目内容不能为空'}
         ]">
-            <EditorBar v-model="dataContent" :is-clear="isClear" />
+            <EditorBar v-model="dataContent" :is-clear="isClear" :value="dataContent" :logoUrl="logoUrl"/>
         </el-form-item>
         <el-form-item label="上传附件">
            <el-upload
@@ -117,6 +118,7 @@ export default class ProgramRelease extends Vue {
         id: ""
     }
 
+    private logoUrl = ""
     private selectBoolean = false
     private dataContent = ""
 
@@ -203,7 +205,6 @@ export default class ProgramRelease extends Vue {
 
     // 提交
     private onSubmit() {
-        console.log(this.dataContent)
         this.dataForm.fileIds = JSON.stringify(this.fileIdsArr)
         this.dataForm.type = this.programType
         this.dataForm.content = this.dataContent
@@ -275,6 +276,10 @@ export default class ProgramRelease extends Vue {
 
     private back() {
         this.$router.back()
+    }
+
+    private optionChange(item: any) {
+        this.logoUrl = item.logoUrl
     }
 }
 </script>

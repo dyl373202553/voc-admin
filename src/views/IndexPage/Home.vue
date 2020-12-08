@@ -16,8 +16,8 @@
                     </el-carousel-item>
                 </el-carousel>
             </div>
-            </el-card>
-            <el-card class="box-card">
+          </el-card>
+          <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span class="header-title">近期节目</span>
                 <router-link :to="{name:'ProgramList'}">

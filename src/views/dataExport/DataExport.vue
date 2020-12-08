@@ -114,6 +114,18 @@
     <el-dialog title="三级部门" :visible.sync="dialogTreeVisible">
        <TreeDepartmentAll @funcs="getMsgFormSonThird"  :restFloat="restDept3Code"/>
     </el-dialog>
+    <el-dialog
+          custom-class="info-dialog"
+          title="提示"
+          :visible.sync="centerDialogVisible"
+          width="25%"
+          top="15%"
+          :center="true"
+          >
+          <div slot="footer" class="dialog-footer" style="padding:50px 20px;">
+              <span>导出中，请稍等......</span>
+          </div>
+      </el-dialog>
   </div>
 </template>
 
@@ -171,6 +183,7 @@ export default class OverseeCheck extends Vue {
     private selectList = ""
     private dialogTableVisible = false
     private dialogTreeVisible = false
+    private centerDialogVisible = false
 
     get userToken() {
         // @ts-ignore
@@ -263,6 +276,7 @@ export default class OverseeCheck extends Vue {
     }
 
     private exportAll() {
+        this.centerDialogVisible = true
         axios({
             method: "get",
             url: `customervoice-downexecl/exportAll?ids=${this.selectList}`,
@@ -273,13 +287,15 @@ export default class OverseeCheck extends Vue {
             }
         })
             .then((res) => {
+                this.centerDialogVisible = false
                 const dateName = day(new Date(), "YYYY-MM-DD")
                 const fileName = "列表导出" + dateName + ".xls"
                 const blob = new Blob([res.data], { type: "application/vnd.ms-excel" })
                 handleDownloadFile(blob, fileName)
             })
-            .catch(function (error) { // 请求失败处理
+            .catch((error) => { // 请求失败处理
                 MessageBox.alert(error, "失败", { type: "error" })
+                this.centerDialogVisible = false
             })
     }
 

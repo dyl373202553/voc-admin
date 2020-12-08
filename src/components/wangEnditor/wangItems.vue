@@ -55,6 +55,10 @@ export default {
         isClear: {
             type: Boolean,
             default: false
+        },
+        logoUrl: {
+            type: String,
+            default: ""
         }
     },
     data() {
@@ -85,7 +89,10 @@ export default {
         value: function (value) {
             if (value !== this.editor.txt.html()) {
                 this.editor.txt.html(this.value)
+            } else {
+                this.editor.txt.html(this.value)
             }
+            // console.log(value)
         }
         // value为编辑框输入的内容，这里我监听了一下值，当父组件调用得时候，如果给value赋值了，子组件将会显示父组件赋给的值
     },
