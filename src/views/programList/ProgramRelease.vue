@@ -3,7 +3,7 @@
   <div class="app-container">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span v-show="!$route.params.summaryName" class="header-title">发布节目</span>
+        <span v-show="!$route.params.summaryName" class="header-title">发布节目（注：仅节目主讲人进行发布）</span>
         <span v-show="$route.params.summaryName" class="header-title">编辑节目</span>
       </div>
       <el-form ref="dataForm" :model="dataForm" label-width="150px">
