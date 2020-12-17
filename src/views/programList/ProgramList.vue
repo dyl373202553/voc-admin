@@ -5,47 +5,51 @@
             <span class="header-title">节目列表</span>
         </div>
         <div>
-            <el-form label-position="left" label-width="30px">
-            <el-row>
-                <el-col :span="24">
-                    <div class="dinput-search">输入查询</div>
-                </el-col>
-                <el-col :span="20">
-                    <el-input v-model="dataPage.queryParam" placeholder="请输入直播关键字" />
-                </el-col>
-                <el-col :span="4">
-                <el-form-item class="dbtn">
-                    <el-button type="primary" round @click="load">查询</el-button>
-                    <el-button round @click="rest">重置</el-button>
-                </el-form-item>
-                </el-col>
-            </el-row>
+            <el-form label-position="left" label-width="30px" style="padding-left: 18px;">
+                <el-row>
+                    <el-col :span="24">
+                        <div class="dinput-search">输入查询</div>
+                    </el-col>
+                    <el-col :span="20">
+                        <el-input v-model="dataPage.queryParam" placeholder="请输入直播关键字" />
+                    </el-col>
+                    <el-col :span="4">
+                    <el-form-item class="dbtn">
+                        <el-button type="primary" round @click="load">查询</el-button>
+                        <el-button round @click="rest">重置</el-button>
+                    </el-form-item>
+                    </el-col>
+                </el-row>
             </el-form>
         </div>
         <div class="dtable">
-            <el-table v-loading="listLoading" :data="tableData" element-loading-text="Loading" stripe>
-              <el-table-column prop="title" label="节目名称" align="center" width="200" />
-              <el-table-column prop="liveEntity.startTime" label="节目时间" align="center">
-                  <template slot-scope="scope">
-                      {{$day(scope.row.liveEntity.startTime, "YYYY-MM-DD")}} -- {{$day(scope.row.liveEntity.endTime, "YYYY-MM-DD")}}
-                  </template>
-              </el-table-column>
-              <el-table-column prop="liveEntity.speakers" label="主讲人" align="center" />
-              <el-table-column prop="superviseItemEntity.status" label="督办状态" align="center">
-                  <!-- 督办状态： 0:督办已完成， 1：督办未发布，2：督办未回复，3：督办未确认，4：本期无督办 -->
-                  <template slot-scope="scope">
-                      <span v-if="scope.row.superviseItemEntity" :class="(scope.row.superviseItemEntity.status !== '0' && scope.row.superviseItemEntity.status !== '4')? 'dred':'dblue'">
-                          {{$getNameByCode(status, scope.row.superviseItemEntity.status)}}
-                      </span>
-                      <span v-else>--</span>
-                  </template>
-              </el-table-column>
-              <el-table-column label="操作" align="center">
-                  <div slot-scope="scope">
-                      <el-button type="text" size="small" @click="checkValid(scope.row.id, scope.row.liveEntity.startTime, scope.row.liveId)">进入</el-button>
-                  </div>
-              </el-table-column>
-            </el-table>
+            <el-row>
+                <el-col v-for="(value, key) in tableData" :key="key" :span="8">
+                    <div @click="checkValid(value.id, value.liveEntity.startTime, value.liveId)">
+                        <el-card class="card-img">
+                            <div class="box-card-img">
+                                <!-- <img :src="value.img" class="image"> -->
+                                <el-image :src="`/resources/`+ value.liveEntity.logoUrl" fit="cover" class="image" />
+                            </div>
+                            <div class="box-card-info">
+                                <div class="title">{{ value.title }}</div>
+                                <div class="time">{{ $day(value.liveEntity.startTime, "YYYY年MM月DD日")}}--{{ $day(value.liveEntity.endTime, "YYYY年MM月DD日")}}</div>
+                                <div class="bottom clearfix">
+                                    <div><span class="title-left">本期主播：</span><span>{{ value.liveEntity.speakers }}</span></div>
+                                    <div>
+                                        <span class="title-left">督办状态：</span>
+                                        <span v-if="value.superviseItemEntity"
+                                        :class="(value.superviseItemEntity.status !== '0' && value.superviseItemEntity.status !== '4')? 'dred':'dblue'">
+                                            {{$getNameByCode(status,value.superviseItemEntity.status)}}
+                                        </span>
+                                        <span v-else class="dred">无</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </el-card>
+                    </div>
+                </el-col>
+            </el-row>
             <div class="dpagination">
                 <el-pagination
                 background
@@ -87,7 +91,7 @@ export default class ProgramList extends Vue {
     private dataTotal = 0
     private dataPage = {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 9,
         queryParam: ""
     }
 

@@ -41,8 +41,8 @@
                         <div class="home-img-small">
                             <el-col :span="24">
                                 <template v-if="showTwo">
-                                    <el-image v-if="showTwo.type ==='img'" :src="`/resources/`+ showTwo.content" class="image" style="width:100%;height:400px;"/>
-                                    <video :src="`/resources/`+ showTwo.content" :controls="true" v-if="showTwo.type === 'video'" style="width:100%;height:400px;">
+                                    <el-image v-if="showTwo.type ==='img'" :src="`/resources/`+ showTwo.content" class="image" style="width:100%;height:195px;"/>
+                                    <video :src="`/resources/`+ showTwo.content" :controls="true" v-if="showTwo.type === 'video'" style="width:100%;height:195px;">
                                         您的浏览器不支持视频播放
                                     </video>
                                     <div class="home-show-title">{{showTwo.title}}</div>
@@ -97,7 +97,7 @@
                             </div>
                             <div class="box-card-info">
                                 <div class="title">{{ value.title }}</div>
-                                <div class="time">{{ $day(value.liveEntity.startTime, "YYYY-MM-DD")}}</div>
+                                <div class="time">{{ $day(value.liveEntity.startTime, "YYYY年MM月DD日")}}--{{ $day(value.liveEntity.endTime, "YYYY年MM月DD日")}}</div>
                                 <div class="bottom clearfix">
                                     <div><span class="title-left">本期主播：</span><span>{{ value.liveEntity.speakers }}</span></div>
                                     <div>
@@ -261,6 +261,7 @@ export default class Home extends Vue {
         line-height: 40px;
         color: #fff;
         padding-left: 15px;
+        font-size: 16px;
     }
     .home-img-small {
         height: 195px;
