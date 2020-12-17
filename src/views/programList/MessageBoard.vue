@@ -109,8 +109,9 @@
                                 </div>
                             </div>
                         </div>
-
-                        <div class="dpagination">
+                        <div class="comment-nomoreBtn" v-if="dataPage.pageNum === pageTotal">没有更多评论</div>
+                        <div class="comment-moreBtn" v-else @click="handleCurrentChange">查看更多评论</div>
+                        <!-- <div class="dpagination">
                             <el-pagination
                             background
                             @current-change="handleCurrentChange"
@@ -119,7 +120,7 @@
                             :page-size="dataPage.pageSize"
                             layout="prev, pager, next, jumper">
                             </el-pagination>
-                        </div>
+                        </div> -->
                     </div>
 
                 </el-tab-pane>
@@ -239,6 +240,7 @@ export default class MessageBoard extends Vue {
     }
 
     private dataTotal = 0
+    private pageTotal = 1
     private messageList = []
     private messageChildrenList: any = []
     private messageChild: any = []
@@ -247,7 +249,7 @@ export default class MessageBoard extends Vue {
     private showIndex = false
     private dataPage = {
         pageNum: 1,
-        pageSize: 10,
+        pageSize: 5,
         programId: this.$route.params.promId,
         wonderfulFlag: "", // 是否为精彩留言（0：是，1：否）
         targetId: this.$route.params.promId
@@ -261,8 +263,9 @@ export default class MessageBoard extends Vue {
         postMessageAll(this.dataPage).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    this.messageList = res.data
+                    this.messageList = this.messageList.concat(res.data) // 追加数据
                     this.dataTotal = res.total
+                    this.pageTotal = res.pages
                     for (let i = 0; i < this.messageList.length; i++) {
                         this.messageChildrenList.push(null)
                     }
@@ -292,9 +295,11 @@ export default class MessageBoard extends Vue {
         })
     }
 
-    private handleCurrentChange(val: number) {
-        this.dataPage.pageNum = val
-        this.load()
+    private handleCurrentChange() {
+        this.dataPage.pageNum += 1
+        if (this.dataPage.pageNum <= this.pageTotal) {
+            this.load()
+        }
     }
 
     private onSubmit() {

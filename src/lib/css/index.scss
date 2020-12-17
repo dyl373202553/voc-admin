@@ -275,6 +275,32 @@ body {
     }
   }
 }
+.comment-content {
+  position: relative;
+  .el-tabs__nav-scroll::before {
+      content: "全部留言";
+      font-size: 15px;
+      font-weight: bold;
+      line-height: 40px;
+      padding-left: 18px;
+  }
+}
+.comment-moreBtn {
+  cursor: pointer;
+  display: block;
+  width: 100%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  background-color: #f0f0f0;
+  color: #adadad;
+  font-size: 14px;
+}
+.comment-nomoreBtn {
+  text-align: center;
+  color: #999999;
+  font-size: 14px;
+}
 
 // 小结内容
 .dsummary {
