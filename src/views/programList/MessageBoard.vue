@@ -1,22 +1,30 @@
 <template>
     <el-card class="box-card dpadding0">
         <div class="dcontent">
-            <el-tabs v-model="activeName" type="card">
-                <div class="comment">
-                    <template>
-                        <el-input
-                            v-model="message"
-                            type="textarea"
-                            :rows="4"
-                            placeholder="说点什么吧"
-                        />
-                    </template>
-                    <div class="text-right margin-top10 dmessage">
-                        <el-button type="primary" round @click="onSubmit" :disabled="this.message === '' ">留言</el-button>
+            <div class="alltitle">留言（{{this.dataTotal}}）</div>
+            <div class="comment">
+                <div class="comment-main">
+                    <div class="comment-left">
+                        <el-image :src="`/resources/bluepage/a/`+userCode+`_A.jpg`" fit="fill" class="image" style="width:60px;height:60px;border-radius: 50%;"/>
                     </div>
+                    <el-input
+                        v-model="message"
+                        type="textarea"
+                        class="comment-right"
+                        :rows="4"
+                        placeholder="说点什么吧"
+                    />
                 </div>
-                <el-tab-pane label="全部留言" name="first">
-                    <span slot="label">全部留言（{{this.dataTotal}}）</span>
+                <div class="text-right margin-top10 dmessage">
+                    <el-button type="primary" round @click="onSubmit" :disabled="this.message === '' ">留言</el-button>
+                </div>
+            </div>
+            <div class="comment-none" v-if="messageList.length===0">
+                暂无评论哦，快来评论一下吧！
+            </div>
+            <el-tabs v-model="activeName" type="card" v-else class="comment-content">
+                <el-tab-pane name="first">
+                    <span slot="label">全部留言 /</span>
                     <div class="bottom dliuyan">
                         <div class="bottom-main" v-for="(item, key) in messageList" :key="key">
                             <div class="main-info">
@@ -113,6 +121,7 @@
                             </el-pagination>
                         </div>
                     </div>
+
                 </el-tab-pane>
                 <el-tab-pane label="精彩留言" name="secound">
                     <div class="bottom dliuyan">
@@ -214,6 +223,11 @@ export default class MessageBoard extends Vue {
     get userrole() {
         // @ts-ignore
         return UserModule.userrole
+    }
+
+    get userCode() {
+        // @ts-ignore
+        return UserModule.user.userCode
     }
 
     private activeName = "first"
@@ -394,3 +408,12 @@ export default class MessageBoard extends Vue {
     }
 }
 </script>
+<style lang="scss" scoped>
+  .alltitle {
+    padding-left: 18px;
+    font-size: 15px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+  }
+</style>

@@ -172,4 +172,7 @@ export default class ProgramList extends Vue {
       }
     }
   }
+  .dtable .card-img {
+    cursor: pointer;
+  }
 </style>

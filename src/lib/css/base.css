@@ -334,3 +334,15 @@ textarea {
 .dline:last-child {
     border-bottom: none;
 }
+.dcolloapse {
+  position: relative;
+}
+.dcolloapse  .el-collapse-item__header{
+    position: absolute;
+    right: 0;
+    top: -73px;
+}
+
+.dcolloapse{
+  border: none;
+}
