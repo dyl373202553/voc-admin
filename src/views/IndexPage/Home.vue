@@ -4,7 +4,7 @@
             <div slot="header" class="clearfix">
                 <span class="header-title">特别关注</span>
             </div>
-            <div>
+            <!-- <div>
                 <el-carousel height="450px" :arrow="(this.slideshowList.length>1)? 'hover':'never'">
                     <el-carousel-item v-for="(item, key) in slideshowList" :key="key">
                         <template>
@@ -15,9 +15,72 @@
                         </template>
                     </el-carousel-item>
                 </el-carousel>
-            </div>
-          </el-card>
-          <el-card class="box-card">
+            </div> -->
+            <el-row :gutter="10">
+                <el-col :span="16">
+                    <div class="home-img">
+                        <template v-if="showOne">
+                            <el-image v-if="showOne.type ==='img'" :src="`/resources/`+ showOne.content" class="image" style="width:100%;height:400px;"/>
+                            <video :src="`/resources/`+ showOne.content" :controls="true" v-if="showOne.type === 'video'" style="width:100%;height:400px;">
+                                您的浏览器不支持视频播放
+                            </video>
+                            <div class="home-show-title">{{showOne.title}}</div>
+                            <div class="home-show"></div>
+                        </template>
+                        <template v-else>
+                            <el-image class="image" style="width:100%;height:400px;">
+                                <div slot="error" class="image-slot">
+                                  <i class="el-icon-picture-outline"></i>
+                                </div>
+                            </el-image>
+                        </template>
+                    </div>
+                </el-col>
+                <el-col :span="8">
+                    <el-row>
+                        <div class="home-img-small">
+                            <el-col :span="24">
+                                <template v-if="showTwo">
+                                    <el-image v-if="showTwo.type ==='img'" :src="`/resources/`+ showTwo.content" class="image" style="width:100%;height:400px;"/>
+                                    <video :src="`/resources/`+ showTwo.content" :controls="true" v-if="showTwo.type === 'video'" style="width:100%;height:400px;">
+                                        您的浏览器不支持视频播放
+                                    </video>
+                                    <div class="home-show-title">{{showTwo.title}}</div>
+                                    <div class="home-show"></div>
+                                </template>
+                                <template v-else>
+                                    <el-image class="image" style="width:100%;height:400px;">
+                                        <div slot="error" class="image-slot">
+                                          <i class="el-icon-picture-outline"></i>
+                                        </div>
+                                    </el-image>
+                                </template>
+                            </el-col>
+                        </div>
+                        <div class="home-img-small">
+                            <el-col :span="24">
+                                <template v-if="showThree">
+                                    <el-image v-if="showThree.type ==='img'" :src="`/resources/`+ showThree.content" class="image" style="width:100%;height:195px;"/>
+                                    <video :src="`/resources/`+ showThree.content" :controls="true" v-if="showThree.type === 'video'" style="width:100%;height:195px;">
+                                        您的浏览器不支持视频播放
+                                    </video>
+                                    <div class="home-show-title">{{showThree.title}}</div>
+                                    <div class="home-show"></div>
+                                </template>
+                                <template v-else>
+                                    <el-image class="image" style="width:100%;height:400px;">
+                                        <div slot="error" class="image-slot">
+                                          <i class="el-icon-picture-outline"></i>
+                                        </div>
+                                    </el-image>
+                                </template>
+                            </el-col>
+                        </div>
+                    </el-row>
+                </el-col>
+            </el-row>
+        </el-card>
+        <el-card class="box-card">
             <div slot="header" class="clearfix">
                 <span class="header-title">近期节目</span>
                 <router-link :to="{name:'ProgramList'}">
@@ -58,9 +121,9 @@
                     </div>
                 </el-col>
             </el-row>
-        </el-card>
-        <Rank />
-        <el-dialog
+      </el-card>
+      <Rank />
+      <el-dialog
             custom-class="info-dialog"
             title="提示"
             :visible.sync="centerDialogVisible"
@@ -71,7 +134,7 @@
             <span slot="footer" class="dialog-footer dbtn">
                 <el-button type="primary" round @click="centerDialogVisible = false">确 定</el-button>
             </span>
-        </el-dialog>
+      </el-dialog>
     </div>
 </template>
 
@@ -99,6 +162,10 @@ export default class Home extends Vue {
 
     private recentList = []
     private slideshowList= []
+    private showOne = {}
+    private showTwo = {}
+    private showThree = {}
+
     private centerDialogVisible=false
     private programTime = ""
     protected mounted() {
@@ -122,7 +189,11 @@ export default class Home extends Vue {
             this.status = res[0]
             this.programStatus = res[1]
             this.slideshowList = res[2].data
+            this.showOne = res[2].data[0]
+            this.showTwo = res[2].data[1]
+            this.showThree = res[2].data[2]
             this.recentList = res[3].data
+            console.log(res[2].data)
         }).catch(() => {
             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
         })
@@ -164,5 +235,40 @@ export default class Home extends Vue {
     }
     .card-img {
         cursor: pointer;
+    }
+    .home-img {
+        height: 400px;
+        overflow: hidden;
+        position: relative;
+        border-radius: 8px;
+        .image {
+          border-radius: 8px;
+        }
+    }
+    .home-show {
+        background: #3d3c3c;
+        position: absolute;
+        z-index: 110;
+        bottom: 0;
+        width: 100%;
+        height: 40px;
+        opacity: .5;
+    }
+    .home-show-title {
+        position: absolute;
+        z-index: 111;
+        bottom: 0;
+        line-height: 40px;
+        color: #fff;
+        padding-left: 15px;
+    }
+    .home-img-small {
+        height: 195px;
+        overflow: hidden;
+        position: relative;
+        border-radius: 8px;
+    }
+    .home-img-small:first-child {
+      margin-bottom: 10px;
     }
 </style>

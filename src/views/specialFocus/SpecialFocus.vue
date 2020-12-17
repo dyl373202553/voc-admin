@@ -39,6 +39,15 @@
                         />
                     </el-col>
                 </el-form-item>
+                <el-form-item label="标题内容"
+                    prop="title"
+                    :rules="[
+                    { required: true, message: '请输入标题内容', trigger: 'blur' }
+                    ]">
+                    <el-col :span="11">
+                        <el-input v-model="dataForm.title" placeholder="请输入标题内容"></el-input>
+                    </el-col>
+                </el-form-item>
                 <el-form-item label="内容上传"  prop="logoUrl"
                     :rules="[
                     { required: true, message: '内容上传不能为空'}
@@ -89,7 +98,7 @@
                 </el-form-item>
                 <el-form-item v-show="$route.params.viewStatus !== '3'" class="dbtn text-center">
                     <el-button type="primary" round @click="onSubmit" v-show="!this.over"
-                     :disabled="!(dataForm.startTime && dataForm.endTime && this.dataForm.content)"
+                     :disabled="!(dataForm.startTime && dataForm.endTime && this.dataForm.content && dataForm.title)"
                      >发布</el-button>
                     <!-- <el-button v-show="$route.params.statusName" type="primary" round>编辑</el-button> -->
                     <el-button v-show="$route.params.viewStatus && !this.over" type="danger" plain round @click="onOffLine($route.params.id)">结束</el-button>
@@ -121,6 +130,7 @@ export default class SpecialFocus extends Vue {
         startTime: "",
         endTime: "",
         content: "",
+        title: "",
         status: "0", // 上线状态（0：上线，1：下线）
         id: "",
         type: ""
