@@ -10,13 +10,13 @@
             <el-col :span="12">
               <el-form-item label="节目开始时间">
                 <el-date-picker v-model="startTime"
-                    type="date" placeholder="请选择开始时间"
+                    type="datetime" placeholder="请选择开始时间"
                     @change="checkDate" suffix-icon="el-icon-date" style="width:100%" />
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="节目结束时间">
-                <el-date-picker v-model="endTime" type="date"
+                <el-date-picker v-model="endTime" type="datetime"
                     placeholder="请选择结束时间" @change="checkDate" suffix-icon="el-icon-date" style="width:100%" />
               </el-form-item>
             </el-col>
@@ -217,10 +217,10 @@ export default class OverseeCheck extends Vue {
 
     private search() {
         if (this.startTime) {
-            this.dataForm.startTime = day(this.startTime, "YYYY-MM-DD")
+            this.dataForm.startTime = day(this.startTime, "YYYY-MM-DD HH:mm:ss")
         }
         if (this.endTime) {
-            this.dataForm.endTime = day(this.endTime, "YYYY-MM-DD")
+            this.dataForm.endTime = day(this.endTime, "YYYY-MM-DD HH:mm:ss")
         }
         this.load()
     }
