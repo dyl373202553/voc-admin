@@ -490,15 +490,15 @@ body {
     .dspan-info {
       position: absolute;
       top: 15px;
-      right: 20px;
+      left: 20px;
       font-size: 14px;
       color: #999999;
     }
   }
-  & .el-tab-pane {
-    background: #FCFDFF;
-    border: 1px solid #DFEAFF;
-  }
+  // & .el-tab-pane {
+  //   background: #FCFDFF;
+  //   border: 1px solid #DFEAFF;
+  // }
   & .el-table::before {
     background-color: transparent;
   }
@@ -515,6 +515,7 @@ body {
         line-height: 40px;
         width: 150px;
         text-align: center;
+        display: none;
         span {
           font-size: 15px;
           color: #666666;
@@ -548,10 +549,14 @@ body {
     color: #5D5D5D;
   }
   .el-table th {
-    background: #7BA7EC;
-    color: #fff;
+    // background: #7BA7EC;
+    // color: #fff;
+    // font-size: 18px;
+    // border-left: 1px solid #A3C3F3;
+    background: #eef4ff;
+    color: #747476;
     font-size: 18px;
-    border-left: 1px solid #A3C3F3;
+    border-left: 1px solid #e0eaff;
   }
   .el-table tr th:first-child{
     border-left: none;
@@ -563,11 +568,14 @@ body {
   // 2级tabs
   .home-table-tabs {
     & .el-tab-pane {
-      border: none;
+      border: 1px solid #eef3ff;
     }
     .el-tabs__item {
       height: 30px;
       line-height: 30px;
+      padding: 0 10px !important;
+      border: 1px solid #e6e6e6;
+      color: #909090;
     }
     .el-tabs__header {
       padding: 12px 27px 0;
@@ -576,13 +584,18 @@ body {
       background-color: transparent;
     }
     .el-tabs__item.is-active {
-      color: #fff;
-      background: #4484F6;
-      border-radius: 20px;
-      padding: 0 12px;
+      // color: #fff;
+      // background: #4484F6;
+      // border-radius: 20px;
+      // padding: 0 12px;
+      border: 1px solid #7ba7ec;
+      color: #7ba7ec;
     }
     .el-tabs__active-bar {
       background-color: transparent;
+    }
+    .el-tabs__nav {
+      float: right;
     }
   }
 }
@@ -711,4 +724,9 @@ body {
   color: #999999;
   font-size: 14px;
   padding: 20px 0 60px;
+}
+.dcolloapse {
+  .el-collapse-item__wrap {
+    border: none;
+  }
 }
