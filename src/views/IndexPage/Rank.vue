@@ -143,7 +143,6 @@ export default class Home extends Vue {
     }
 
     private tabChange(name: string) {
-        console.log(name)
         this.rankList = name
     }
 }
