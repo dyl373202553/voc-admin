@@ -19,15 +19,15 @@
             </div>
             <div class="main">
                 <div v-if="this.programForm.guests">
-                    <div class="main-title">本期嘉宾</div>
+                    <div class="main-title">—— 本期嘉宾 ——</div>
                     <p>{{this.programForm.guests}}</p>
                 </div>
                 <div>
-                    <div class="main-title">本期简介</div>
+                    <div class="main-title">—— 本期简介 ——</div>
                     <p>{{this.programForm.summary}}</p>
                 </div>
                 <div>
-                    <div class="main-title">节目内容</div>
+                    <div class="main-title">—— 节目内容 ——</div>
                     <div v-html="this.programForm.content" style="font-size:14px;letter-spacing: 1px;line-height: 24px;"></div>
                 </div>
                 <div v-if="this.programFormFileId.length!==0">
