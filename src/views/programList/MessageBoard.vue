@@ -40,20 +40,20 @@
                                     <p>{{item.content}}</p>
                                     <div class="text-right margin-top10 info">
                                         <span class="fl checkBack" @click="checkBack(item.id, key)" v-if="item.subCount !==0 ">查看全部回复<i class="el-icon-arrow-right"></i></span>
-                                        <span class="fl wonderful" v-show="item.wonderfulFlag === '1' && userrole===0"
-                                            @click="setWonderful(item.id, '0')">设置精彩留言</span>
-                                        <span class="fl wonderful" v-show="item.wonderfulFlag === '0' && userrole===0"
-                                            @click="setWonderful(item.id, '1')">取消精彩留言</span>
+                                        <span class="fl wonderful" v-show="!showWonderful[key] && userrole===0"
+                                            @click="setWonderful(item, '0', key)">设置精彩留言</span>
+                                        <span class="fl wonderful" v-show="showWonderful[key] && userrole===0"
+                                            @click="setWonderful(item, '1', key)">取消精彩留言</span>
                                         <span class="optionBtn" @click="indexRepeat=item.id+key"><img src="@/assets/images/icon_repeat.png"/></span>
-                                        <span class="optionBtn" v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)">
+                                        <span class="optionBtn" v-if="!showLike[key]" @click="getLike(item, key, 'all')">
                                             <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
                                             <span>{{item.praiseNum}}</span>
                                         </span>
-                                        <span class="optionBtn" v-if="item.ownerPraiseStatus ==='0'" >
+                                        <span class="optionBtn" v-if="showLike[key]" >
                                             <img src="@/assets/images/icon_like_blue.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
-                                            <span>{{item.praiseNum}}</span>
+                                            <span>{{item.praiseNum + 1}}</span>
                                         </span>
-                                        <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(item.id)"><img src="@/assets/images/icon_del.png"/></span>
+                                        <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(item.id, key, 'all')"><img src="@/assets/images/icon_del.png"/></span>
                                     </div>
                                     <div class="text-right margin-top10 info" v-if="indexRepeat=== item.id+key">
                                         <template>
@@ -84,15 +84,15 @@
                                                     </div>
                                                     <p>{{itemChild.content}}</p>
                                                     <div class="text-right margin-top10 info">
-                                                        <span class="optionBtn" v-if="itemChild.ownerPraiseStatus !=='0'" @click="getLike(itemChild.id)">
+                                                        <!-- <span class="optionBtn" v-if="itemChild.ownerPraiseStatus !=='0'" @click="getLike(itemChild.id)">
                                                             <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
                                                             <span>{{itemChild.praiseNum}}</span>
                                                         </span>
                                                         <span class="optionBtn" v-if="itemChild.ownerPraiseStatus ==='0'" >
                                                             <img src="@/assets/images/icon_like_blue.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
                                                             <span>{{itemChild.praiseNum}}</span>
-                                                        </span>
-                                                        <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(item.id)"><img src="@/assets/images/icon_del.png"/></span>
+                                                        </span> -->
+                                                        <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(itemChild.id, key, 'child')"><img src="@/assets/images/icon_del.png"/></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -139,15 +139,15 @@
                                         <span class="fl wonderful" v-show="item.wonderfulFlag === '0' && userrole===0"
                                             @click="setWonderful(item.id, '1')">取消精彩留言</span>
                                         <span class="optionBtn" @click="indexRepeat=item.id+key"><img src="@/assets/images/icon_repeat.png"/></span>
-                                        <span class="optionBtn" v-if="item.ownerPraiseStatus !=='0'" @click="getLike(item.id)">
+                                        <span class="optionBtn" v-if="!showLikeWonderful[key]" @click="getLike(item, key, 'wonderful')">
                                             <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
                                             <span>{{item.praiseNum}}</span>
                                         </span>
-                                        <span class="optionBtn" v-if="item.ownerPraiseStatus ==='0'" >
+                                        <span class="optionBtn" v-if="showLikeWonderful[key]" >
                                             <img src="@/assets/images/icon_like_blue.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
-                                            <span>{{item.praiseNum}}</span>
+                                            <span>{{item.praiseNum+1}}</span>
                                         </span>
-                                        <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(item.id)"><img src="@/assets/images/icon_del.png"/></span>
+                                        <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(item.id, key, 'Wonderful')"><img src="@/assets/images/icon_del.png"/></span>
                                     </div>
                                     <div class="text-right margin-top10 info" v-if="indexRepeat=== item.id+key">
                                         <template>
@@ -178,15 +178,15 @@
                                                     </div>
                                                     <p>{{itemChild.content}}</p>
                                                     <div class="text-right margin-top10 info">
-                                                        <span class="optionBtn" v-if="itemChild.ownerPraiseStatus !=='0'" @click="getLike(itemChild.id)">
+                                                        <!-- <span class="optionBtn" v-if="itemChild.ownerPraiseStatus !=='0'" @click="getLike(itemChild.id)">
                                                             <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
                                                             <span>{{itemChild.praiseNum}}</span>
                                                         </span>
                                                         <span class="optionBtn" v-if="itemChild.ownerPraiseStatus ==='0'" >
                                                             <img src="@/assets/images/icon_like_blue.png" style="vertical-align: text-bottom;cursor: not-allowed;"/>
                                                             <span>{{itemChild.praiseNum}}</span>
-                                                        </span>
-                                                        <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(item.id)"><img src="@/assets/images/icon_del.png"/></span>
+                                                        </span> -->
+                                                        <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(itemChild.id, key, 'child')"><img src="@/assets/images/icon_del.png"/></span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -258,7 +258,12 @@ export default class MessageBoard extends Vue {
 
     private dataTotalWonderful = 0
     private pageTotalWonderful = 1
-    private messageListWonderful = []
+    private messageListWonderful: any = []
+    private showWonderful: any = []
+
+    private showLike: any = []
+    private showLikeWonderful: any = []
+
     private dataPageWonderful = {
         pageNum: 1,
         pageSize: 5,
@@ -279,6 +284,18 @@ export default class MessageBoard extends Vue {
                     this.messageList = this.messageList.concat(res.data) // 追加数据
                     this.dataTotal = res.total
                     this.pageTotal = res.pages
+                    for (let i = 0; i < res.data.length; i++) {
+                        if (res.data[i].wonderfulFlag === "0") {
+                            this.showWonderful.push(true)
+                        } else {
+                            this.showWonderful.push(false)
+                        }
+                        if (res.data[i].ownerPraiseStatus === "0") {
+                            this.showLike.push(true)
+                        } else {
+                            this.showLike.push(false)
+                        }
+                    }
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
@@ -293,6 +310,13 @@ export default class MessageBoard extends Vue {
                     this.messageListWonderful = this.messageListWonderful.concat(res.data) // 追加数据
                     this.dataTotalWonderful = res.total
                     this.pageTotalWonderful = res.pages
+                    for (let i = 0; i < res.data.length; i++) {
+                        if (res.data[i].ownerPraiseStatus === "0") {
+                            this.showLikeWonderful.push(true)
+                        } else {
+                            this.showLikeWonderful.push(false)
+                        }
+                    }
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
@@ -360,15 +384,21 @@ export default class MessageBoard extends Vue {
     }
 
     // 点赞
-    private getLike(id: string) {
+    private getLike(item: any, index: number, name: string) {
         const params = {
             programId: this.$route.params.promId,
-            targetId: id
+            targetId: item.id
         }
         postLikeAdd(params).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    this.load()
+                    if (name === "all") {
+                        this.showLike[index] = !this.showLike[index]
+                        Vue.set(this.showLike, index, this.showLike[index])
+                    } else if (name === "wonderful") {
+                        this.showLikeWonderful[index] = !this.showLikeWonderful[index]
+                        Vue.set(this.showLikeWonderful, index, this.showLikeWonderful[index])
+                    }
                 } else {
                     MessageBox.alert(`操作失败`, "失败", { type: "error" })
                 }
@@ -379,16 +409,16 @@ export default class MessageBoard extends Vue {
     }
 
     // 设置精彩留言
-    private setWonderful(id: string, type: string) {
+    private setWonderful(item: any, type: string, index: number) {
         const params = {
-            id: id,
+            id: item.id,
             wonderfulFlag: type
         }
         postMessageSetWonderful(params).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    this.load()
-                    this.loadWonderful()
+                    this.showWonderful[index] = !this.showWonderful[index]
+                    this.messageListWonderful.unshift(item)
                     MessageBox.alert("设置成功", "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`操作失败`, "失败", { type: "error" })
@@ -400,15 +430,20 @@ export default class MessageBoard extends Vue {
     }
 
     // 删除留言
-    private liuyanDel(id: string) {
+    private liuyanDel(id: string, index: number, name: string) {
         const params = {
             id: id
         }
         getMessageDelete(params).then((res) => {
             if (res) {
                 if (res.code < 200) {
-                    this.load()
-                    this.loadWonderful()
+                    if (name === "all") {
+                        this.messageList.splice(index, 1)
+                    } else if (name === "Wonderful") {
+                        this.messageListWonderful.splice(index, 1)
+                    } else {
+                        this.messageChild.splice(index, 1)
+                    }
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
                 }
