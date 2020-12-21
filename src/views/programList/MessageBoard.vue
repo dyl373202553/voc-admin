@@ -134,10 +134,10 @@
                                     <p>{{item.content}}</p>
                                     <div class="text-right margin-top10 info">
                                         <span class="fl checkBack" @click="checkBack(item.id, key)" v-if="item.subCount !==0 ">查看全部回复<i class="el-icon-arrow-right"></i></span>
-                                        <span class="fl wonderful" v-show="item.wonderfulFlag === '1' && userrole===0"
+                                        <!-- <span class="fl wonderful" v-show="item.wonderfulFlag === '1' && userrole===0"
                                             @click="setWonderful(item.id, '0')">设置精彩留言</span>
                                         <span class="fl wonderful" v-show="item.wonderfulFlag === '0' && userrole===0"
-                                            @click="setWonderful(item.id, '1')">取消精彩留言</span>
+                                            @click="setWonderful(item.id, '1')">取消精彩留言</span> -->
                                         <span class="optionBtn" @click="indexRepeat=item.id+key"><img src="@/assets/images/icon_repeat.png"/></span>
                                         <span class="optionBtn" v-if="!showLikeWonderful[key]" @click="getLike(item, key, 'wonderful')">
                                             <img src="@/assets/images/icon_like.png" style="vertical-align: text-bottom;"/>
@@ -418,7 +418,8 @@ export default class MessageBoard extends Vue {
             if (res) {
                 if (res.code < 200) {
                     this.showWonderful[index] = !this.showWonderful[index]
-                    this.messageListWonderful.unshift(item)
+                    this.messageListWonderful = []
+                    this.loadWonderful()
                     MessageBox.alert("设置成功", "成功", { type: "success" })
                 } else {
                     MessageBox.alert(`操作失败`, "失败", { type: "error" })
