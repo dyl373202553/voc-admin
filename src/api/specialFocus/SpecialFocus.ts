@@ -34,3 +34,11 @@ export const postOffLine = (
         ids: string;
     }
 ) => { return postData(`${voc}/khzsSpecialAttention/offline`, { ids }) }
+
+// 特别关注- 置顶
+export const postSetTop = (
+    { id, topFlag }: {
+        id: string;
+        topFlag: number;
+    }
+) => { return postData(`${voc}/khzsSpecialAttention/setTop`, { id, topFlag }) }

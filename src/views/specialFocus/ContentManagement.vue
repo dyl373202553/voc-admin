@@ -19,12 +19,14 @@
                     </span>
                 </div>
             </el-table-column>
-            <el-table-column label="操作" width="150px">
+            <el-table-column label="操作" width="200px" align="center" >
                 <div slot-scope="scope">
-                <router-link :to="{name:'SpecialFocus', params: {viewStatus:scope.row.viewStatus, id:scope.row.id}, query: { id: scope.row.id } }">
-                    <el-button type="text" size="small">查看</el-button>
-                </router-link>
-                <el-button v-show="scope.row.viewStatus !== '3'" type="text" size="small"  @click="onOffLine(scope.row.id)">结束</el-button>
+                  <router-link :to="{name:'SpecialFocus', params: {viewStatus:scope.row.viewStatus, id:scope.row.id}, query: { id: scope.row.id } }">
+                      <el-button type="text" size="small">查看</el-button>
+                  </router-link>
+                  <el-button v-show="scope.row.viewStatus !== '3'" type="text" size="small"  @click="onOffLine(scope.row.id)">结束</el-button>
+                  <el-button v-show="scope.row.viewStatus !== '3' && !getIstop" type="text" size="small"  @click="setTop(scope.row, 'top')">置顶</el-button>
+                  <el-button v-show="scope.row.topFlag === 0 && getIstop" type="text" size="small"  @click="setTop(scope.row,'cancel')">取消置顶</el-button>
                 </div>
             </el-table-column>
             </el-table>
@@ -44,12 +46,16 @@
 
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator"
-import { getSpecialFocusList, postOffLine } from "@/api/specialFocus/SpecialFocus"
+import { getSpecialFocusList, postOffLine, postSetTop } from "@/api/specialFocus/SpecialFocus"
+import { PageModule } from "@/store/module/page";
 import { getViewStatus } from "@/api/dict"
 import { MessageBox } from "element-ui"
 import Cookies from "js-cookie"
 @Component
 export default class ContentManagement extends Vue {
+    get getIstop() {
+        return PageModule.isTop
+    }
     private centerDialogVisible = false
     private tableData = []
     private dataTotal = 0
@@ -58,6 +64,7 @@ export default class ContentManagement extends Vue {
         pageSize: 10
     }
 
+    private showTop = true
     private status: any = []
 
     private userrole: any= ""
@@ -132,6 +139,30 @@ export default class ContentManagement extends Vue {
     //         }
     //     })
     // }
+    private setTop(item: any, name: string) {
+        const params = {
+            id: item.id,
+            topFlag: 1
+        }
+        if (name === "top") {
+            params.topFlag = 0
+        }
+        postSetTop(params).then((res) => {
+            if (res) {
+                if (res.code === 0) {
+                    this.load()
+                    if (name === "top") {
+                      PageModule.setIsTop(true)
+                    } else {
+                      PageModule.setIsTop(false)
+                    }
+                    MessageBox.alert(res.message, "成功", { type: "success" })
+                } else {
+                    MessageBox.alert(`操作失败`, "失败", { type: "error" })
+                }
+            }
+        })
+    }
 }
 </script>
 <style lang="scss" scoped>
