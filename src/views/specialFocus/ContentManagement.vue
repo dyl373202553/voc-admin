@@ -26,12 +26,12 @@
                   </router-link>
                   <el-button v-show="scope.row.viewStatus !== '3'" type="text" size="small"  @click="onOffLine(scope.row.id)">结束</el-button>
                   <el-button v-show="scope.row.viewStatus !== '3' && !getIstop" type="text" size="small"  @click="setTop(scope.row, 'top')">置顶</el-button>
-                  <el-button v-show="scope.row.topFlag === 0 && getIstop" type="text" size="small"  @click="setTop(scope.row,'cancel')">取消置顶</el-button>
+                  <el-button v-show="scope.row.topFlag === 0" type="text" size="small"  @click="setTop(scope.row,'cancel')">取消置顶</el-button>
                 </div>
             </el-table-column>
             </el-table>
             <div class="dpagination">
-                <el-pagination
+                <el-pagination 
                 background
                 @current-change="handleCurrentChange"
                 :current-page="dataPage.pageNum"
@@ -80,6 +80,13 @@ export default class ContentManagement extends Vue {
             Promise.all([status, tableData]).then((res) => {
                 this.status = res[0]
                 this.tableData = res[1].data
+                const arr = []
+                for (var i = 0; i < res[1].data.length; i++) {
+                    arr.push(res[1].data[i].topFlag)
+                }
+                if (arr.indexOf(0)!==-1) {
+                    PageModule.setIsTop(true)
+                }
                 this.dataTotal = res[1].total
             }).catch(() => {
                 MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
