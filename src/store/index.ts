@@ -2,7 +2,7 @@ import Vue from "vue"
 import Vuex from "vuex"
 import { UserState } from "./module/user"
 import { ConfigState } from "./module/config"
-import { PageState } from './module/page'
+import { PageState } from "./module/page"
 
 Vue.use(Vuex)
 
