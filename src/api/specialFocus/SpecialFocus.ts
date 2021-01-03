@@ -4,15 +4,16 @@ const { voc } = ConfigModule
 
 // 发布特别关注
 export const postSpecialFocus = (
-    { startTime, endTime, content, status, type, title }: {
+    { startTime, endTime, content, cover, status, type, title }: {
         startTime: string;
         endTime: string;
         content: string;
+        cover: string;
         title: string;
         status: string; // 上线状态（0：上线，1：下线）
         type: string;
     }
-) => { return postData(`${voc}/khzsSpecialAttention/save`, { startTime, endTime, content, status, type, title }) }
+) => { return postData(`${voc}/khzsSpecialAttention/save`, { startTime, endTime, content, cover, status, type, title }) }
 
 // 特别关注--内容管理
 export const getSpecialFocusList = (
