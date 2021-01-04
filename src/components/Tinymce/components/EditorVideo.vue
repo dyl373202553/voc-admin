@@ -1,7 +1,7 @@
 <template>
   <div class="upload-container">
     <el-button :style="{background:color,borderColor:color}" icon="el-icon-upload" size="mini" type="primary" @click=" dialogVisible=true">
-      上传图片
+      上传视频
     </el-button>
     <el-dialog :visible.sync="dialogVisible">
       <el-upload
@@ -17,7 +17,7 @@
         list-type="picture-card"
       >
         <el-button size="small" type="primary">
-          上传图片
+          上传视频
         </el-button>
       </el-upload>
       <el-button @click="dialogVisible = false">
@@ -31,10 +31,9 @@
 </template>
 
 <script>
-// import { getToken } from 'api/qiniu'
 import { UserModule } from "@/store/module/user"
 export default {
-    name: 'EditorSlideUpload',
+    name: 'EditorSlideUploadEditorVideo',
     props: {
         color: {
             type: String,
@@ -51,13 +50,6 @@ export default {
             }
         }
     },
-    // computed:{
-    //   userToken:{
-    //       get:function(){
-    //           return UserModule.token
-    //       }
-    //   }
-    // },
     methods: {
         checkAllSuccess() {
             console.log(this.listObj)
@@ -113,9 +105,9 @@ export default {
                 const img = new Image() 
                 console.log(img)
                 img.src = _URL.createObjectURL(file)
-                img.onload = function() {
+                // img.onload = function() {
                     _self.listObj[fileName] = { hasSuccess: false, uid: file.uid, width: this.width, height: this.height }
-                }
+                // }
                 resolve(true)
             })
           }

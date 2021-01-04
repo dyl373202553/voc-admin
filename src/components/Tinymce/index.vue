@@ -3,6 +3,7 @@
     <textarea :id="tinymceId" class="tinymce-textarea" />
     <div class="editor-custom-btn-container">
       <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
+      <editorVideo color="#1890ff" class="editor-upload-btn" @successCBK="videoSuccessCBK" />
     </div>
   </div>
 </template>
@@ -13,6 +14,7 @@
  * https://panjiachen.github.io/vue-element-admin-site/feature/component/rich-editor.html#tinymce
  */
 import editorImage from './components/EditorImage'
+import editorVideo from './components/EditorVideo'
 import plugins from './plugins'
 import toolbar from './toolbar'
 import load from './dynamicLoadScript'
@@ -22,7 +24,7 @@ const tinymceCDN = 'https://cdn.jsdelivr.net/npm/tinymce-all-in-one@4.9.3/tinymc
 
 export default {
   name: 'Tinymce',
-  components: { editorImage },
+  components: { editorImage, editorVideo },
   props: {
     id: {
       type: String,
@@ -202,7 +204,17 @@ export default {
     },
     imageSuccessCBK(arr) {
       arr.forEach(v => window.tinymce.get(this.tinymceId).insertContent(`<img class="wscnph" src="${v.url}" >`))
+    },
+    videoSuccessCBK(arr) {
+      arr.forEach(v => window.tinymce.get(this.tinymceId).insertContent(
+        `<p>
+          <span class="mce-preview-object mce-object-video" contenteditable="false" data-mce-object="video" data-mce-p-allowfullscreen="allowfullscreen" data-mce-p-frameborder="no" data-mce-p-scrolling="no" data-mce-p-src=${v.url} data-mce-html="%20">
+              <video src=${v.url} width="420" controls="controls"></video>
+          </span>
+        </p>`
+      ))
     }
+    
   }
 }
 </script>
