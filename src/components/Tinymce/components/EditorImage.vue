@@ -11,8 +11,9 @@
         :on-remove="handleRemove"
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
+        :headers = headerUpload
         class="editor-slide-upload"
-        action="https://httpbin.org/post"
+        action="/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=2"
         list-type="picture-card"
       >
         <el-button size="small" type="primary">
@@ -31,7 +32,7 @@
 
 <script>
 // import { getToken } from 'api/qiniu'
-
+import { UserModule } from "@/store/module/user"
 export default {
     name: 'EditorSlideUpload',
     props: {
@@ -44,17 +45,30 @@ export default {
         return {
             dialogVisible: false,
             listObj: {},
-            fileList: []
+            fileList: [],
+            headerUpload: {
+                Authorization: `Bearer ${UserModule.token}`
+            }
         }
     },
+    // computed:{
+    //   userToken:{
+    //       get:function(){
+    //           return UserModule.token
+    //       }
+    //   }
+    // },
     methods: {
         checkAllSuccess() {
+            console.log(this.listObj)
             return Object.keys(this.listObj).every(item => this.listObj[item].hasSuccess)
         },
         handleSubmit() {
             const arr = Object.keys(this.listObj).map(v => this.listObj[v])
+            console.log(arr)
+            console.log(this.checkAllSuccess())
             if (!this.checkAllSuccess()) {
-                this.$message('Please wait for all images to be uploaded successfully. If there is a network problem, please refresh the page and upload again!')
+                this.$message('请等待所有的文件上传完毕，如果网络有问题请再次刷新!')
                 return
             }
             this.$emit('successCBK', arr)
@@ -64,13 +78,20 @@ export default {
         },
         handleSuccess(response, file) {
             const uid = file.uid
+            console.log(this.listObj)
             const objKeyArr = Object.keys(this.listObj)
+            console.log(response)
+            console.log(file)
+            console.log(objKeyArr)
             for (let i = 0, len = objKeyArr.length; i < len; i++) {
+                console.log(objKeyArr[i])
+                console.log(this.listObj[objKeyArr[i]].uid)
                 if (this.listObj[objKeyArr[i]].uid === uid) {
-                    this.listObj[objKeyArr[i]].url = response.files.file
+                    this.listObj[objKeyArr[i]].url = `/resources/` + response.data.filePath
                     this.listObj[objKeyArr[i]].hasSuccess = true
                     return
                 }
+                console.log(this.listObj)
             }
         },
         handleRemove(file) {
@@ -89,7 +110,8 @@ export default {
             const fileName = file.uid
             this.listObj[fileName] = {}
             return new Promise((resolve, reject) => {
-                const img = new Image()
+                const img = new Image() 
+                console.log(img)
                 img.src = _URL.createObjectURL(file)
                 img.onload = function() {
                     _self.listObj[fileName] = { hasSuccess: false, uid: file.uid, width: this.width, height: this.height }
