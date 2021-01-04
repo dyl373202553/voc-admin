@@ -21,8 +21,8 @@
                     <div class="home-img">
                         <template v-if="showOne">
                             <el-image v-if="showOne.type ==='img'" :src="`/resources/`+ showOne.cover" class="image" style="width:100%;height:400px;"/>
-                            <video :poster="`/resources/`+ showOne.content"  :controls="true" v-if="showOne.type === 'video'" style="width:100%;height:400px;">
-                                <source :src="`/resources/`+ showOne.cover" />
+                            <video :poster="`/resources/`+ showOne.cover"  :controls="true" v-if="showOne.type === 'video'" style="width:100%;height:400px;">
+                                <source :src="`/resources/`+ showOne.content" />
                                 您的浏览器不支持视频播放
                             </video>
                             <div class="home-show-title">{{showOne.title}}</div>
@@ -43,8 +43,8 @@
                             <el-col :span="24">
                                 <template v-if="showTwo">
                                     <el-image v-if="showTwo.type ==='img'" :src="`/resources/`+ showTwo.cover" class="image" style="width:100%;height:195px;"/>
-                                    <video :poster="`/resources/`+ showTwo.content"  :controls="true" v-if="showOne.type === 'video'" style="width:100%;height:195px;">
-                                        <source :src="`/resources/`+ showTwo.cover" />
+                                    <video :poster="`/resources/`+ showTwo.cover"  :controls="true" v-if="showOne.type === 'video'" style="width:100%;height:195px;">
+                                        <source :src="`/resources/`+ showTwo.content" />
                                         您的浏览器不支持视频播放
                                     </video>
                                     <div class="home-show-title">{{showTwo.title}}</div>
@@ -63,8 +63,8 @@
                             <el-col :span="24">
                                 <template v-if="showThree">
                                     <el-image v-if="showThree.type ==='img'" :src="`/resources/`+ showThree.cover" class="image" style="width:100%;height:195px;"/>
-                                    <video :poster="`/resources/`+ showThree.content"  :controls="true" v-if="showOne.type === 'video'" style="width:100%;height:195px;">
-                                        <source :src="`/resources/`+ showThree.cover" />
+                                    <video :poster="`/resources/`+ showThree.cover"  :controls="true" v-if="showOne.type === 'video'" style="width:100%;height:195px;">
+                                        <source :src="`/resources/`+ showThree.content" />
                                         您的浏览器不支持视频播放
                                     </video>
                                     <div class="home-show-title">{{showThree.title}}</div>

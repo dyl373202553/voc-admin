@@ -96,9 +96,29 @@
                         </div>
                     </el-col>
                 </el-form-item>
+                <el-form-item label="封面上传"  prop="logoUrl"
+                    v-show="this.dataForm.type === 'video'"
+                    :rules="[
+                    { required: true, message: '内容上传不能为空'}
+                    ]"
+                  >
+                    <el-upload
+                        class="upload-cover"
+                        :action="' '"
+                        list-type="picture"
+                        ref="upload"
+                        accept=".jpg,.png,.jpeg"
+                        :auto-upload="true"
+                        :http-request="uploadRequest"
+                        :limit="1"
+                        >
+                        <el-button size="small" type="primary" plain>选择文件</el-button>
+                        <span class="dgrey" slot="tip" style="margin-left:20px;">请上传小于150M的文件，支持格式png/jpg</span>
+                    </el-upload>
+                </el-form-item>
                 <el-form-item v-show="$route.params.viewStatus !== '3'" class="dbtn text-center">
                     <el-button type="primary" round @click="onSubmit" v-show="!this.over"
-                     :disabled="!(dataForm.startTime && dataForm.endTime && this.dataForm.content && dataForm.title)"
+                     :disabled="!(dataForm.startTime && dataForm.endTime && dataForm.title && (this.dataForm.content || this.dataForm.cover))"
                      >发布</el-button>
                     <!-- <el-button v-show="$route.params.statusName" type="primary" round>编辑</el-button> -->
                     <el-button v-show="$route.params.viewStatus && !this.over" type="danger" plain round @click="onOffLine($route.params.id)">结束</el-button>
@@ -130,6 +150,7 @@ export default class SpecialFocus extends Vue {
         startTime: "",
         endTime: "",
         content: "",
+        cover: "moa-customervoice/khzsSpecialAttention/default.png",
         title: "",
         status: "0", // 上线状态（0：上线，1：下线）
         id: "",
@@ -152,6 +173,8 @@ export default class SpecialFocus extends Vue {
     ]
 
     private dataListFile: any = []
+
+    // 上传封面
 
     // 时间-不得选早于之前的
     private expireTimeOption = {
@@ -216,6 +239,7 @@ export default class SpecialFocus extends Vue {
                 MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
             }
         })
+        console.log(this.dataForm)
     }
 
     // 结束-下线
@@ -288,12 +312,55 @@ export default class SpecialFocus extends Vue {
         }
     }
 
+    // 上传封面
+
+    private uploadRequest(option: any) {
+        const isLt = option.file.size / 1024 / 1024 <= 150
+        if (!isLt) {
+            option.onError()
+            this.$message.error("上传附件大小不能超过 150M! 请重新选择")
+            return false
+        } else if (isLt) {
+            const formData = new FormData()
+            formData.append("file", option.file) // 传参改为formData格式
+            axios({
+                method: "post",
+                url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=2`, // 请求后端的url
+                headers: {
+                    "Content-Type": "multipart/form-data", // 设置headers
+                    Authorization: `Bearer ${this.userToken}`
+                },
+                data: formData,
+                onUploadProgress: (progressEvent) => {
+                    const num = progressEvent.loaded / progressEvent.total * 100 | 0 // 百分比
+                    option.onProgress({ percent: num }) // 进度条
+                }
+            })
+                .then((res: any) => {
+                    if (res) {
+                        if (res.data.code < 200) {
+                            // 上传成功
+                            this.dataForm.cover = res.data.data.filePath
+                            option.onSuccess() // 上传成功(打钩的小图标)
+                        }
+                    } else {
+                        // 上传失败
+                        option.onError("上传失败")
+                    }
+                })
+                .catch(() => {
+                    // 请求失败
+                    option.onError("上传失败")
+                })
+        }
+    }
+
     private upbtn() {
         const formData = new FormData()
         formData.append("file", this.dfile.raw) // 传参改为formData格式
         axios({
             method: "post",
-            url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=1`, // 请求后端的url
+            url: `/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=2`, // 请求后端的url
             headers: {
                 "Content-Type": "multipart/form-data", // 设置headers
                 Authorization: `Bearer ${this.userToken}`
@@ -309,7 +376,17 @@ export default class SpecialFocus extends Vue {
                 if (res) {
                     if (res.data.code < 200) {
                         // 上传成功
-                        this.dataForm.content = res.data.data.filePath
+                        console.log(res.data.data)
+                        // 测试
+                        if (this.dataForm.type === "img") {
+                            console.log("img")
+                            this.dataForm.cover = res.data.data.filePath
+                        } else { // 视频
+                            console.log("video")
+                            console.log(this.dataForm.content)
+                            this.dataForm.content = res.data.data.filePath
+                        }
+                        
                         if (this.progressPercent === 100) {
                             // this.progressFlag = false
                             this.showFile = 3
@@ -331,6 +408,7 @@ export default class SpecialFocus extends Vue {
         this.dataListFile = []
         this.fileDataList = []
         this.dataForm.content = ""
+        this.dataForm.cover = ""
         this.progressFlag = false
         this.progressPercent = 0
         this.showFile = 0
