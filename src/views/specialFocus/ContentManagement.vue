@@ -45,7 +45,7 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator"
+import { Component, Vue, Watch } from "vue-property-decorator"
 import { getSpecialFocusList, postOffLine, postSetTop } from "@/api/specialFocus/SpecialFocus"
 import { PageModule } from "@/store/module/page";
 import { getViewStatus } from "@/api/dict"
@@ -53,6 +53,12 @@ import { MessageBox } from "element-ui"
 import Cookies from "js-cookie"
 @Component
 export default class ContentManagement extends Vue {
+    @Watch('$route.query.load')
+    protected onParamsIdChange(val: string) {
+      if (val === "1") {
+          this.load()
+      }
+    }
     get getIstop() {
         return PageModule.isTop
     }

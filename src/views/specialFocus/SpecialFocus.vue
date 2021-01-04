@@ -230,7 +230,8 @@ export default class SpecialFocus extends Vue {
                 if (res.code === 0) {
                     MessageBox.alert("发布成功", "成功", { type: "success" })
                     this.$router.push({
-                        name: "ContentManagement"
+                        name: "ContentManagement",
+                        query:{load: "1"}
                     })
                 } else {
                     MessageBox.alert(`操作失败`, "失败", { type: "error" })

@@ -346,3 +346,24 @@ textarea {
 .dcolloapse{
   border: none;
 }
+
+/* 上传封面 */
+.upload-cover {
+  width: 900px;
+  height: 360px;
+}
+/* .upload-cover .el-upload-list--picture .el-upload-list__item {
+  height: auto;
+}
+.upload-cover .el-upload-list--picture .el-upload-list__item-thumbnail {
+  width: 858px;
+  height: 360px;
+} */
+
+.upload-cover .el-upload-list--picture .el-upload-list__item-thumbnail {
+    width: 108%;
+    height: 274px;
+}
+.upload-cover .el-upload-list--picture .el-upload-list__item {
+    height: auto;
+}
