@@ -34,6 +34,18 @@ export default [
         }
     },
     {
+        path: "/TinymceDemo",
+        name: "TinymceDemo",
+        hidden: true,
+        role: "all",
+        component: () => import("@/views/TinymceDemo.vue"),
+        meta: {
+            title: "components",
+            deepth: 2,
+            keepAlive: true // 需要被缓存
+        }
+    },
+    {
         path: "/programList",
         meta: { title: "我的节目" },
         role: "all",
