@@ -55,7 +55,7 @@
                   >
                   <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
                   <editorVideo color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
-                  <span class="dgrey" style="margin-left:20px;">请上传小于150M的文件，支持格式png/jpg/mp4/wma</span>
+                  <span class="dgrey" style="margin-left:10px;">请上传小于150M的文件，支持格式png/jpg/mp4/wma</span>
                 </el-form-item>
                 <el-form-item>
                   <div style="width:75%;height:247px; overflow: hidden;">
@@ -174,22 +174,21 @@ export default class SpecialFocus extends Vue {
         if (this.$route.params.id) {
             this.dataForm.id = this.$route.params.id
         }
-        // postSpecialFocus(this.dataForm).then((res) => {
-        //     if (res) {
-        //         if (res.code === 0) {
-        //             MessageBox.alert("发布成功", "成功", { type: "success" })
-        //             this.$router.push({
-        //                 name: "ContentManagement",
-        //                 query:{load: "1"}
-        //             })
-        //         } else {
-        //             MessageBox.alert(`操作失败`, "失败", { type: "error" })
-        //         }
-        //     } else {
-        //         MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-        //     }
-        // })
-        console.log(this.dataForm)
+        postSpecialFocus(this.dataForm).then((res) => {
+            if (res) {
+                if (res.code === 0) {
+                    MessageBox.alert("发布成功", "成功", { type: "success" })
+                    this.$router.push({
+                        name: "ContentManagement",
+                        query:{load: "1"}
+                    })
+                } else {
+                    MessageBox.alert(`操作失败`, "失败", { type: "error" })
+                }
+            } else {
+                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+            }
+        })
     }
 
     // 结束-下线
@@ -218,11 +217,9 @@ export default class SpecialFocus extends Vue {
     }
 
     private imageSuccessCBK(arr: any) {
-        console.log(arr)
         Vue.set(this.coverArr, "cover", arr[0].cover)
         Vue.set(this.coverArr, "type", arr[0].type)
         Vue.set(this.coverArr, "url", arr[0].url)
-        console.log(this.coverArr)
         this.dataForm.content = this.coverArr.url
         this.dataForm.type  = this.coverArr.type
         this.dataForm.cover  = this.coverArr.cover
