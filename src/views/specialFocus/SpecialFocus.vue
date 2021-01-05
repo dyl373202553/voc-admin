@@ -59,8 +59,8 @@
                 </el-form-item>
                 <el-form-item>
                   <div style="width:75%;height:247px; overflow: hidden;">
-                      <el-image v-show="coverArr.type==='img'" :src="coverArr.cover" fit="contain" class="image" />
-                      <video v-show="coverArr.type==='video'" :src="coverArr.url" :poster="coverArr.cover" :controls="true">
+                      <el-image v-show="coverArr.type==='img'" :src="coverArr.cover" fit="contain" class="image" style="height:auto" />
+                      <video v-show="coverArr.type==='video'" :src="coverArr.url" :poster="coverArr.cover" :controls="true" style="height:247px">
                           您的浏览器不支持视频播放
                       </video>
                   </div>
@@ -174,21 +174,21 @@ export default class SpecialFocus extends Vue {
         if (this.$route.params.id) {
             this.dataForm.id = this.$route.params.id
         }
-        postSpecialFocus(this.dataForm).then((res) => {
-            if (res) {
-                if (res.code === 0) {
-                    MessageBox.alert("发布成功", "成功", { type: "success" })
-                    this.$router.push({
-                        name: "ContentManagement",
-                        query:{load: "1"}
-                    })
-                } else {
-                    MessageBox.alert(`操作失败`, "失败", { type: "error" })
-                }
-            } else {
-                MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-            }
-        })
+        // postSpecialFocus(this.dataForm).then((res) => {
+        //     if (res) {
+        //         if (res.code === 0) {
+        //             MessageBox.alert("发布成功", "成功", { type: "success" })
+        //             this.$router.push({
+        //                 name: "ContentManagement",
+        //                 query:{load: "1"}
+        //             })
+        //         } else {
+        //             MessageBox.alert(`操作失败`, "失败", { type: "error" })
+        //         }
+        //     } else {
+        //         MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+        //     }
+        // })
         console.log(this.dataForm)
     }
 
