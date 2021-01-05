@@ -5,40 +5,46 @@
     </el-button>
     <el-dialog :visible.sync="dialogVisible">
        <el-upload
-        :multiple="true"
+        :limit="1"
         :file-list="fileListCover"
         :show-file-list="true"
         :on-success="handleSuccessCover"
+        :on-remove="handleRemoveCover"
         :headers = headerUpload
-        class="editor-slide-upload"
+        accept=".jpg,.png,.jpeg"
+        class="editor-slide-upload video-upload"
         action="/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=2"
         list-type="picture-card"
       >
-        <el-button size="small" type="primary">
-          上传封面
-        </el-button>
+        <div class="cover-border" v-show="coverShow">
+            <el-button size="small" type="primary">
+              上传封面
+            </el-button>
+        </div>
       </el-upload>
 
       <el-upload
-        :multiple="true"
+        v-show="!coverShow"
+        :limit="1"
+        accept=".mp4,.wma"
         :file-list="fileList"
         :show-file-list="true"
         :on-remove="handleRemove"
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         :headers = headerUpload
-        class="editor-slide-upload"
+        class="editor-slide-upload video-upload"
         action="/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=2"
-        list-type="picture-card"
+        list-type="text"
       >
-        <el-button size="small" type="primary">
+        <el-button size="small" type="primary" v-show="!coverShow && videShow">
           上传视频
         </el-button>
       </el-upload>
       <el-button @click="dialogVisible = false">
         取消
       </el-button>
-      <el-button type="primary" @click="handleSubmit">
+      <el-button type="primary" @click="handleSubmit" v-show="!videShow">
         确认
       </el-button>
     </el-dialog>
@@ -59,9 +65,11 @@ export default {
         return {
             dialogVisible: false,
             listObj: {},
+            coverShow: true,
+            videShow: true,
             coverUrl:"/resources/moa-customervoice/khzsSpecialAttention/default.png",
             fileList: [],
-            fileListCover:[],
+            fileListCover: [],
             headerUpload: {
                 Authorization: `Bearer ${UserModule.token}`
             }
@@ -82,11 +90,14 @@ export default {
             this.fileList = []
             this.fileListCover = []
             this.dialogVisible = false
+            this.coverShow = true
+            this.videShow = true
         },
         // 上传视频
         handleSuccess(response, file) {
             const uid = file.uid
             const objKeyArr = Object.keys(this.listObj)
+            this.videShow = false
             for (let i = 0, len = objKeyArr.length; i < len; i++) {
                 if (this.listObj[objKeyArr[i]].uid === uid) {
                     this.listObj[objKeyArr[i]].url = `/resources/` + response.data.filePath
@@ -97,6 +108,7 @@ export default {
             }
         },
         handleRemove(file) {
+            this.videShow = true
             const uid = file.uid
             const objKeyArr = Object.keys(this.listObj)
             for (let i = 0, len = objKeyArr.length; i < len; i++) {
@@ -124,8 +136,15 @@ export default {
           // 上传封面
           handleSuccessCover(response, file) {
               this.coverUrl = response.data.filePath
+              this.coverShow = false
               console.log(this.coverUrl)
-          }
+          },
+          handleRemoveCover(file) {
+              this.coverShow = true
+              this.coverUrl = "/resources/moa-customervoice/khzsSpecialAttention/default.png"
+              this.listObj = {}
+              this.fileList = []
+        }
       }
 }
 </script>
