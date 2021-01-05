@@ -398,4 +398,10 @@ textarea {
 .editor-upload-btn {
   margin-right: 13px;
   margin-top: 5px;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.specialFocus .editor-upload-btn {
+  float: left;
 }
