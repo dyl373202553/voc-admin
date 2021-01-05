@@ -391,3 +391,11 @@ textarea {
     height: 148px;
     line-height: 146px;
 }
+.release .el-dialog__body {
+  padding: 30px 20px;
+}
+
+.editor-upload-btn {
+  margin-right: 13px;
+  margin-top: 5px;
+}

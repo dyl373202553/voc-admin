@@ -1,6 +1,6 @@
 
 <template>
-  <div class="app-container">
+  <div class="app-container release">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
         <span v-show="!$route.params.summaryName" class="header-title">发布节目（注：仅节目主讲人进行发布）</span>
@@ -59,7 +59,9 @@
             :rules="[
             { required: true, message: '节目内容不能为空'}
         ]">
-            <EditorBar v-model="dataContent" :is-clear="isClear" :value="dataContent" :logoUrl="logoUrl"/>
+            <div class="components-container">
+                <Tinymce v-model="dataContent" :height="300" />
+            </div>
         </el-form-item>
         <el-form-item label="上传附件">
            <el-upload
@@ -78,7 +80,6 @@
         <el-form-item class="text-center dbtn">
           <el-button v-show="$route.params.summaryName" plain round @click="back">返回</el-button>
           <el-button type="primary" round @click="onSubmit"
-          :disabled="!(dataForm.liveId && dataForm.title && dataContent)"
           >提交</el-button>
         </el-form-item>
       </el-form>
@@ -93,9 +94,9 @@ import { getProgramName, getProgramKind } from "@/api/dict"
 import { MessageBox } from "element-ui"
 import { UserModule } from "@/store/module/user"
 import axios from "axios"
-import EditorBar from "@/components/wangEnditor/wangItems.vue"
+import Tinymce from '@/components/Tinymce/index.vue'
 @Component({
-    components: { EditorBar }
+    components: { Tinymce }
 })
 export default class ProgramRelease extends Vue {
     get userToken() {
@@ -209,18 +210,19 @@ export default class ProgramRelease extends Vue {
         this.dataForm.type = this.programType
         this.dataForm.content = this.dataContent
         this.dataForm.content = encodeURIComponent(this.dataForm.content)
-        postProgramRelease(this.dataForm).then((res) => {
-            if (res) {
-                if (res.code < 200) {
-                    MessageBox.alert(`发布成功`, "成功", { type: "success" })
-                    this.$router.push({
-                        name: "home"
-                    })
-                } else {
-                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-                }
-            }
-        })
+        console.log(this.dataContent)
+        // postProgramRelease(this.dataForm).then((res) => {
+        //     if (res) {
+        //         if (res.code < 200) {
+        //             MessageBox.alert(`发布成功`, "成功", { type: "success" })
+        //             this.$router.push({
+        //                 name: "home"
+        //             })
+        //         } else {
+        //             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+        //         }
+        //     }
+        // })
     }
 
     // 上传附件
