@@ -9,6 +9,7 @@
         :on-success="handleSuccessCover"
         :on-remove="handleRemoveCover"
         :headers = headerUpload
+        :on-change="changeImg"
         accept=".jpg,.png,.jpeg"
         class="editor-slide-upload video-upload"
         action="/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=2"
@@ -121,7 +122,6 @@ export default {
             const _URL = window.URL || window.webkitURL
             const fileName = file.uid
             this.listObj[fileName] = {}
-            console.log(this.coverUrl)
             return new Promise((resolve, reject) => {
                 // const img = new Image() 
                 // img.src = _URL.createObjectURL(file)
@@ -134,7 +134,6 @@ export default {
           // 上传封面
           handleSuccessCover(response, file) {
               this.coverUrl = response.data.filePath
-              this.coverShow = false
               console.log(this.coverUrl)
           },
           handleRemoveCover(file) {
@@ -142,6 +141,9 @@ export default {
               this.coverUrl = "/resources/moa-customervoice/khzsSpecialAttention/default.png"
               this.listObj = {}
               this.fileList = []
+        },
+        changeImg(file) {
+          this.coverShow = false
         }
       }
 }
