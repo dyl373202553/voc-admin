@@ -367,3 +367,27 @@ textarea {
 .upload-cover .el-upload-list--picture .el-upload-list__item {
     height: auto;
 }
+
+.video-upload .el-upload-list--picture-card .el-upload-list__item {
+    width: 100%;
+    height: 274px;
+}
+
+.video-upload .el-upload-list--picture .el-upload-list__item-thumbnail {
+  height: 274px;
+}
+.video-upload .el-upload--picture-card {
+  width: 100%;
+  height: revert;
+  line-height: inherit;
+  border: none;
+  background: transparent;
+}
+.cover-border {
+    border: 1px dashed #c0ccda;
+    border-radius: 6px;
+    box-sizing: border-box;
+    width: 100%;
+    height: 148px;
+    line-height: 146px;
+}
