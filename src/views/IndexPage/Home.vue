@@ -63,7 +63,7 @@
                             <el-col :span="24">
                                 <template v-if="showThree">
                                     <el-image v-if="showThree.type ==='img'" :src="`/resources/`+ showThree.cover" class="image" style="width:100%;height:195px;"/>
-                                    <video :poster="`/resources/`+ showThree.cover"  :controls="true" v-if="showOne.type === 'video'" style="width:100%;height:195px;">
+                                    <video :poster="`/resources/`+ showThree.cover"  :controls="true" v-if="showThree.type === 'video'" style="width:100%;height:195px;">
                                         <source :src="`/resources/`+ showThree.content" />
                                         您的浏览器不支持视频播放
                                     </video>
