@@ -53,14 +53,16 @@
                     { required: true, message: '内容上传不能为空'}
                     ]"
                   >
-                  <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
-                  <editorVideo color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
+                  <template v-if="$route.params.viewStatus !== '3'">
+                      <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
+                      <editorVideo color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
+                  </template>
                   <span class="dgrey" style="margin-left:10px;">请上传小于150M的文件，支持格式png/jpg/mp4/wma</span>
                 </el-form-item>
                 <el-form-item>
-                  <div style="width:75%;height:247px; overflow: hidden;">
-                      <el-image v-show="coverArr.type==='img'" :src="coverArr.cover" fit="contain" class="image" style="height:auto" />
-                      <video v-show="coverArr.type==='video'" :src="coverArr.url" :poster="coverArr.cover" :controls="true" style="height:247px">
+                  <div style="width:75%;height:195px; overflow: hidden;">
+                      <el-image v-show="coverArr.type==='img'" :src="coverArr.cover" fit="contain" class="image" style="height:195px;width:75%;" />
+                      <video v-show="coverArr.type==='video'" :src="coverArr.url" :poster="coverArr.cover" :controls="true" style="height:195px;width:75%;">
                           您的浏览器不支持视频播放
                       </video>
                   </div>

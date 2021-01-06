@@ -21,11 +21,11 @@
             </el-table-column>
             <el-table-column label="操作" width="200px" align="center" >
                 <div slot-scope="scope">
-                  <router-link :to="{name:'SpecialFocus', params: {viewStatus:scope.row.viewStatus, id:scope.row.id}, query: { id: scope.row.id } }">
+                  <router-link :to="{name:'SpecialFocus', params: {viewStatus:scope.row.viewStatus, id:scope.row.id}, query: { viewStatus:scope.row.viewStatus, id:scope.row.id } }">
                       <el-button type="text" size="small">查看</el-button>
                   </router-link>
                   <el-button v-show="scope.row.viewStatus !== '3'" type="text" size="small"  @click="onOffLine(scope.row.id)">结束</el-button>
-                  <el-button v-show="scope.row.viewStatus !== '3' && !getIstop" type="text" size="small"  @click="setTop(scope.row, 'top')">置顶</el-button>
+                  <el-button v-show="scope.row.viewStatus === '2' && !getIstop" type="text" size="small"  @click="setTop(scope.row, 'top')">置顶</el-button>
                   <el-button v-show="scope.row.topFlag === 0" type="text" size="small"  @click="setTop(scope.row,'cancel')">取消置顶</el-button>
                 </div>
             </el-table-column>
