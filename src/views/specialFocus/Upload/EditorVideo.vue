@@ -16,14 +16,14 @@
         list-type="picture-card"
       >
         <div class="cover-border" v-show="coverShow">
-            <el-button size="small" type="primary">
+            <img src="/resources/moa-customervoice/khzsSpecialAttention/default.png"/>
+            <el-button size="small" type="primary" class="cover-btn">
               上传封面
             </el-button>
         </div>
       </el-upload>
 
       <el-upload
-        v-show="!coverShow"
         :limit="1"
         accept=".mp4,.wma"
         :file-list="fileList"
@@ -36,7 +36,7 @@
         action="/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=2"
         list-type="text"
       >
-        <el-button size="small" type="primary" v-show="!coverShow && videShow">
+        <el-button size="small" type="primary" v-show="videShow">
           上传视频
         </el-button>
       </el-upload>
@@ -66,7 +66,7 @@ export default {
             listObj: {},
             coverShow: true,
             videShow: true,
-            coverUrl:"/resources/moa-customervoice/khzsSpecialAttention/default.png",
+            coverUrl:"moa-customervoice/khzsSpecialAttention/default.png",
             fileList: [],
             fileListCover: [],
             headerUpload: {
@@ -138,7 +138,7 @@ export default {
           },
           handleRemoveCover(file) {
               this.coverShow = true
-              this.coverUrl = "/resources/moa-customervoice/khzsSpecialAttention/default.png"
+              this.coverUrl = "moa-customervoice/khzsSpecialAttention/default.png"
               this.listObj = {}
               this.fileList = []
         },
