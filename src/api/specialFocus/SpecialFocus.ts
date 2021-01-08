@@ -14,7 +14,7 @@ export const postSpecialFocus = (
         status: string; // 上线状态（0：上线，1：下线）
         type: string;
     }
-) => { return postData(`${voc}/khzsSpecialAttention/save`, { id ,startTime, endTime, content, cover, status, type, title,topFlag:1 }) }
+) => { return postData(`${voc}/khzsSpecialAttention/save`, { id, startTime, endTime, content, cover, status, type, title, topFlag: 1 }) }
 
 // 特别关注--内容管理
 export const getSpecialFocusList = (
