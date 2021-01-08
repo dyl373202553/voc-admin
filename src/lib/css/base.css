@@ -419,3 +419,6 @@ textarea {
 .specialFocus .editor-upload-btn {
   float: left;
 }
+.mce-floatpanel.mce-popover.mce-bottom {
+  width: 200px !important;
+}
