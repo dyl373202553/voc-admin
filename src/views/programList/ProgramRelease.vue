@@ -210,19 +210,18 @@ export default class ProgramRelease extends Vue {
         this.dataForm.type = this.programType
         this.dataForm.content = this.dataContent
         this.dataForm.content = encodeURIComponent(this.dataForm.content)
-        console.log(this.dataContent)
-        // postProgramRelease(this.dataForm).then((res) => {
-        //     if (res) {
-        //         if (res.code < 200) {
-        //             MessageBox.alert(`发布成功`, "成功", { type: "success" })
-        //             this.$router.push({
-        //                 name: "home"
-        //             })
-        //         } else {
-        //             MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
-        //         }
-        //     }
-        // })
+        postProgramRelease(this.dataForm).then((res) => {
+            if (res) {
+                if (res.code < 200) {
+                    MessageBox.alert(`发布成功`, "成功", { type: "success" })
+                    this.$router.push({
+                        name: "home"
+                    })
+                } else {
+                    MessageBox.alert(`请联系管理员`, "失败", { type: "error" })
+                }
+            }
+        })
     }
 
     // 上传附件
