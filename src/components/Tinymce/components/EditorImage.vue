@@ -126,6 +126,7 @@ export default {
   margin-bottom: 20px;
   ::v-deep .el-upload--picture-card {
     width: 100%;
+    height: 274px;
   }
 }
 </style>
