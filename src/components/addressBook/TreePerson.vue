@@ -3,7 +3,9 @@
         <el-row :gutter="20">
             <el-col :span="12">
                 <div class="treePersonSearch" style="margin-bottom:10px;">
-                    <el-input v-model="searchPerson" placeholder="请输入搜索关键字" @change="searchChange"/>
+                    <el-input v-model="searchPerson" placeholder="请输入搜索关键字" class="input-with-select">
+                        <el-button slot="append" icon="el-icon-search" @click="searchChange"></el-button>
+                    </el-input>
                 </div>
                 <div class="searchPerson" v-if="searchPerson">
                     <div  class="nameShow" >
