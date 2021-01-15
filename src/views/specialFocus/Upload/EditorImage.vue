@@ -11,6 +11,7 @@
         :before-upload="beforeUpload"
         :on-change="changeImg"
         :headers = headerUpload
+        accept=".jpg,.png,.jpeg"
         class="editor-slide-upload video-upload"
         action="/vue-potal/portal-file/api/file/provider/resourcesUploadfile?busSource=moa-customervoice&filePath=khzsSpecialAttention&isystemName=2"
         list-type="picture-card"
@@ -135,7 +136,7 @@ export default {
   margin-bottom: 20px;
   ::v-deep .el-upload--picture-card {
     width: 100%;
-    height: 274px;
+    height: auto;
   }
 }
 .el-dialog {
