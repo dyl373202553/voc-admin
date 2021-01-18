@@ -22,7 +22,7 @@
                     <div class="main-title">—— 本期嘉宾 ——</div>
                     <p>{{this.programForm.guests}}</p>
                 </div>
-                <div>
+                <div v-if="this.programForm.summary">
                     <div class="main-title">—— 本期简介 ——</div>
                     <p>{{this.programForm.summary}}</p>
                 </div>
