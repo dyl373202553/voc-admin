@@ -134,7 +134,6 @@ export default {
           // 上传封面
           handleSuccessCover(response, file) {
               this.coverUrl = response.data.filePath
-              console.log(this.coverUrl)
           },
           handleRemoveCover(file) {
               this.coverShow = true
