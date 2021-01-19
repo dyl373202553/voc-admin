@@ -17,7 +17,7 @@
                             placeholder="请选择开始时间"
                             style="width: 100%;"
                             :picker-options="expireTimeOption"
-                            :disabled="$route.params.viewStatus === '2' || $route.params.viewStatus === '3'|| this.over"
+                            :disabled="$route.query.viewStatus === '2' || $route.query.viewStatus === '3'|| this.over"
                             @change="checkDate"
                         />
                     </el-col>
@@ -34,7 +34,7 @@
                             placeholder="请选择结束时间"
                             style="width: 100%;"
                             :picker-options="expireTimeOption"
-                            :disabled="$route.params.viewStatus === '3' || this.over"
+                            :disabled="$route.query.viewStatus === '3' || this.over"
                             @change="checkDate"
                         />
                     </el-col>
@@ -53,7 +53,7 @@
                     { required: true, message: '内容上传不能为空'}
                     ]"
                   >
-                  <template v-if="$route.params.viewStatus !== '3'">
+                  <template v-if="$route.query.viewStatus !== '3'">
                       <editorImage color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
                       <editorVideo color="#1890ff" class="editor-upload-btn" @successCBK="imageSuccessCBK" />
                   </template>
@@ -67,13 +67,13 @@
                       </video>
                   </div>
                 </el-form-item>
-                <el-form-item v-show="$route.params.viewStatus !== '3'" class="dbtn text-center">
+                <el-form-item v-show="$route.query.viewStatus !== '3'" class="dbtn text-center">
                     <el-button type="primary" round @click="onSubmit" v-show="!this.over"
                      :disabled="!(dataForm.startTime && dataForm.endTime && dataForm.title && (this.dataForm.content || this.dataForm.cover))"
                      >发布</el-button>
                     <!-- <el-button v-show="$route.params.statusName" type="primary" round>编辑</el-button> -->
-                    <el-button v-show="$route.params.viewStatus && !this.over" type="danger" plain round @click="onOffLine($route.params.id)">结束</el-button>
-                    <el-button v-show="$route.params.viewStatus && this.over" type="danger"  plain round :disabled="this.over">已结束</el-button>
+                    <el-button v-show="$route.query.viewStatus && !this.over" type="danger" plain round @click="onOffLine($route.query.id)">结束</el-button>
+                    <el-button v-show="$route.query.viewStatus && this.over" type="danger"  plain round :disabled="this.over">已结束</el-button>
                 </el-form-item>
             </el-form>
         </el-card>
@@ -143,7 +143,7 @@ export default class SpecialFocus extends Vue {
     protected mounted() {
         this.userrole = Cookies.get("userrole")
         if (this.userrole === "0") {
-            if (this.$route.params.id) {
+            if (this.$route.query.id) {
                 this.load()
             }
         } else {
@@ -155,12 +155,12 @@ export default class SpecialFocus extends Vue {
 
     private load() {
         const params = {
-            id: this.$route.params.id
+            id: this.$route.query.id as string
         }
         getSpecialFocusDetail(params).then((res) => {
             if (res) {
                 this.dataForm = res.data
-                if (this.$route.params.viewStatus !== "3") {
+                if (this.$route.query.viewStatus !== "3") {
                     this.coverArr.url = this.dataForm.content
                     this.coverArr.cover = this.dataForm.cover
                     this.coverArr.type = this.dataForm.type
@@ -173,8 +173,8 @@ export default class SpecialFocus extends Vue {
     private onSubmit() {
         this.dataForm.startTime = day(this.dataForm.startTime, "YYYY-MM-DD HH:mm:ss")
         this.dataForm.endTime = day(this.dataForm.endTime, "YYYY-MM-DD HH:mm:ss")
-        if (this.$route.params.id) {
-            this.dataForm.id = this.$route.params.id
+        if (this.$route.query.id) {
+            this.dataForm.id = this.$route.query.id as string
         }
         postSpecialFocus(this.dataForm).then((res) => {
             if (res) {
