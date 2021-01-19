@@ -132,8 +132,8 @@
                 <el-button v-if="this.$route.query.status === '2' || this.$route.query.status === '5'"  type="primary" round :disabled="!dsummaryContent" @click="onSubmit">提交</el-button>
             </div>
             <div v-show="this.$route.query.status === '3'" class="bottom dbtn">
-                <el-button type="danger" round plain @click="allBack"  v-show="this.superviseMeasuresList.lenght>1">一键退回</el-button>
-                <el-button type="primary" round @click="allMakesureComfire" v-show="this.superviseMeasuresList.lenght>1">一键确认</el-button>
+                <el-button type="danger" round plain @click="allBack"  v-show="this.superviseMeasuresList.length>1">一键退回</el-button>
+                <el-button type="primary" round @click="allMakesureComfire" v-show="this.superviseMeasuresList.length>1">一键确认</el-button>
                 <el-button type="danger" round @click="overseeCancel">撤销督办</el-button>
             </div>
             </el-form>
