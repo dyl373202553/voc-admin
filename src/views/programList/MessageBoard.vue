@@ -39,7 +39,7 @@
                                     </div>
                                     <p>{{item.content}}</p>
                                     <div class="text-right margin-top10 info">
-                                        <span class="fl checkBack" @click="checkBack(item.id, key)" v-if="item.subCount !==0 ">查看全部回复<i class="el-icon-arrow-right"></i></span>
+                                        <span class="fl checkBack" @click="checkBack(item.id, key)" >查看全部回复<i class="el-icon-arrow-right"></i></span>
                                         <span class="fl wonderful" v-show="!showWonderful[key] && userrole===0"
                                             @click="setWonderful(item, '0', key)">设置精彩留言</span>
                                         <span class="fl wonderful" v-show="showWonderful[key] && userrole===0"
@@ -93,6 +93,16 @@
                                                             <span>{{itemChild.praiseNum}}</span>
                                                         </span> -->
                                                         <span class="optionBtn" v-if="userrole===0" @click="liuyanDel(itemChild.id, key, 'child')"><img src="@/assets/images/icon_del.png"/></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span class="fl hide-comment" @click="checkBackDown()">收起回复</span>
+                                        </div>
+                                        <div class="liuyan-children" v-else>
+                                            <div class="main-info">
+                                                <div class="info-right">
+                                                    <div class="text-center margin-top10 info">
+                                                        没有评论，赶紧来回复他吧...
                                                     </div>
                                                 </div>
                                             </div>
