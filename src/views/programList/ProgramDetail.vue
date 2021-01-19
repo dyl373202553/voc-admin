@@ -31,7 +31,7 @@
                     <div v-html="this.programForm.content" style="font-size:14px;letter-spacing: 1px;line-height: 24px;"></div>
                 </div>
                 <div v-if="this.programFormFileId.length!==0">
-                    <div class="main-title">附件</div>
+                    <div class="main-title">—— 附件 ——</div>
                     <div class="downloadClick" v-for="(item, key) in programFormFileId" :key="key">
                         <a @click="$handleDownload(item.fileId)" >
                             <i class="el-icon-paperclip" />
@@ -83,9 +83,9 @@
 
                             <template v-if="item.fileIds">
                                 <div class="downloadClick" v-for="(itemChild, key) in JSON.parse(item.fileIds)" :key="key">
-                                    <a @click="$handleDownload(itemChild.fileId)">
-                                        <i class="el-icon-paperclip"/>
-                                        <span class="info-title">{{itemChild}}</span>
+                                    <a @click="$handleDownload(itemChild.fileId)" >
+                                        <i class="el-icon-paperclip" />
+                                        <span class="info-title">{{itemChild.fileName}}</span>
                                     </a>
                                 </div>
                             </template>
