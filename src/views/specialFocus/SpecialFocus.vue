@@ -16,6 +16,7 @@
                             type="datetime"
                             placeholder="请选择开始时间"
                             style="width: 100%;"
+                            :default-time="defaultTime"
                             :picker-options="expireTimeOption"
                             :disabled="$route.query.viewStatus === '2' || $route.query.viewStatus === '3'|| this.over"
                             @change="checkDate"
@@ -33,6 +34,7 @@
                             type="datetime"
                             placeholder="请选择结束时间"
                             style="width: 100%;"
+                            :default-time="defaultTime"
                             :picker-options="expireTimeOption"
                             :disabled="$route.query.viewStatus === '3' || this.over"
                             @change="checkDate"
@@ -98,6 +100,7 @@ export default class SpecialFocus extends Vue {
         // @ts-ignore
         return UserModule.token
     }
+    private defaultTime = day(new Date(), "HH:mm:ss")
     private coverArr: any = {}
     private dialogFormVisible = false
     private over = false
