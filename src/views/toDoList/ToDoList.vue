@@ -44,10 +44,10 @@
                   <template slot-scope="scope">
                     <!-- link 节目待办（1：待处理，0：已完结）、督办待办（0：督办已完成，1：督办未发布，2：督办未回复，3：督办未确认，4：本期无督办，5：被退回）、通知（1：待处理，0：已完结） -->
                     <!--type 1：节目待办，2：督办待办，3：通知 -->
-                    <router-link v-if="scope.row.type !=='3'" :to="{name:'OverseeAnswer', params: {status:scope.row.link, id:scope.row.id , businessId:scope.row.businessId}, query: { id: scope.row.id } }">
+                    <router-link v-if="scope.row.type !=='3'" :to="{name:'OverseeAnswer', params: {status:scope.row.link, id:scope.row.id , businessId:scope.row.businessId}, query: { status:scope.row.link, id:scope.row.id , businessId:scope.row.businessId } }">
                       <el-button type="text" size="small">处理</el-button>
                     </router-link>
-                    <router-link v-if="scope.row.type ==='3'" :to="{name:'ProgramDetail', params: {promId:scope.row.businessId}, query: { id: scope.row.businessId } }">
+                    <router-link v-if="scope.row.type ==='3'" :to="{name:'ProgramDetail', params: {promId:scope.row.businessId}, query: { promId:scope.row.businessId } }">
                       <el-button type="text" size="small">已阅</el-button>
                     </router-link>
                   </template>
