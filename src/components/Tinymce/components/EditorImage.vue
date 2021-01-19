@@ -92,6 +92,11 @@ export default {
             const fileName = file.uid
             this.listObj[fileName] = {}
             return new Promise((resolve, reject) => {
+                const isLt150M = file.size / 1024 / 1024 <= 150;
+                if (!isLt150M) {
+                    this.$message.error('上传附件大小不能超过 150M!');
+                    reject()
+                }
                 const img = new Image() 
                 img.src = _URL.createObjectURL(file)
                 img.onload = function() {
