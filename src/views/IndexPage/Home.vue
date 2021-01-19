@@ -211,7 +211,7 @@ export default class Home extends Vue {
                         this.$router.push({
                             name: "ProgramDetail",
                             params: { promId: promId, liveId: liveId },
-                            query: { id: promId }
+                            query: { promId: promId, liveId: liveId }
                         })
                     } else {
                         this.centerDialogVisible = true

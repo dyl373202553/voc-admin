@@ -165,7 +165,7 @@ export default class ProgramDetail extends Vue {
     }
 
     private load() {
-        getProgramDetail({ id: this.$route.params.promId }).then((res) => {
+        getProgramDetail({ id: this.$route.query.promId as string }).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.allList = res.data
@@ -216,8 +216,8 @@ export default class ProgramDetail extends Vue {
 
     private getLikeShow() {
         const params = {
-            programId: this.$route.params.promId,
-            targetId: this.$route.params.promId
+            programId: this.$route.query.promId as string,
+            targetId: this.$route.query.promId as string
         }
         postLikeAdd(params).then((res) => {
             if (res) {
