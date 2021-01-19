@@ -251,9 +251,9 @@ export default class MessageBoard extends Vue {
     private dataPage = {
         pageNum: 1,
         pageSize: 5,
-        programId: this.$route.params.promId,
+        programId: this.$route.query.promId as string,
         wonderfulFlag: "", // 是否为精彩留言（0：是，1：否）
-        targetId: this.$route.params.promId
+        targetId: this.$route.query.promId as string
     }
 
     private dataTotalWonderful = 0
@@ -267,9 +267,9 @@ export default class MessageBoard extends Vue {
     private dataPageWonderful = {
         pageNum: 1,
         pageSize: 5,
-        programId: this.$route.params.promId,
+        programId: this.$route.query.promId as string,
         wonderfulFlag: "0", // 是否为精彩留言（0：是，1：否）
-        targetId: this.$route.params.promId
+        targetId: this.$route.query.promId as string
     }
 
     protected mounted() {
@@ -357,10 +357,11 @@ export default class MessageBoard extends Vue {
     }
 
     private onSubmit() {
+        this.dataTotal += 1
         const dataMessagePage = {
             content: this.message,
-            targetId: this.$route.params.promId,
-            programId: this.$route.params.promId,
+            targetId: this.$route.query.promId as string,
+            programId: this.$route.query.promId as string,
             wonderfulFlag: "1"
         }
         this.postMessage(dataMessagePage, "", -1)
@@ -371,7 +372,7 @@ export default class MessageBoard extends Vue {
         const dataMessagePage = {
             content: backMessage,
             targetId: id,
-            programId: this.$route.params.promId,
+            programId: this.$route.query.promId,
             wonderfulFlag: "1"
         }
         this.postMessage(dataMessagePage, id, index)
@@ -386,7 +387,7 @@ export default class MessageBoard extends Vue {
     // 点赞
     private getLike(item: any, index: number, name: string) {
         const params = {
-            programId: this.$route.params.promId,
+            programId: this.$route.query.promId as string,
             targetId: item.id
         }
         postLikeAdd(params).then((res) => {
@@ -459,7 +460,7 @@ export default class MessageBoard extends Vue {
         const dataPage = {
             pageNum: 1,
             pageSize: 10,
-            programId: this.$route.params.promId,
+            programId: this.$route.query.promId as string,
             wonderfulFlag: "", // 是否为精彩留言（0：是，1：否）
             targetId: id
         }
