@@ -2,8 +2,8 @@
   <div class="app-container">
         <el-card class="box-card dpadding0">
         <div slot="header" class="clearfix">
-            <span class="header-title" v-if="this.$route.params.status === '3'">举措确认</span>
-            <span class="header-title" v-if="this.$route.params.status === '2' || this.$route.params.status === '5'">督办回答</span>
+            <span class="header-title" v-if="this.$route.query.status === '3'">举措确认</span>
+            <span class="header-title" v-if="this.$route.query.status === '2' || this.$route.query.status === '5'">督办回答</span>
         </div>
         <div class="dsummary">
             <div class="dsummary-mian">
@@ -21,7 +21,7 @@
                 <p><span>责任部门：</span><span>{{this.deptnamesData}}</span></p>
                 </div>
             </div>
-            <div v-show="this.$route.params.status === '2' " class="dsummary-mian">
+            <div v-show="this.$route.query.status === '2' " class="dsummary-mian">
                 <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>督办举措</div>
                 <el-input
                     v-model="dsummaryContent"
@@ -30,10 +30,10 @@
                     placeholder="请输入举措内容"
                 />
             </div>
-            <div v-show="this.$route.params.status === '3' || this.$route.params.status === '5'" class="dsummary-mian">
+            <div v-show="this.$route.query.status === '3' || this.$route.query.status === '5'" class="dsummary-mian">
                 <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>督办举措</div>
                 <el-input
-                    v-show="this.$route.params.status === '5'"
+                    v-show="this.$route.query.status === '5'"
                     v-model="dsummaryContent"
                     type="textarea"
                     :rows="3"
@@ -110,7 +110,7 @@
                     </template>
                 </div>
             </div>
-            <div v-show="this.$route.params.status === '2' || this.$route.params.status === '5'" class="dsummary-mian">
+            <div v-show="this.$route.query.status === '2' || this.$route.query.status === '5'" class="dsummary-mian">
                 <div class="dsummary-title">上传附件</div>
                 <div>
                     <el-upload
@@ -127,11 +127,11 @@
                     </el-upload>
                 </div>
             </div>
-            <div v-show="this.$route.params.status === '2' || this.$route.params.status === '5'" class="bottom dbtn">
+            <div v-show="this.$route.query.status === '2' || this.$route.query.status === '5'" class="bottom dbtn">
                 <el-button round>取消</el-button>
-                <el-button v-if="this.$route.params.status === '2' || this.$route.params.status === '5'"  type="primary" round :disabled="!dsummaryContent" @click="onSubmit">提交</el-button>
+                <el-button v-if="this.$route.query.status === '2' || this.$route.query.status === '5'"  type="primary" round :disabled="!dsummaryContent" @click="onSubmit">提交</el-button>
             </div>
-            <div v-show="this.$route.params.status === '3'" class="bottom dbtn">
+            <div v-show="this.$route.query.status === '3'" class="bottom dbtn">
                 <el-button type="danger" round plain @click="allBack"  v-show="this.superviseMeasuresList.lenght>1">一键退回</el-button>
                 <el-button type="primary" round @click="allMakesureComfire" v-show="this.superviseMeasuresList.lenght>1">一键确认</el-button>
                 <el-button type="danger" round @click="overseeCancel">撤销督办</el-button>
@@ -214,7 +214,7 @@ export default class OverseeAnswer extends Vue {
     }
 
     private load() {
-        getOverseeDetail({ id: this.$route.params.businessId }).then((res) => {
+        getOverseeDetail({ id: this.$route.query.businessId as string }).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.status = res.data.status
@@ -242,7 +242,7 @@ export default class OverseeAnswer extends Vue {
     private onSubmit() {
         this.fileIds = JSON.stringify(this.fileIdsArr)
         const params = {
-            todoId: this.$route.params.id, // 待办ID
+            todoId: this.$route.query.id as string, // 待办ID
             content: this.dsummaryContent, // 督办举措内容
             fileIds: this.fileIds, // 附件
             id: "" // ID
@@ -263,7 +263,7 @@ export default class OverseeAnswer extends Vue {
 
     // 撤销
     private overseeCancel() {
-        postOverseeCancel({ id: this.$route.params.businessId }).then((res) => {
+        postOverseeCancel({ id: this.$route.query.businessId as string}).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.$router.push({
