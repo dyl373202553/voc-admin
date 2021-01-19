@@ -3,15 +3,15 @@
   <div class="app-container release">
     <el-card class="box-card">
       <div slot="header" class="clearfix">
-        <span v-show="!$route.params.summaryName" class="header-title">发布节目（注：仅节目主讲人进行发布）</span>
-        <span v-show="$route.params.summaryName" class="header-title">编辑节目</span>
+        <span v-show="!$route.query.summaryName" class="header-title">发布节目（注：仅节目主讲人进行发布）</span>
+        <span v-show="$route.query.summaryName" class="header-title">编辑节目</span>
       </div>
       <el-form ref="dataForm" :model="dataForm" label-width="150px">
           <el-form-item label="节目时间"
             :rules="[
             { required: true, message: '节目时间不能为空'}
             ]">
-            <el-select v-if="!this.$route.params.id" v-model="dataForm.liveId" placeholder="请选择节目时间" style="width: 65%;" :disabled="selectBoolean">
+            <el-select v-if="!this.$route.query.id" v-model="dataForm.liveId" placeholder="请选择节目时间" style="width: 65%;" :disabled="selectBoolean">
                 <el-option
                 v-for="(item, index) in dataOptions"
                 :key="index"
@@ -20,7 +20,7 @@
                 @click.native ="optionChange(item)"
                 />
             </el-select>
-            <el-input v-if="this.$route.params.id" v-model="showStart" :disabled="true" style="width: 65%;" />
+            <el-input v-if="this.$route.query.id" v-model="showStart" :disabled="true" style="width: 65%;" />
           <span class="dgrey" style="margin-left:20px;">注：默认展示时间与发布直播最近时间，如有多个可进行选择</span>
         </el-form-item>
          <el-form-item label="节目类型"
@@ -78,7 +78,7 @@
             </el-upload>
         </el-form-item>
         <el-form-item class="text-center dbtn">
-          <el-button v-show="$route.params.summaryName" plain round @click="back">返回</el-button>
+          <el-button v-show="$route.query.summaryName" plain round @click="back">返回</el-button>
           <el-button type="primary" round @click="onSubmit"
           >提交</el-button>
         </el-form-item>
@@ -129,7 +129,7 @@ export default class ProgramRelease extends Vue {
     private fileIdsArr: any = []
 
     protected mounted() {
-        if (this.$route.params.id) {
+        if (this.$route.query.id) {
             this.selectBoolean = true
             this.getDetail()
             this.getKind()
@@ -185,7 +185,7 @@ export default class ProgramRelease extends Vue {
     }
 
     private getDetail() {
-        getProgramDetail({ id: this.$route.params.id }).then((res) => {
+        getProgramDetail({ id: this.$route.query.id as string }).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.dataForm.liveId = res.data.liveId
@@ -195,7 +195,7 @@ export default class ProgramRelease extends Vue {
                     this.dataForm.summary = res.data.summary
                     this.dataForm.content = res.data.content
                     this.dataContent = decodeURIComponent(res.data.content)
-                    this.dataForm.id = this.$route.params.id
+                    this.dataForm.id = this.$route.query.id as string
                     this.showStart = res.data.liveEntity.startTime + "--" + res.data.liveEntity.endTime
                 } else {
                     MessageBox.alert(`请联系管理员`, "失败", { type: "error" })

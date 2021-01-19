@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-card class="box-card dpadding0">
       <div slot="header" class="clearfix">
-        <span class="header-title">{{ $route.params.summaryName }}</span>
+        <span class="header-title">{{ $route.query.summaryName }}</span>
       </div>
       <div class="dsummary">
         <div class="dsummary-mian">
@@ -43,7 +43,7 @@
                     <el-button size="small" type="primary" plain>选择文件</el-button>
                     <span slot="tip"  class="dgrey" style="margin-left:20px;">请上传小于10M的文件，支持格式：doc/docx/ppt/pptx/xls/pdf/txt/png/jpg/zip/rar;</span>
                 </el-upload>
-            <template v-if="$route.params.summaryName ==='管理小结' && this.fileIds">
+            <template v-if="$route.query.summaryName ==='管理小结' && this.fileIds">
                 <div class="downloadClick" v-for="(item, key) in fileId" :key="key">
                     <a @click="$handleDownload(item.fileId)" >
                         <i class="el-icon-paperclip" />
@@ -55,7 +55,7 @@
         <div class="bottom dbtn">
           <el-button round @click="back">返回</el-button>
           <el-button type="primary" round :disabled="!summaryContent" @click="onSubmit">提交</el-button>
-          <el-button v-show="$route.params.summaryName !=='发布小结'" type="danger" plain round @click="summaryDelete">删除</el-button>
+          <el-button v-show="$route.query.summaryName !=='发布小结'" type="danger" plain round @click="summaryDelete">删除</el-button>
         </div>
       </div>
     </el-card>
@@ -111,7 +111,7 @@ export default class ProgramSummary extends Vue {
     }
 
     private getSummaryDetail() {
-        getProgramDetail({ id: this.$route.params.id }).then((res) => {
+        getProgramDetail({ id: this.$route.query.id as string }).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.programTitle = res.data.title
@@ -135,7 +135,7 @@ export default class ProgramSummary extends Vue {
     private onSubmit() {
         this.fileIds = JSON.stringify(this.fileIdsArr)
         const params = {
-            programId: this.$route.params.id, // 节目ID
+            programId: this.$route.query.id as string, // 节目ID
             content: this.summaryContent, // 小结内容
             deptnames: this.deptnamesData, // 参与部门，多个以‘;’想个，只做显示
             fileIds: this.fileIds, // 附件id
