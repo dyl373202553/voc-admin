@@ -11,35 +11,35 @@
                 <p><span>节目名称：</span><span>{{this.programList.title}}</span></p>
                 <p><span>节目时间：</span><span>{{this.programList.time}}</span></p>
                 <p><span>督办状态：</span>
-                <span v-if="$route.params.status === '0'" class="dblue">{{ $route.params.statusName }}</span>
-                <span v-if="$route.params.status !== '0'" class="dred">{{ $route.params.statusName }}</span>
+                <span v-if="$route.query.status === '0'" class="dblue">{{ $route.query.statusName }}</span>
+                <span v-if="$route.query.status !== '0'" class="dred">{{ $route.query.statusName }}</span>
                 </p>
             </div>
             </div>
             <div class="dsummary-mian">
             <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>督办事项</div>
                 <template>
-                        <el-input v-if="$route.params.status === '1'"
+                        <el-input v-if="$route.query.status === '1'"
                         v-model="programOversee"
                         type="textarea"
                         :rows="3"
                         placeholder="请填写督办事项"
                         />
-                        <p v-if="$route.params.status !== '1'">{{this.programOversee}}</p>
+                        <p v-if="$route.query.status !== '1'">{{this.programOversee}}</p>
                 </template>
                 <template>
-                    <div v-show="$route.params.status !== '1'">
+                    <div v-show="$route.query.status !== '1'">
                         <p><span>责任部门：</span><span>{{this.person}}</span></p>
                     </div>
                 </template>
             </div>
-            <div v-show="$route.params.status === '1'" class="dsummary-mian">
+            <div v-show="$route.query.status === '1'" class="dsummary-mian">
                 <div class="dsummary-title dimportant-title"><i class="dimportant">*</i>责任部门</div>
                 <el-input v-model="deptnamesDataList" placeholder="请选择参与部门"  @focus="dialogTableVisible = true" suffix-icon="el-icon-s-home" />
             </div>
-            <div v-show="$route.params.status !== '1'" class="dsummary-mian">
+            <div v-show="$route.query.status !== '1'" class="dsummary-mian">
                 <div class="dsummary-title">督办举措</div>
-                <template v-show="$route.params.status !== '2'">
+                <template v-show="$route.query.status !== '2'">
                     <div class="main-info dline" v-for="(item, key) in superviseMeasuresList" :key="key">
                         <div class="info-left">
                             <el-avatar :src="`/resources/bluepage/a/`+item.userCode+`_A.jpg`"/>
@@ -78,17 +78,17 @@
                     </div>
                 </template>
 
-                <div v-show="$route.params.status === '2' && this.superviseMeasuresList.length===0" class="main-info">
+                <div v-show="$route.query.status === '2' && this.superviseMeasuresList.length===0" class="main-info">
                     暂无内容！
                 </div>
             </div>
             <div class="bottom dbtn">
-            <el-button v-show="$route.params.status !== '3'" round @click="back">返回</el-button>
-            <el-button v-show="$route.params.status === '1' || $route.params.status === '2'" type="primary" round
+            <el-button v-show="$route.query.status !== '3'" round @click="back">返回</el-button>
+            <el-button v-show="$route.query.status === '1' || $route.query.status === '2'" type="primary" round
             :disabled="!(this.deptnamesDataList && this.programOversee)" @click="submit">提交</el-button>
-            <el-button v-show="$route.params.status === '3' && this.superviseMeasuresList.lenght>1" type="danger" round  @click="allBack">一键退回</el-button>
-            <el-button v-show="$route.params.status === '3' && this.superviseMeasuresList.lenght>1" type="primary" round @click="allMakesureComfire">一键确认</el-button>
-            <el-button v-show="$route.params.status === '3' || $route.params.status === '2'" type="danger" plain round @click="overseeCancel">撤销督办</el-button>
+            <el-button v-show="$route.query.status === '3' && this.superviseMeasuresList.lenght>1" type="danger" round  @click="allBack">一键退回</el-button>
+            <el-button v-show="$route.query.status === '3' && this.superviseMeasuresList.lenght>1" type="primary" round @click="allMakesureComfire">一键确认</el-button>
+            <el-button v-show="$route.query.status === '3' || $route.query.status === '2'" type="danger" plain round @click="overseeCancel">撤销督办</el-button>
             </div>
         </div>
         </el-card>
@@ -160,8 +160,8 @@ export default class OverseeCheck extends Vue {
     }
 
     private load() {
-        const programList = getProgramDetail({ id: this.$route.params.programId }) // 获取节目列表--主要是为了拿取节目时间
-        const programOversee = getOverseeDetail({ id: this.$route.params.id }) // 督办详情
+        const programList = getProgramDetail({ id: this.$route.query.programId as string }) // 获取节目列表--主要是为了拿取节目时间
+        const programOversee = getOverseeDetail({ id: this.$route.query.id as string }) // 督办详情
         Promise.all([programList, programOversee]).then((res) => {
             this.programList.title = res[0].data.title
             this.programList.time = res[0].data.liveEntity.startTime + "--" + res[0].data.liveEntity.endTime
@@ -176,7 +176,7 @@ export default class OverseeCheck extends Vue {
     // 提交-督办事项
     private submit() {
         const params = {
-            id: this.$route.params.id, // ID
+            id: this.$route.query.id as string, // ID
             content: this.programOversee, // 内容
             deptnamesData: this.deptnamesData // String-督办部门 格式：[{"deptCode":"201000000","deptName":"信息系统部"},{"deptCode":"202000000","deptName":"网络部"}]
         }
@@ -198,7 +198,7 @@ export default class OverseeCheck extends Vue {
 
     // 撤销
     private overseeCancel() {
-        postOverseeCancel({ id: this.$route.params.id }).then((res) => {
+        postOverseeCancel({ id: this.$route.query.id as string}).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.$router.push({

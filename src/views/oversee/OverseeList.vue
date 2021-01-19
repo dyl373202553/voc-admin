@@ -114,7 +114,7 @@ export default class OverseeList extends Vue {
                         this.$router.push({
                             name: "OverseeCheck",
                             params: { status: status, statusName: statusName, programId: programId, id: id },
-                            query: { id: id }
+                            query: { status: status, statusName: statusName, programId: programId, id: id }
                         })
                     } else {
                         this.centerDialogVisible = true
