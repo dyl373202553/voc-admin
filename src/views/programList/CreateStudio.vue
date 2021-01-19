@@ -12,7 +12,13 @@
                             :rules="[
                             { required: true, message: '节目时间开始时间不能为空'}
                             ]">
-                            <el-date-picker v-model="dataForm.startTime" :picker-options="expireTimeOption" type="datetime" placeholder="请选择开始时间" style="width: 100%;" @change="checkDate" />
+                            <el-date-picker v-model="dataForm.startTime" 
+                            :picker-options="expireTimeOption" 
+                            type="datetime" 
+                            placeholder="请选择开始时间" 
+                            style="width: 100%;" @change="checkDate" 
+                            :default-time="defaultTime"
+                            />
                         </el-form-item>
                     </el-col>
                     <el-col :span="2" class="line">至</el-col>
@@ -21,7 +27,7 @@
                             :rules="[
                             { required: true, message: '节目时间结束时间不能为空'}
                             ]">
-                            <el-date-picker v-model="dataForm.endTime" :picker-options="expireTimeOption" type="datetime" placeholder="请选择结束时间" style="width: 100%;" @change="checkDate" />
+                            <el-date-picker v-model="dataForm.endTime" :picker-options="expireTimeOption" type="datetime" placeholder="请选择结束时间" style="width: 100%;" @change="checkDate" :default-time="defaultTime" />
                         </el-form-item>
                     </el-col>
                 </el-form-item>
@@ -104,7 +110,7 @@ export default class CreateStudio extends Vue {
         // @ts-ignore
         return UserModule.token
     }
-
+    private defaultTime = day(new Date(), "HH:mm:ss")
     private dialogTableVisible = false
     private loading = false
     private dataList: any = [] // 保存通讯录传过来的数据
