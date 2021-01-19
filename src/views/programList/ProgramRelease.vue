@@ -41,9 +41,9 @@
         <el-form-item label="节目名称"
             prop="title"
             :rules="[
-            { required: true, message: '节目名称不能为空'}
+            { required: true, message: '节目名称不能为空', trigger: 'blur'}
             ]">
-          <el-input v-model="dataForm.title" :disabled="programType!=='3'" :maxlength="50"/>
+          <el-input v-model="dataForm.title" :disabled="programType!=='3'" :maxlength="50" placeholder="自定义"/>
         </el-form-item>
         <el-form-item label="节目简介">
           <el-input
@@ -178,7 +178,7 @@ export default class ProgramRelease extends Vue {
     // 切换节目类型
     private typeChange() {
         if (this.programType === "3") {
-            this.dataForm.title = "自定义"
+            this.dataForm.title = ""
         } else {
             this.getName()
         }
