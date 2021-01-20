@@ -132,8 +132,8 @@
                 <el-button v-if="this.$route.query.status === '2' || this.$route.query.status === '5'"  type="primary" round :disabled="!dsummaryContent" @click="onSubmit">提交</el-button>
             </div>
             <div v-show="this.$route.query.status === '3'" class="bottom dbtn">
-                <el-button type="danger" round plain @click="allBack"  v-show="this.superviseMeasuresList.length>1">一键退回</el-button>
-                <el-button type="primary" round @click="allMakesureComfire" v-show="this.superviseMeasuresList.length>1">一键确认</el-button>
+                <el-button type="danger" round plain @click="allBack"  v-show="allTotal>=2">一键退回</el-button>
+                <el-button type="primary" round @click="allMakesureComfire" v-show="allTotal>=2">一键确认</el-button>
                 <el-button type="danger" round @click="overseeCancel">撤销督办</el-button>
             </div>
             </el-form>
@@ -209,6 +209,10 @@ export default class OverseeAnswer extends Vue {
     private fileIdsArr: any = []
     private fileIdsName = ""
 
+    // 一键操作
+    private allTotal = 0
+    private backAll = false
+
     protected mounted() {
         this.load()
     }
@@ -220,6 +224,11 @@ export default class OverseeAnswer extends Vue {
                     this.status = res.data.status
                     this.programList.title = res.data.programTitle
                     this.superviseMeasuresList = res.data.superviseMeasuresList
+                    for (var i = 0; i < res.data.superviseMeasuresList.length; i++) {
+                        if (res.data.superviseMeasuresList[i].status==="1") {
+                            this.allTotal += 1
+                        }
+                    }
                     const programId = res.data.programId
                     getProgramDetail({ id: programId }).then((res) => {
                         if (res) {
@@ -278,11 +287,16 @@ export default class OverseeAnswer extends Vue {
     }
 
     // 举措确认
-    private overseeMakesureComfire(id: string) {
+    private overseeMakesureComfire(id: string, all?: string) {
         postOverseeMakesure({ ids: id }).then((res) => {
             if (res) {
                 if (res.code < 200) {
                     this.load()
+                    if (all) {
+                        this.allTotal = 0
+                      } else {
+                        this.allTotal -= 1
+                    }
                     UserModule.getTodo()
                     MessageBox.alert(res.message, "成功", { type: "success" })
                 } else {
@@ -298,12 +312,13 @@ export default class OverseeAnswer extends Vue {
         for (let i = 0; i < this.superviseMeasuresList.length; i++) {
             arr.push(this.superviseMeasuresList[i].id)
         }
-        this.overseeMakesureComfire(arr.toString())
+        this.overseeMakesureComfire(arr.toString(), "all")
     }
 
     // 退回弹框
     private backDialog(id: string) {
         this.centerDialogVisible = true
+        this.backAll = false
         this.returnOpinionId = id
     }
 
@@ -318,6 +333,11 @@ export default class OverseeAnswer extends Vue {
             if (res) {
                 if (res.code < 200) {
                     this.load()
+                    if (this.backAll) {
+                        this.allTotal = 0
+                    } else {
+                        this.allTotal -= 1
+                    }
                     UserModule.getTodo()
                     MessageBox.alert(res.message, "成功", { type: "success" })
                 } else {
@@ -329,6 +349,7 @@ export default class OverseeAnswer extends Vue {
 
     // 一键退回
     private allBack() {
+        this.backAll = true
         this.centerDialogVisible = true
         const arr = []
         for (let i = 0; i < this.superviseMeasuresList.length; i++) {
